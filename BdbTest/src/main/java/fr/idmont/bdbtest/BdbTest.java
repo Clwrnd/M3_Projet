@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 
 /**
  *
@@ -38,7 +39,7 @@ public class BdbTest {
         }
     }
 
-    public static void query(Connection con, String ref, String des, int puissance) throws SQLException {
+    public static void addMachine(Connection con, String ref, String des, int puissance) throws SQLException {
         con.setAutoCommit(false);
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Tmachine (ref,des,puissance)
@@ -58,7 +59,7 @@ public class BdbTest {
         }
     }
 
-    public static void collecttable(Connection con)
+    public static void collecttableMachine(Connection con)
             throws SQLException {
         try (Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("SELECT * FROM Tmachine ");
@@ -69,8 +70,52 @@ public class BdbTest {
         } catch (SQLException ex) {
             System.out.println("Table non existante");
         }
-
+                
     }
+    
+    public static int ChooseTypeOp(Connection con)
+            throws SQLException {
+        try (Statement st = con.createStatement()) {
+            ResultSet res = st.executeQuery("SELECT * FROM Ttype_operation ");
+            while (res.next()) {
+                System.out.println(res.getInt(1) + " " + res.getString(2));
+            }
+            System.out.println("OK");
+        } catch (SQLException ex) {
+            System.out.println("Table non existante");
+        }
+        System.out.println("Choisissez l'id votre typeOP:");
+        int i = Lire.i();
+        return i;
+    }
+    
+    public static void AssociateMachTypeOp(Connection con)throws SQLException {
+        collecttableMachine(con);
+        System.out.println("Choisisser l'id de la machine: ");
+        int Idmachine=Lire.i();
+        int idTypeOP = ChooseTypeOp(con);
+        System.out.println("durée de l'opération: ");
+        float duree = Lire.f();
+        con.setAutoCommit(false);
+        try (PreparedStatement pt = con.prepareStatement("""
+                                                       INSERT INTO Trealise (id_machine,id_type,duree)
+                                                       VALUES (?,?,?)
+                                                       """)) {
+            pt.setInt(1, Idmachine);
+            pt.setInt(2,idTypeOP );
+            pt.setFloat(3, duree);
+            pt.executeUpdate();
+            con.commit();
+            System.out.println("Transaction réussi");
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("Transaction échec");
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+    
+        
 
     public static void creates(Connection con) throws SQLException {
         con.setAutoCommit(false);
@@ -180,7 +225,49 @@ public class BdbTest {
         } 
 
     }
-
+    
+    public static void addType_Operation(Connection con,String des)throws SQLException {
+        con.setAutoCommit(false);
+        try (PreparedStatement pt = con.prepareStatement("""
+                                                       INSERT INTO Ttype_operation (des)
+                                                       VALUES (?)
+                                                       """)) {
+            pt.setString(1, des);
+            pt.executeUpdate();
+            con.commit();
+            System.out.println("Transaction réussi");
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("Transaction échec");
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+  
+    public static void CreateProduct(Connection con,String ref, String des)throws SQLException {
+        con.setAutoCommit(false);
+        try (PreparedStatement pt = con.prepareStatement("""
+                                                       INSERT INTO Tproduits(ref,des)
+                                                       VALUES (?,?)
+                                                       """)) {
+            pt.setString(1, ref);
+            pt.setString(2, des);
+            pt.executeUpdate();
+            con.commit();
+            System.out.println("Transaction réussi");
+        } catch (SQLException ex) {
+            con.rollback();
+            System.out.println("Transaction échec");
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+    
+    public static void Addoperations(Connection con)throws SQLException {
+ // A compléter 
+    }
+    
+    
     public static void main(String[] args) throws SQLException {
         pilotCheck();
         String host = "92.222.25.165";
@@ -199,6 +286,9 @@ public class BdbTest {
             System.out.println("3) Afficher table :");
             System.out.println("4) Ajouter machine :");
             System.out.println("5) Stop :");
+            System.out.println("6) Ajouter type_operation");
+            System.out.println("7) Associer machine/typeOp");
+            System.out.println("8) Ajouter un produit");
             int rep = Lire.i();
             switch (rep) {
                 case 1:
@@ -208,7 +298,7 @@ public class BdbTest {
                     drop(con);
                     break;
                 case 3:
-                    collecttable(con);
+                    collecttableMachine(con);
                     break;
                 case 4:
                     System.out.println("Reference:");
@@ -217,10 +307,23 @@ public class BdbTest {
                     String def = Lire.S();
                     System.out.println("Puissance");
                     int puissance = Lire.i();
-                    query(con, ref, def, puissance);
+                    addMachine(con, ref, def, puissance);
                     break;
                 case 5:
                     fin = false;
+                    break;
+                case 6: 
+                    System.out.println("Description: ");
+                    String des = Lire.S();
+                    addType_Operation(con, des);
+                case 7:
+                    AssociateMachTypeOp(con);
+                case 8:
+                    System.out.println("Ref produit:");
+                    String refP = Lire.S();
+                    System.out.println("Des produit:");
+                    String desP = Lire.S();
+                    CreateProduct(con, refP, desP);
                     break;
                 default:
                     System.out.println("Commande invalide");
