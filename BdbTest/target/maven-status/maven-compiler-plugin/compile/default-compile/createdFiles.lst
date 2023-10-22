@@ -1,2 +1,5 @@
-fr\idmont\bdbtest\BdbTest.class
+fr\idmont\bdbtest\DbTransaction.class
 fr\idmont\bdbtest\Lire.class
+fr\idmont\bdbtest\Main.class
+fr\idmont\bdbtest\Initialisation.class
+fr\idmont\bdbtest\SchemaManage.class
