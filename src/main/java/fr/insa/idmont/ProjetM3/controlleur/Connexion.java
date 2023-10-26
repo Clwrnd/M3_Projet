@@ -1,11 +1,11 @@
 package fr.insa.idmont.ProjetM3.controlleur;
 
 import fr.insa.idmont.ProjetM3.views.Identification;
+import fr.insa.idmont.ProjetM3.views.NewUserform;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  *
@@ -13,19 +13,21 @@ import java.sql.Statement;
  */
 public class Connexion {
 
-    Identification view;
-
+    Identification viewLog;
+    NewUserform viewSig;
+    
     public Connexion(Identification view) {
-        this.view = view;
+        this.viewLog = view;
+    }
+   public Connexion(NewUserform view) {
+        this.viewSig = view;
     }
 
-    public boolean TestiD() throws SQLException {
-        String username = this.view.getUsername().getValue();
-        String pw = this.view.getPwEntry().getValue();
-        Connection con = this.view.getCon();
-         try (PreparedStatement pst = con.prepareStatement(
+    public boolean TestiD(String username,String pw) throws SQLException {
+        Connection con = this.viewLog.getMain().getCon();
+        try (PreparedStatement pst = con.prepareStatement(
                 "select *"
-                + " from Identifiant"             
+                + " from Identifiant"
                 + " where username = ? and password = ?")) {
             pst.setString(1, username);
             pst.setString(2, pw);
@@ -34,10 +36,35 @@ public class Connexion {
                 return true;
             } else {
                 return false;
-            }           
-         }catch (SQLException ex) {
-             return  false;
+            }
+        } catch (SQLException ex) {
+            return false;
         }
     }
+    
+    public boolean CreationCompte(String username,String pw) throws SQLException{
+        Connection con = this.viewSig.getMain().getCon();
+        try (PreparedStatement pt = con.prepareStatement("""
+                                                       INSERT INTO Identifiant (username,password)
+                                                       VALUES (?,?)
+                                                       """)) {
+            pt.setString(1, username);
+            pt.setString(2, pw);
+            pt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        } 
+    }
+    
+    
+    
+    public void GotoLoginForm(){
+       this.viewLog.getMain().removeAll();
+       this.viewLog.getMain().add(new NewUserform(this.viewLog.getMain()));
+
+        
+    }
+    
 
 }
