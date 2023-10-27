@@ -47,6 +47,7 @@ public class Identification extends VerticalLayout {
         this.newUser.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         this.pwEntry = new PasswordField();
         this.pwEntry.setLabel("Password");
+        this.pwEntry.setClassName("error");
 
         EntryUsername = new TextField("Username");
 
@@ -56,13 +57,14 @@ public class Identification extends VerticalLayout {
         this.main.setAlignSelf(Alignment.CENTER,this);
 
         this.validate.addClickListener((e) -> {
+            this.pwEntry.setHelperText(null);
             String username = this.EntryUsername.getValue();
             String pw = this.pwEntry.getValue();
             try {
                 if (this.controlleur.TestiD(username,pw)) {
-                    System.out.println("Oui");
+                    // A completer
                 } else {
-                    System.out.println("Non");
+                   this.pwEntry.setHelperText("Incorect Username or Password");
                 }
             } catch (SQLException ex) {
             }

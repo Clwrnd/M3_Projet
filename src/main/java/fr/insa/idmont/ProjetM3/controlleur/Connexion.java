@@ -62,9 +62,29 @@ public class Connexion {
     public void GotoLoginForm(){
        this.viewLog.getMain().removeAll();
        this.viewLog.getMain().add(new NewUserform(this.viewLog.getMain()));
-
-        
     }
-    
+
+public boolean TestUsername(String username) throws SQLException {
+        Connection con = this.viewSig.getMain().getCon();
+        try (PreparedStatement pst = con.prepareStatement(
+                "select *"
+                + " from Identifiant"
+                + " where username = ?")) {
+            pst.setString(1, username);
+            ResultSet res = pst.executeQuery();
+            if (res.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException ex) {
+            return false;
+        }
+    }   
+
+    public void goBackIden(){
+        this.viewSig.getMain().removeAll();
+        this.viewSig.getMain().add(new Identification(this.viewSig.getMain()));
+    }
 
 }

@@ -1,0 +1,4 @@
+
+vaadin-text-field.error > [slot="helper"] {
+    color : red;
+}
