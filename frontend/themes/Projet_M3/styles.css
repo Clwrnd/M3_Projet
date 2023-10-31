@@ -1,4 +1,7 @@
-
 vaadin-text-field.error > [slot="helper"] {
     color : red;
 }
+vaadin-password-field.error > [slot="helper"] {
+    color : red ;
+}
+

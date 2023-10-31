@@ -12,10 +12,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import fr.insa.idmont.ProjetM3.DataBase.Initialisation;
 import fr.insa.idmont.ProjetM3.controlleur.Connexion;
-import java.sql.Connection;
+import fr.insa.idmont.ProjetM3.controlleur.Utilisateur;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  *
@@ -37,7 +37,6 @@ public class Identification extends VerticalLayout {
 
         Paragraph state = new Paragraph("Pilot found \n Successful connection");
         state.getStyle().set("white-space", "pre-line");
-
 
         HorizontalLayout Hlay = new HorizontalLayout();
 
@@ -61,8 +60,10 @@ public class Identification extends VerticalLayout {
             String username = this.EntryUsername.getValue();
             String pw = this.pwEntry.getValue();
             try {
-                if (this.controlleur.TestiD(username,pw)) {
-                    // A completer
+                Optional<Utilisateur> user = this.controlleur.TestiD(username,pw);
+                if (user.isPresent()) {
+                    this.main.getInfoSess().setUtilActuel(user);
+                    this.controlleur.goMainContentLog();
                 } else {
                    this.pwEntry.setHelperText("Incorect Username or Password");
                 }

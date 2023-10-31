@@ -1,11 +1,13 @@
 package fr.insa.idmont.ProjetM3.controlleur;
 
 import fr.insa.idmont.ProjetM3.views.Identification;
+import fr.insa.idmont.ProjetM3.views.InterfacePrinc;
 import fr.insa.idmont.ProjetM3.views.NewUserform;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  *
@@ -23,8 +25,8 @@ public class Connexion {
         this.viewSig = view;
     }
 
-    public boolean TestiD(String username,String pw) throws SQLException {
-        Connection con = this.viewLog.getMain().getCon();
+    public Optional<Utilisateur> TestiD(String username,String pw) throws SQLException {
+        Connection con = this.viewLog.getMain().getInfoSess().getCon();
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
                 + " from Identifiant"
@@ -33,17 +35,17 @@ public class Connexion {
             pst.setString(2, pw);
             ResultSet res = pst.executeQuery();
             if (res.next()) {
-                return true;
+                return Optional.of(new Utilisateur(res.getInt(1),username,pw)) ;
             } else {
-                return false;
+                return Optional.empty();
             }
         } catch (SQLException ex) {
-            return false;
+            return Optional.empty();
         }
     }
     
     public boolean CreationCompte(String username,String pw) throws SQLException{
-        Connection con = this.viewSig.getMain().getCon();
+        Connection con = this.viewSig.getMain().getInfoSess().getCon();
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Identifiant (username,password)
                                                        VALUES (?,?)
@@ -65,7 +67,7 @@ public class Connexion {
     }
 
 public boolean TestUsername(String username) throws SQLException {
-        Connection con = this.viewSig.getMain().getCon();
+        Connection con = this.viewSig.getMain().getInfoSess().getCon();
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
                 + " from Identifiant"
@@ -85,6 +87,16 @@ public boolean TestUsername(String username) throws SQLException {
     public void goBackIden(){
         this.viewSig.getMain().removeAll();
         this.viewSig.getMain().add(new Identification(this.viewSig.getMain()));
+    }
+    
+    public void goMainContentLog(){
+        this.viewLog.getMain().removeAll();
+        this.viewLog.getMain().add(new InterfacePrinc(this.viewLog.getMain()));
+    }
+    
+    public void goMainContentSig(){
+        this.viewSig.getMain().removeAll();
+        this.viewSig.getMain().add(new InterfacePrinc(this.viewSig.getMain()));
     }
 
 }

@@ -5,21 +5,23 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import fr.insa.idmont.ProjetM3.DataBase.Initialisation;
+import fr.insa.idmont.ProjetM3.controlleur.InfoSession;
 import java.sql.Connection;
 
 @PageTitle("Main")
 @Route(value = "")
 public class MainView extends HorizontalLayout {
 
-    private Connection con;
-    private Identification StartPage;
+    private InfoSession infoSess;    
+  
 
     public MainView() {
+        this.infoSess = new InfoSession();
+        
         if (Initialisation.pilotCheck()) {
-            con = Initialisation.connectionMySQLdirect();
-            if (con != null) {
-                this.StartPage = new Identification(this);
-                add(this.StartPage);
+           this.infoSess.setCon(Initialisation.connectionMySQLdirect());
+            if (this.infoSess.getCon() != null) {
+                add(new Identification(this));
             } else {
                 add(new H1("Pilot found but connection failed"));
             }
@@ -28,12 +30,10 @@ public class MainView extends HorizontalLayout {
         }
 
     }
-
-    /**
-     * @return the con
-     */
-    public Connection getCon() {
-        return con;
+    
+    public InfoSession getInfoSess() {
+        return infoSess;
     }
-
+    
+    
 }

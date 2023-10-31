@@ -6,22 +6,15 @@ package fr.insa.idmont.ProjetM3.views;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
 import fr.insa.idmont.ProjetM3.controlleur.Connexion;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class NewUserform extends VerticalLayout {
     private TextField EntryUsername;
-    private TextField EntryPw;
+    private PasswordField EntryPw;
     private Button valide;
     private MainView main;
     private Connexion controlleur; 
@@ -41,7 +34,7 @@ public class NewUserform extends VerticalLayout {
        this.controlleur = new Connexion(this);
        this.EntryUsername = new TextField("Username");
        this.EntryUsername.addClassName("error");
-       this.EntryPw = new TextField("Password");
+       this.EntryPw = new PasswordField("Password");
        this.EntryPw.addClassName("error");
        this.valide= new Button("Let's start!");
        this.valide.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -72,7 +65,7 @@ public class NewUserform extends VerticalLayout {
                    this.EntryUsername.setHelperText("Username already exists");
                }
                else if(this.controlleur.CreationCompte(username, pw)){
-                 // A completer  
+                 this.controlleur.goMainContentSig();
                } else {
                    Notification.show("Server error, try again.");
                }
