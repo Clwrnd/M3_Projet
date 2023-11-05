@@ -9,14 +9,17 @@ package fr.insa.idmont.ProjetM3.controlleur;
  * @author cidmo
  */
 public class Utilisateur {
+
     private final int id;
     private String nom;
     private String pass;
+    private Autorisation autorisation;
 
-    public Utilisateur(int id, String nom, String pass) {
+    public Utilisateur(int id, String nom, String pass,Autorisation autorisation) {
         this.id = id;
         this.nom = nom;
         this.pass = pass;
+        this.autorisation = autorisation;
     }
 
  
@@ -32,5 +35,28 @@ public class Utilisateur {
     public String getPass() {
         return pass;
     }
+
+    /**
+     * @return the autorisation
+     */
+    public Autorisation getAutorisation() {
+        return autorisation;
+    }
+
+    /**
+     * @param autorisation the autorisation to set
+     */
+    public void setAutorisation(Autorisation autorisation) {
+        this.autorisation = autorisation;
+    }
+
+
+    /**
+     * @param nom the nom to set
+     */
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     
 }

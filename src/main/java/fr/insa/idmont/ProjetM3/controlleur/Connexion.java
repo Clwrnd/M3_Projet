@@ -24,6 +24,7 @@ public class Connexion {
    public Connexion(NewUserform view) {
         this.viewSig = view;
     }
+   
 
     public Optional<Utilisateur> TestiD(String username,String pw) throws SQLException {
         Connection con = this.viewLog.getMain().getInfoSess().getCon();
@@ -34,8 +35,8 @@ public class Connexion {
             pst.setString(1, username);
             pst.setString(2, pw);
             ResultSet res = pst.executeQuery();
-            if (res.next()) {
-                return Optional.of(new Utilisateur(res.getInt(1),username,pw)) ;
+            if (res.next()) {              
+                return Optional.of(new Utilisateur(res.getInt(1),username,pw,Autorisation.valueOf(res.getString(4)))) ;
             } else {
                 return Optional.empty();
             }
@@ -43,15 +44,34 @@ public class Connexion {
             return Optional.empty();
         }
     }
+    public int getID(String username,String pw) throws SQLException {
+        Connection con = this.viewSig.getMain().getInfoSess().getCon();
+        try (PreparedStatement pst = con.prepareStatement(
+                "select *"
+                + " from Identifiant"
+                + " where username = ? and password = ?")) {
+            pst.setString(1, username);
+            pst.setString(2, pw);
+            ResultSet res = pst.executeQuery();
+            if (res.next()) {
+                return res.getInt(1);
+            } else {
+                return -1;
+            }
+        } catch (SQLException ex) {
+            return -1;
+        }
+    }
     
     public boolean CreationCompte(String username,String pw) throws SQLException{
         Connection con = this.viewSig.getMain().getInfoSess().getCon();
         try (PreparedStatement pt = con.prepareStatement("""
-                                                       INSERT INTO Identifiant (username,password)
-                                                       VALUES (?,?)
+                                                       INSERT INTO Identifiant (username,password,autorisation)
+                                                       VALUES (?,?,?)
                                                        """)) {
             pt.setString(1, username);
             pt.setString(2, pw);
+            pt.setString(3, "CONSULTATION");
             pt.executeUpdate();
             return true;
         } catch (SQLException ex) {

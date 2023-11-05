@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import fr.insa.idmont.ProjetM3.controlleur.Autorisation;
 import fr.insa.idmont.ProjetM3.controlleur.Connexion;
 import fr.insa.idmont.ProjetM3.controlleur.Utilisateur;
 import java.sql.SQLException;
@@ -35,10 +36,7 @@ public class Identification extends VerticalLayout {
         this.main=main;
         this.controlleur = new Connexion(this);
 
-        Paragraph state = new Paragraph("Pilot found \n Successful connection");
-        state.getStyle().set("white-space", "pre-line");
-
-        HorizontalLayout Hlay = new HorizontalLayout();
+        VerticalLayout Vlay = new VerticalLayout();
 
         this.validate = new Button("Log in");
         this.validate.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -50,8 +48,10 @@ public class Identification extends VerticalLayout {
 
         EntryUsername = new TextField("Username");
 
-        Hlay.add(this.newUser, this.validate);
-        this.add(new H1("Gestionnaire de ligne de production"), EntryUsername, pwEntry, Hlay, state);
+        Vlay.add(new Paragraph("First connection ? Click here:"),this.newUser);
+        Vlay.setAlignItems(Alignment.CENTER);
+        Vlay.setSpacing(false);
+        this.add(new H1("Gestionnaire de ligne de production"), EntryUsername, pwEntry, this.validate,new H1(""),Vlay);
         this.setAlignItems(Alignment.CENTER);
         this.main.setAlignSelf(Alignment.CENTER,this);
 

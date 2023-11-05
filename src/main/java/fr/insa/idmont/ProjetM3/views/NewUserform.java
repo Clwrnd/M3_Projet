@@ -13,8 +13,11 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import fr.insa.idmont.ProjetM3.controlleur.Autorisation;
 import fr.insa.idmont.ProjetM3.controlleur.Connexion;
+import fr.insa.idmont.ProjetM3.controlleur.Utilisateur;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  *
@@ -65,7 +68,8 @@ public class NewUserform extends VerticalLayout {
                    this.EntryUsername.setHelperText("Username already exists");
                }
                else if(this.controlleur.CreationCompte(username, pw)){
-                 this.controlleur.goMainContentSig();
+                     this.main.getInfoSess().setUtilActuel(Optional.of(new Utilisateur(this.controlleur.getID(username, pw),username,pw,Autorisation.CONSULTATION)));
+                    this.controlleur.goMainContentSig();
                } else {
                    Notification.show("Server error, try again.");
                }
