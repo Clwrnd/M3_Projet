@@ -17,16 +17,18 @@ public class Connexion {
 
     Identification viewLog;
     NewUserform viewSig;
-    
+
+    // Différents constructeurs des controleurs de la partie connexion :
     public Connexion(Identification view) {
         this.viewLog = view;
     }
-   public Connexion(NewUserform view) {
+
+    public Connexion(NewUserform view) {
         this.viewSig = view;
     }
-   
 
-    public Optional<Utilisateur> TestiD(String username,String pw) throws SQLException {
+    // Existence de l'utilisateur lors de la connexion et envoie de ce dernier
+    public Optional<Utilisateur> TestIdentifiants(String username, String pw) throws SQLException {
         Connection con = this.viewLog.getMain().getInfoSess().getCon();
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
@@ -35,8 +37,8 @@ public class Connexion {
             pst.setString(1, username);
             pst.setString(2, pw);
             ResultSet res = pst.executeQuery();
-            if (res.next()) {              
-                return Optional.of(new Utilisateur(res.getInt(1),username,pw,Autorisation.valueOf(res.getString(4)))) ;
+            if (res.next()) {
+                return Optional.of(new Utilisateur(res.getInt(1), username, pw, Autorisation.valueOf(res.getString(4))));
             } else {
                 return Optional.empty();
             }
@@ -44,7 +46,9 @@ public class Connexion {
             return Optional.empty();
         }
     }
-    public int getID(String username,String pw) throws SQLException {
+
+    // Retourne l'id (DB) de l'utilisateur lors de la première connexion:
+    public int getID(String username, String pw) throws SQLException {
         Connection con = this.viewSig.getMain().getInfoSess().getCon();
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
@@ -62,8 +66,8 @@ public class Connexion {
             return -1;
         }
     }
-    
-    public boolean CreationCompte(String username,String pw) throws SQLException{
+
+    public boolean CreationCompte(String username, String pw) throws SQLException {
         Connection con = this.viewSig.getMain().getInfoSess().getCon();
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Identifiant (username,password,autorisation)
@@ -76,17 +80,15 @@ public class Connexion {
             return true;
         } catch (SQLException ex) {
             return false;
-        } 
-    }
-    
-    
-    
-    public void GotoLoginForm(){
-       this.viewLog.getMain().removeAll();
-       this.viewLog.getMain().add(new NewUserform(this.viewLog.getMain()));
+        }
     }
 
-public boolean TestUsername(String username) throws SQLException {
+    public void GotoLoginForm() {
+        this.viewLog.getMain().removeAll();
+        this.viewLog.getMain().add(new NewUserform(this.viewLog.getMain()));
+    }
+
+    public boolean TestUsername(String username) throws SQLException {
         Connection con = this.viewSig.getMain().getInfoSess().getCon();
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
@@ -102,19 +104,19 @@ public boolean TestUsername(String username) throws SQLException {
         } catch (SQLException ex) {
             return false;
         }
-    }   
+    }
 
-    public void goBackIden(){
+    public void goBackIden() {
         this.viewSig.getMain().removeAll();
         this.viewSig.getMain().add(new Identification(this.viewSig.getMain()));
     }
-    
-    public void goMainContentLog(){
+
+    public void goMainContentLog() {
         this.viewLog.getMain().removeAll();
         this.viewLog.getMain().add(new InterfacePrinc(this.viewLog.getMain()));
     }
-    
-    public void goMainContentSig(){
+
+    public void goMainContentSig() {
         this.viewSig.getMain().removeAll();
         this.viewSig.getMain().add(new InterfacePrinc(this.viewSig.getMain()));
     }

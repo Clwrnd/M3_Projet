@@ -6,20 +6,19 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import fr.insa.idmont.ProjetM3.DataBase.Initialisation;
 import fr.insa.idmont.ProjetM3.controlleur.InfoSession;
-import java.sql.Connection;
 
 @PageTitle("Main")
 @Route(value = "")
 public class MainView extends HorizontalLayout {
 
-    private InfoSession infoSess;    
-  
+    private InfoSession infoSess;
 
     public MainView() {
         this.infoSess = new InfoSession();
-        
+
+        // Vérification de la présence du pilote et de la réussite de la connexion, cas contraire -> message d'erreur
         if (Initialisation.pilotCheck()) {
-           this.infoSess.setCon(Initialisation.connectionMySQLdirect());
+            this.infoSess.setCon(Initialisation.connectionMySQLdirect());
             if (this.infoSess.getCon() != null) {
                 add(new Identification(this));
             } else {
@@ -30,10 +29,10 @@ public class MainView extends HorizontalLayout {
         }
 
     }
-    
+
+    // Get() and Set() :
     public InfoSession getInfoSess() {
         return infoSess;
     }
-    
-    
+
 }

@@ -10,24 +10,30 @@ package fr.insa.idmont.ProjetM3.controlleur;
  */
 public class Utilisateur {
 
+    /**
+     * @param pass the pass to set
+     */
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
     private final int id;
     private String nom;
     private String pass;
     private Autorisation autorisation;
 
-    public Utilisateur(int id, String nom, String pass,Autorisation autorisation) {
+    public Utilisateur(int id, String nom, String pass, Autorisation autorisation) {
         this.id = id;
         this.nom = nom;
         this.pass = pass;
         this.autorisation = autorisation;
     }
-
- 
+    
+    //Get() and Set()
     public int getId() {
         return id;
     }
 
- 
     public String getNom() {
         return nom;
     }
@@ -36,27 +42,17 @@ public class Utilisateur {
         return pass;
     }
 
-    /**
-     * @return the autorisation
-     */
+
     public Autorisation getAutorisation() {
         return autorisation;
     }
 
-    /**
-     * @param autorisation the autorisation to set
-     */
     public void setAutorisation(Autorisation autorisation) {
         this.autorisation = autorisation;
     }
 
-
-    /**
-     * @param nom the nom to set
-     */
     public void setNom(String nom) {
         this.nom = nom;
     }
 
-    
 }

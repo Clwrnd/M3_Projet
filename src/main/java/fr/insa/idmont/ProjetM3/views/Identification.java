@@ -8,11 +8,9 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import fr.insa.idmont.ProjetM3.controlleur.Autorisation;
 import fr.insa.idmont.ProjetM3.controlleur.Connexion;
 import fr.insa.idmont.ProjetM3.controlleur.Utilisateur;
 import java.sql.SQLException;
@@ -24,82 +22,59 @@ import java.util.Optional;
  */
 public class Identification extends VerticalLayout {
 
-    private TextField EntryUsername;
-    private PasswordField pwEntry;
-    private Button validate;
-    private Button newUser;
     private Connexion controlleur;
     private MainView main;
 
+    // Constructeur du formulaire de connexion
     public Identification(MainView main) {
 
-        this.main=main;
+        this.main = main;
         this.controlleur = new Connexion(this);
 
+        // Création des composants:
         VerticalLayout Vlay = new VerticalLayout();
 
-        this.validate = new Button("Log in");
-        this.validate.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        this.newUser = new Button("Sign in");
-        this.newUser.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        this.pwEntry = new PasswordField();
-        this.pwEntry.setLabel("Password");
-        this.pwEntry.setClassName("error");
+        Button validerBut = new Button("Log in");
+        validerBut.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button newUserBut = new Button("Sign in");
+        newUserBut.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        PasswordField pwEntry = new PasswordField();
+        pwEntry.setLabel("Password");
+        pwEntry.setClassName("error");
 
-        EntryUsername = new TextField("Username");
+        TextField EntryUsername = new TextField("Username");
 
-        Vlay.add(new Paragraph("First connection ? Click here:"),this.newUser);
+        Vlay.add(new Paragraph("First connection ? Click here:"), newUserBut);
         Vlay.setAlignItems(Alignment.CENTER);
         Vlay.setSpacing(false);
-        this.add(new H1("Gestionnaire de ligne de production"), EntryUsername, pwEntry, this.validate,new H1(""),Vlay);
+        this.add(new H1("Gestionnaire de ligne de production"), EntryUsername, pwEntry, validerBut, new H1(""), Vlay);
         this.setAlignItems(Alignment.CENTER);
-        this.main.setAlignSelf(Alignment.CENTER,this);
+        this.main.setAlignSelf(Alignment.CENTER, this);
 
-        this.validate.addClickListener((e) -> {
-            this.pwEntry.setHelperText(null);
-            String username = this.EntryUsername.getValue();
-            String pw = this.pwEntry.getValue();
+        // Actions des composants
+        validerBut.addClickListener((e) -> {
+            pwEntry.setHelperText(null);
+            String username = EntryUsername.getValue();
+            String pw = pwEntry.getValue();
             try {
-                Optional<Utilisateur> user = this.controlleur.TestiD(username,pw);
+                Optional<Utilisateur> user = this.controlleur.TestIdentifiants(username, pw);
                 if (user.isPresent()) {
                     this.main.getInfoSess().setUtilActuel(user);
                     this.controlleur.goMainContentLog();
                 } else {
-                   this.pwEntry.setHelperText("Incorect Username or Password");
+                    pwEntry.setHelperText("Incorect Username or Password");
                 }
             } catch (SQLException ex) {
             }
         });
-        
-        this.newUser.addClickListener((e)->{
-           this.controlleur.GotoLoginForm();
+
+        newUserBut.addClickListener((e) -> {
+            this.controlleur.GotoLoginForm();
         });
-        
-    }
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    public TextField getUsername() {
-        return EntryUsername;
+
     }
 
-
-    public PasswordField getPwEntry() {
-        return pwEntry;
-    }
-
-
-
-    /**
-     * @return the main
-     */
+    //Get() and Set()
     public MainView getMain() {
         return main;
     }

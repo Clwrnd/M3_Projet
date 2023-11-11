@@ -9,5 +9,5 @@ package fr.insa.idmont.ProjetM3.controlleur;
  * @author cidmo
  */
 public enum Autorisation {
-    ADMINISTRATION,MODIFICATION,CONSULTATION
+    ADMINISTRATION, MODIFICATION, CONSULTATION
 }

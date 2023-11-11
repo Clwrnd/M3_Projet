@@ -7,8 +7,9 @@ import java.util.Optional;
 
 public class LgOutButton extends Button{
     
-    MainView main;
+    private MainView main;
     
+    // Constructeur du boutton de déconnexion
     public LgOutButton(MainView main){
         this.main = main;
         this.setText("Log out");

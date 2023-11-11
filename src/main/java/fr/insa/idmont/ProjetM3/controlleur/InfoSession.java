@@ -12,14 +12,16 @@ import java.util.Optional;
  * @author cidmo
  */
 public class InfoSession {
+
     private Optional<Utilisateur> utilActuel;
-    private Connection  con;
+    private Connection con;
 
     public InfoSession() {
         this.utilActuel = Optional.empty();
         this.con = null;
     }
 
+    //Get() and Set()
     public void setUtilActuel(Optional<Utilisateur> utilActuel) {
         this.utilActuel = utilActuel;
     }
@@ -35,8 +37,5 @@ public class InfoSession {
     public Connection getCon() {
         return con;
     }
-    
-    
-    
-    
+
 }

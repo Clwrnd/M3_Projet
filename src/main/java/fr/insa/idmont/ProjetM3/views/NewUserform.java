@@ -24,70 +24,66 @@ import java.util.Optional;
  * @author cidmo
  */
 public class NewUserform extends VerticalLayout {
-    private TextField EntryUsername;
-    private PasswordField EntryPw;
-    private Button valide;
+
     private MainView main;
-    private Connexion controlleur; 
-    private Button retour;
-    
-    public NewUserform(MainView main){  
-        
-       this.main = main;
-       this.controlleur = new Connexion(this);
-       this.EntryUsername = new TextField("Username");
-       this.EntryUsername.addClassName("error");
-       this.EntryPw = new PasswordField("Password");
-       this.EntryPw.addClassName("error");
-       this.valide= new Button("Let's start!");
-       this.valide.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-       this.retour = new Button("Retour", new Icon(VaadinIcon.ARROW_LEFT));
-       H3 reg = new H3("Registration");
-       
-       this.add(retour,reg,EntryUsername,EntryPw,valide);
-       this.setAlignSelf(Alignment.CENTER,reg,EntryUsername,EntryPw,valide);
-       this.setAlignSelf(Alignment.START,retour);
+    private Connexion controlleur;
 
+    // Constructeur du formulaire de première connexion
+    public NewUserform(MainView main) {
 
+        this.main = main;
+        this.controlleur = new Connexion(this);
 
-       
-       this.valide.addClickListener((e)->{       
-               this.EntryPw.setHelperText(null);
-               this.EntryUsername.setHelperText(null);
-               String username = this.EntryUsername.getValue();
-               String pw = this.EntryPw.getValue();
-               if(username.length()>30||username.length()==0){
-                   this.EntryUsername.setHelperText("Username must contain 1 to 30 characters");
-               } 
-               else if(pw.length()<6 || pw.length()>50) {
-                   this.EntryPw.setHelperText("Password must contain 6 to 50 characters ");
-              }                
-               else {
-           try {
-               if(this.controlleur.TestUsername(username)){
-                   this.EntryUsername.setHelperText("Username already exists");
-               }
-               else if(this.controlleur.CreationCompte(username, pw)){
-                     this.main.getInfoSess().setUtilActuel(Optional.of(new Utilisateur(this.controlleur.getID(username, pw),username,pw,Autorisation.CONSULTATION)));
-                    this.controlleur.goMainContentSig();
-               } else {
-                   Notification.show("Server error, try again.");
-               }
-           } catch (SQLException ex) {
-           }
-       }
-       });
-       
-       this.retour.addClickListener((e)->{
-          this.controlleur.goBackIden();
-       });
-      
-       
+        // Création des composants:
+        TextField EntryUsername = new TextField("Username");
+        EntryUsername.addClassName("error");
+        PasswordField EntryPw = new PasswordField("Password");
+        EntryPw.addClassName("error");
+        Button valide = new Button("Let's start!");
+        valide.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button retour = new Button("Retour", new Icon(VaadinIcon.ARROW_LEFT));
+        H3 reg = new H3("Registration");
+
+        this.add(retour, reg, EntryUsername, EntryPw, valide);
+        this.setAlignSelf(Alignment.CENTER, reg, EntryUsername, EntryPw, valide);
+        this.setAlignSelf(Alignment.START, retour);
+
+        // Action bouton valider: 
+        valide.addClickListener((e) -> {
+            //Contrôle de saisie:
+            EntryPw.setHelperText(null);
+            EntryUsername.setHelperText(null);
+            String username = EntryUsername.getValue();
+            String pw = EntryPw.getValue();
+            if (username.length() > 30 || username.length() == 0) {
+                EntryUsername.setHelperText("Username must contain 1 to 30 characters");
+            } else if (pw.length() < 6 || pw.length() > 50) {
+                EntryPw.setHelperText("Password must contain 6 to 50 characters ");
+            } else {
+                try {
+                    if (this.controlleur.TestUsername(username)) {
+                        EntryUsername.setHelperText("Username already exists");
+                    } else if (this.controlleur.CreationCompte(username, pw)) {
+                        this.main.getInfoSess().setUtilActuel(Optional.of(new Utilisateur(this.controlleur.getID(username, pw), username, pw, Autorisation.CONSULTATION)));
+                        this.controlleur.goMainContentSig();
+                    } else {
+                        Notification.show("Server error, try again.");
+                    }
+                } catch (SQLException ex) {
+                }
+            }
+        });
+
+        // Action bouton retour:
+        retour.addClickListener((e) -> {
+            this.controlleur.goBackIden();
+        });
+
     }
 
-
+    // Get() and Set():
     public MainView getMain() {
         return main;
     }
-    
+
 }
