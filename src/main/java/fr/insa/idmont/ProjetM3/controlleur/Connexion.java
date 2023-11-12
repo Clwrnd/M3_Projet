@@ -1,5 +1,7 @@
 package fr.insa.idmont.ProjetM3.controlleur;
 
+import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
 import fr.insa.idmont.ProjetM3.views.Identification;
 import fr.insa.idmont.ProjetM3.views.InterfacePrinc;
 import fr.insa.idmont.ProjetM3.views.NewUserform;

@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fr.insa.idmont.ProjetM3.controlleur;
+package fr.insa.idmont.ProjetM3.DataBase_Model;
+
+import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
 
 /**
  *
@@ -10,14 +12,8 @@ package fr.insa.idmont.ProjetM3.controlleur;
  */
 public class Utilisateur {
 
-    /**
-     * @param pass the pass to set
-     */
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
 
-    private final int id;
+    private int id;
     private String nom;
     private String pass;
     private Autorisation autorisation;
@@ -53,6 +49,22 @@ public class Utilisateur {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+    
+    public void setIdString(String id) {
+        this.id = Integer.valueOf(id);
+    }
+    
+    public String getIdString() {
+        return String.valueOf(id);
     }
 
 }

@@ -4,8 +4,8 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import fr.insa.idmont.ProjetM3.DataBase.Initialisation;
-import fr.insa.idmont.ProjetM3.controlleur.InfoSession;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Initialisation;
+import fr.insa.idmont.ProjetM3.DataBase_Model.InfoSession;
 
 @PageTitle("Main")
 @Route(value = "")

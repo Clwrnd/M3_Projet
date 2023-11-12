@@ -1,4 +1,4 @@
-package fr.insa.idmont.ProjetM3.DataBase;
+package fr.insa.idmont.ProjetM3.DataBase_Model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

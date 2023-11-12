@@ -4,6 +4,8 @@
  */
 package fr.insa.idmont.ProjetM3.controlleur;
 
+import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
 import fr.insa.idmont.ProjetM3.views.GestionUser;
 import fr.insa.idmont.ProjetM3.views.InterfacePrinc;
 import java.sql.Connection;
@@ -47,7 +49,21 @@ public class MainContent {
             }
             return liste;
         } catch (SQLException ex) {
-            return null;
+            return liste;
+        }
+    }
+
+    public static void EditUser(Connection con, String newUsername, String newPassword, String newAutorisation, int id) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "update Identifiant  "
+                + " set username=?,password=?,autorisation=?"
+                + " where id = ?")) {
+            pst.setString(1, newUsername);
+            pst.setString(2, newPassword);
+            pst.setString(3, newAutorisation);
+            pst.setInt(4, id);
+            pst.executeUpdate();
+        } catch (SQLException ex) {
         }
     }
 
@@ -62,8 +78,42 @@ public class MainContent {
                 pst.setInt(1, iteraeur.next().getId());
                 pst.executeUpdate();
             } catch (SQLException ex) {
-                System.out.println("error");
+                
             }
+        }
+    }
+
+    public static boolean TestUsername(Connection con, String username) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "select *"
+                + " from Identifiant"
+                + " where username = ?")) {
+            pst.setString(1, username);
+            ResultSet res = pst.executeQuery();
+            if (res.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    public  List<Utilisateur> searchUser(String User) throws SQLException {
+        ArrayList<Utilisateur> liste = new ArrayList<>();
+        try (PreparedStatement st = this.viewGest.getMain().getInfoSess().getCon().prepareStatement(
+                "select *"
+                + " from Identifiant"
+                + " where username like ?")) {
+            st.setString(1, "%"+User+"%");
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                liste.add(new Utilisateur(res.getInt(1), res.getString(2), res.getString(3), Autorisation.valueOf(res.getString(4))));
+            }
+            return liste;
+        } catch (SQLException ex) {
+            return liste;
         }
     }
 

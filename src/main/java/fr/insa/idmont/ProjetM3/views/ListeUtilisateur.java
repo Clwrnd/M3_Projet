@@ -9,12 +9,16 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import fr.insa.idmont.ProjetM3.controlleur.Autorisation;
-import fr.insa.idmont.ProjetM3.controlleur.Utilisateur;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
+import fr.insa.idmont.ProjetM3.controlleur.MainContent;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -24,8 +28,15 @@ import java.util.List;
 // Affichage des utilisateurs
 public class ListeUtilisateur extends Grid<Utilisateur> {
 
+    TextField userField;
+    PasswordField pwField;
+    ComboBox<Autorisation> selecAutori;
+    TextField id;
+    Connection con;
+
     // Constructeur du GRID affichant la liste des utilisateurs;
-    public ListeUtilisateur(List<Utilisateur> data) {
+    public ListeUtilisateur(Connection con, List<Utilisateur> data) throws SQLException {
+        this.con = con;
 
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
@@ -50,23 +61,37 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.getEditor().setBinder(new Binder<>(Utilisateur.class));
         this.getEditor().setBuffered(true);
 
-        TextField userField = new TextField();
-        userField.setWidthFull();
+        this.userField = new TextField();
+        this.userField.setWidthFull();
+        this.userField.setClassName("error");
         this.getEditor().getBinder().forField(userField).bind(Utilisateur::getNom, Utilisateur::setNom);
         this.getColumns().get(1).setEditorComponent(userField);
 
-        PasswordField pwField = new PasswordField();
-        pwField.setWidthFull();
+        this.pwField = new PasswordField();
+        this.pwField.setWidthFull();
+        this.pwField.setClassName("error");
         this.getEditor().getBinder().forField(pwField).bind(Utilisateur::getPass, Utilisateur::setPass);
         this.getColumns().get(2).setEditorComponent(pwField);
 
-        ComboBox<Autorisation> selecAutori = new ComboBox<>();
-        selecAutori.setItems(Autorisation.values());
-        selecAutori.setWidthFull();
+        this.selecAutori = new ComboBox<>();
+        this.selecAutori.setItems(Autorisation.values());
+        this.selecAutori.setWidthFull();
         this.getEditor().getBinder().forField(selecAutori).bind(Utilisateur::getAutorisation, Utilisateur::setAutorisation);
         this.getColumns().get(3).setEditorComponent(selecAutori);
 
-        Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> this.getEditor().save());
+        this.id = new TextField();
+        this.id.setReadOnly(true);
+        this.id.setSizeFull();
+        this.getEditor().getBinder().forField(id).bind(Utilisateur::getIdString, Utilisateur::setIdString);
+        this.getColumns().get(0).setEditorComponent(id);
+
+        Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
+            try {
+                save();
+            } catch (SQLException ex) {
+
+            }
+        });
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
@@ -81,6 +106,29 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.getColumns().get(3).setSortable(true);
 
         this.setItems(data);
+
+    }
+
+    public void save() throws SQLException {
+        // Contrôle de saisie.
+        this.userField.setHelperText(null);
+        this.pwField.setHelperText(null);
+        if (this.userField.getValue().length() > 30 || this.userField.getValue().length() == 0) {
+            this.userField.setHelperText("1-30 characters exiged");
+        } else if (this.pwField.getValue().length() < 6 || this.pwField.getValue().length() > 50) {
+            this.pwField.setHelperText("6-50 characters exiged ");
+        } else {
+            try {
+                if (MainContent.TestUsername(con, this.userField.getValue())) {
+                    this.userField.setHelperText("Username already exists");
+                } else {
+                    this.getEditor().save();
+                    MainContent.EditUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
+                }
+            } catch (SQLException ex) {
+                Notification.show("Server error, try again");
+            }
+        }
 
     }
 

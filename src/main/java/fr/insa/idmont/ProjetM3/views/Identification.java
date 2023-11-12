@@ -12,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import fr.insa.idmont.ProjetM3.controlleur.Connexion;
-import fr.insa.idmont.ProjetM3.controlleur.Utilisateur;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import java.sql.SQLException;
 import java.util.Optional;
 
