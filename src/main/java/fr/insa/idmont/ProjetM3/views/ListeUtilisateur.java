@@ -33,10 +33,12 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
     ComboBox<Autorisation> selecAutori;
     TextField id;
     Connection con;
+    boolean mode; // True -> User, False -> PreUser
 
     // Constructeur du GRID affichant la liste des utilisateurs;
-    public ListeUtilisateur(Connection con, List<Utilisateur> data) throws SQLException {
+    public ListeUtilisateur(Connection con, List<Utilisateur> data, boolean mode) throws SQLException {
         this.con = con;
+        this.mode = mode;
 
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
@@ -119,11 +121,16 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
             this.pwField.setHelperText("6-50 characters exiged ");
         } else {
             try {
-                if (MainContent.TestUsername(con, this.userField.getValue())) {
-                    this.userField.setHelperText("Username already exists");
-                } else {
+                int i = MainContent.TestUsername(con, this.userField.getValue());
+                if (i == Integer.valueOf(this.id.getValue()) || i == -1) {
                     this.getEditor().save();
-                    MainContent.EditUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
+                    if (this.mode) {
+                        MainContent.EditUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
+                    } else {
+                        MainContent.EditPreUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
+                    }
+                } else {
+                    this.userField.setHelperText("Username already exists");
                 }
             } catch (SQLException ex) {
                 Notification.show("Server error, try again");
