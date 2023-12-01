@@ -15,7 +15,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
-import fr.insa.idmont.ProjetM3.controlleur.MainContent;
+import fr.insa.idmont.ProjetM3.controlleur.GestionAdmin;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -121,13 +121,13 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
             this.pwField.setHelperText("6-50 characters exiged ");
         } else {
             try {
-                int i = MainContent.TestUsername(con, this.userField.getValue());
+                int i = GestionAdmin.TestUsername(con, this.userField.getValue());
                 if (i == Integer.valueOf(this.id.getValue()) || i == -1) {
                     this.getEditor().save();
                     if (this.mode) {
-                        MainContent.EditUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
+                        GestionAdmin.EditUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
                     } else {
-                        MainContent.EditPreUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
+                        GestionAdmin.EditPreUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
                     }
                 } else {
                     this.userField.setHelperText("Username already exists");

@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -65,6 +66,7 @@ public class Identification extends VerticalLayout {
                     pwEntry.setHelperText("Incorect Username or Password");
                 }
             } catch (SQLException ex) {
+                Notification.show("Error data base");
             }
         });
 

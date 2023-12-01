@@ -10,6 +10,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -17,7 +18,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
-import fr.insa.idmont.ProjetM3.controlleur.MainContent;
+import fr.insa.idmont.ProjetM3.controlleur.GestionAdmin;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -30,14 +31,14 @@ import java.util.List;
 public class GestionUser extends VerticalLayout {
 
     private MainView main;
-    private MainContent controlleur;
+    private GestionAdmin controlleur;
     private ListeUtilisateur TableUser;
     private ListeUtilisateur TablePreUser;
 
     // Constructeur de l'interface de gestion des utilisateurs
     public GestionUser(MainView main) {
         this.main = main;
-        this.controlleur = new MainContent(this);
+        this.controlleur = new GestionAdmin(this);
 
         // Création des composants       
         H2 titre1 = new H2("User Management");
@@ -68,24 +69,27 @@ public class GestionUser extends VerticalLayout {
         ComboBox<Autorisation> autoAdd = new ComboBox<>("Autorisation");
         autoAdd.setItems(Autorisation.values());
         autoAdd.setValue(Autorisation.CONSULTATION);
+        
+        Button menuPrinc = new Button(VaadinIcon.HOME.create());
 
         HorizontalLayout hl3 = new HorizontalLayout(UserAdd, passAdd, autoAdd);
 
         try {
-            this.TableUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), MainContent.GetUser(this.getMain().getInfoSess().getCon()), true);
-            this.TablePreUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), MainContent.GetPreUser(this.getMain().getInfoSess().getCon()), false);
-            this.add(Hl1, RechercheUserField, this.TableUser, new Hr(), Hl2, hl3, RecherchePreUserField, this.TablePreUser);;
+            this.TableUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), GestionAdmin.GetUser(this.getMain().getInfoSess().getCon()), true);
+            this.TablePreUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()), false);
+            this.add(menuPrinc,Hl1, RechercheUserField, this.TableUser, new Hr(), Hl2, hl3, RecherchePreUserField, this.TablePreUser);;
         } catch (SQLException ex) {
             Notification.show("Server error, try again");
         }
 
         this.setAlignSelf(Alignment.CENTER, Hl1, Hl2, hl3);
+        this.setAlignSelf(Alignment.START,menuPrinc);
 
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
             try {
                 this.controlleur.DeleteUser();
-                refreshTableUser(this.main.getInfoSess().getCon(), MainContent.GetUser(this.getMain().getInfoSess().getCon()));
+                refreshTableUser(this.main.getInfoSess().getCon(), GestionAdmin.GetUser(this.getMain().getInfoSess().getCon()));
             } catch (SQLException ex) {
                 Notification.show("server error, try again");
             }
@@ -94,7 +98,7 @@ public class GestionUser extends VerticalLayout {
         deleteButton2.addClickListener((e) -> {
             try {
                 this.controlleur.DeletePreUser();
-                refreshTablePreUser(this.main.getInfoSess().getCon(), MainContent.GetPreUser(this.getMain().getInfoSess().getCon()));
+                refreshTablePreUser(this.main.getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()));
             } catch (SQLException ex) {
                 Notification.show("server error, try again");
             }
@@ -117,6 +121,10 @@ public class GestionUser extends VerticalLayout {
             }
             ;
         });
+        
+        menuPrinc.addClickListener((e)->{
+            this.controlleur.goMainContent();
+        });
 
         addButton.addClickListener((e) -> {
             // Contrôle de saisie.
@@ -128,11 +136,11 @@ public class GestionUser extends VerticalLayout {
                 passAdd.setHelperText("6-50 characters exiged ");
             } else {
                 try {
-                    if (MainContent.TestUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1 || MainContent.TestPreUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1) {
+                    if (GestionAdmin.TestUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1 || GestionAdmin.TestPreUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1) {
                         UserAdd.setHelperText("Username already exists");
                     } else {
                         this.controlleur.AddPreUser(UserAdd.getValue(), passAdd.getValue(), autoAdd.getValue().toString());
-                        refreshTablePreUser(this.main.getInfoSess().getCon(), MainContent.GetPreUser(this.getMain().getInfoSess().getCon()));
+                        refreshTablePreUser(this.main.getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()));
                     }
                 } catch (SQLException ex) {
                     Notification.show("Server error, try again");
@@ -147,14 +155,14 @@ public class GestionUser extends VerticalLayout {
     public void refreshTableUser(Connection con, List<Utilisateur> data) throws SQLException {
         this.remove(this.TableUser);
         this.TableUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), data, true);
-        this.addComponentAtIndex(2, this.TableUser);
+        this.addComponentAtIndex(3, this.TableUser);
 
     }
 
     public void refreshTablePreUser(Connection con, List<Utilisateur> data) throws SQLException {
         this.remove(this.TablePreUser);
         this.TablePreUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), data, false);
-        this.addComponentAtIndex(6, this.TablePreUser);
+        this.addComponentAtIndex(7, this.TablePreUser);
     }
 
     //Get() and Set():     

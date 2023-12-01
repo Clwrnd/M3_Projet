@@ -16,6 +16,7 @@ public class InterfacePrinc extends VerticalLayout {
     public InterfacePrinc(MainView mainn) {
         this.main = mainn;
         this.controlleur = new MainContent(this);
+        LgOutButton logOutButton = new LgOutButton(this.main);
 
         Button AdminBt = new Button("Admin options");
         AdminBt.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
@@ -27,7 +28,8 @@ public class InterfacePrinc extends VerticalLayout {
 
         this.setAlignSelf(Alignment.START, permState);
 
-        this.add(AdminBt, permState);
+        this.add(logOutButton,AdminBt, permState);
+        this.setAlignSelf(Alignment.START, logOutButton);
 
         // Ajout/Mise en visibilité des éléments spécifique aux autorisation      
         switch (this.main.getInfoSess().getUtilActuel().get().getAutorisation()) {
