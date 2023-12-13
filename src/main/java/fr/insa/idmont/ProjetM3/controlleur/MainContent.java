@@ -6,6 +6,7 @@ package fr.insa.idmont.ProjetM3.controlleur;
 
 import fr.insa.idmont.ProjetM3.views.GestionUser;
 import fr.insa.idmont.ProjetM3.views.InterfacePrinc;
+import fr.insa.idmont.ProjetM3.views.LocateInPlan;
 
 /**
  *
@@ -20,8 +21,22 @@ public class MainContent {
     }
 
     public void GoToAdminInterface() {
+        this.viewPrinc.setContent(new GestionUser(this.viewPrinc.getMain()));
+    }
+    
+    public void GoToLocateInPlan()
+    {
         this.viewPrinc.getMain().removeAll();
-        this.viewPrinc.getMain().add(new GestionUser(this.viewPrinc.getMain()));
+        this.viewPrinc.getMain().add(new LocateInPlan(this.viewPrinc.getMain()));
+    }
+
+    public void setContent(int i) {
+        
+        switch(i){
+            
+            case(2): GoToAdminInterface();
+            break;
+        }
     }
     
    
