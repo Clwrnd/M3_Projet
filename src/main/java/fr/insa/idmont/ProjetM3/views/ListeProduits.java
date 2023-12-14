@@ -10,7 +10,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
-import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ListeProduits extends Grid<Produits> {
     
     
     
-    // Constructeur du GRID affichant la liste des utilisateurs;
+    // Constructeur du GRID affichant la liste des produits;
     public ListeProduits(Connection con, List<Produits> data, boolean mode) throws SQLException {
         this.con = con;
         this.mode = mode;
@@ -51,12 +50,6 @@ public class ListeProduits extends Grid<Produits> {
             });
             return editButton;
         });
-    
-    
-        
-        
-        
-        
         
         
         
@@ -74,7 +67,7 @@ public class ListeProduits extends Grid<Produits> {
 
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
-        this.getColumns().get(4).setEditorComponent(actions);
+        this.getColumns().get(3).setEditorComponent(actions);
 
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
