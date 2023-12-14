@@ -42,7 +42,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
 
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        // Ajout des collonnes et des composants d'éditions:
+        // Ajout des colonnes et des composants d'éditions:
         this.addColumn(Utilisateur::getId).setHeader("Id");
         this.addColumn(Utilisateur::getNom).setHeader("Username");
         this.addColumn(Utilisateur::getPass).setHeader("Passwrod");
