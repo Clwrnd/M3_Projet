@@ -9,8 +9,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
-import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Operations;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,8 +18,7 @@ import java.util.List;
  *
  * @author Henry Adèle
  */
-public class ListeProduits extends Grid<Produits> {
-    
+public class ListeMachines extends Grid<Machines> {
     
     Connection con;
     boolean mode; // True -> User, False -> PreUser
@@ -28,17 +26,18 @@ public class ListeProduits extends Grid<Produits> {
     
     
     
-    // Constructeur du GRID affichant la liste des utilisateurs;
-    public ListeProduits(Connection con, List<Produits> data, boolean mode) throws SQLException {
+    // Constructeur du GRID affichant la liste des opérations;
+    public ListeMachines(Connection con, List<Machines> data, boolean mode) throws SQLException {
         this.con = con;
         this.mode = mode;
 
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
         // Ajout des colonnes et des composants d'éditions:
-        this.addColumn(Produits::getId).setHeader("Id");
-        this.addColumn(Produits::getRef).setHeader("Ref");
-        this.addColumn(Produits::getDes).setHeader("Des");
+        this.addColumn(Machines::getId).setHeader("Id");
+        this.addColumn(Machines::getRef).setHeader("Ref");
+        this.addColumn(Machines::getDef).setHeader("Def");
+        this.addColumn(Machines::getPuissance).setHeader("Puissance");
         
 
         this.addComponentColumn(user -> {
@@ -53,14 +52,7 @@ public class ListeProduits extends Grid<Produits> {
         });
     
     
-        
-        
-        
-        
-        
-        
-        
-                Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
+    Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
             try {
                  save();
             } catch (SQLException ex) {
@@ -79,9 +71,15 @@ public class ListeProduits extends Grid<Produits> {
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
         this.getColumns().get(2).setSortable(true);
+        this.getColumns().get(3).setSortable(true);
 
         this.setItems(data);
 
-    }
     
+    
+    
+    
+    
+    
+}
 }
