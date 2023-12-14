@@ -26,8 +26,7 @@ public class MainContent {
     
     public void GoToLocateInPlan()
     {
-        this.viewPrinc.getMain().removeAll();
-        this.viewPrinc.getMain().add(new LocateInPlan(this.viewPrinc.getMain()));
+        this.viewPrinc.setContent(new LocateInPlan(this.viewPrinc.getMain()));
     }
 
     public void setContent(int i) {
@@ -36,6 +35,9 @@ public class MainContent {
             
             case(2): GoToAdminInterface();
             break;
+            case(0): GoToLocateInPlan();
+            break;
+            
         }
     }
     

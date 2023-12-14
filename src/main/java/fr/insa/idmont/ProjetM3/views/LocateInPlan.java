@@ -8,8 +8,11 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.server.StreamResource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -29,15 +32,18 @@ public class LocateInPlan extends HorizontalLayout {
         Upload dropEnabledUpload = new Upload(memoryBuffer);
         dropEnabledUpload.setDropAllowed(true);
         dropEnabledUpload.setAcceptedFileTypes("image/jpg", "image/png");
-       /*      dropEnabledUpload.addSucceededListener(event -> {
-        try {
-                InputStream inputStream =memoryBuffer.getInputStream();
-                
-                
-            } catch (IOException e) {
-                
+        dropEnabledUpload.addAllFinishedListener(event -> {
+        InputStream inputStream = memoryBuffer.getInputStream();
+        Image image = new Image(new StreamResource(memoryBuffer.getFileName(), () -> {;
+            try {
+                return inputStream;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-}); */
+            return null;
+        }), "alt text");
+      add(image);     
+}); 
         
          //Image image2 = new Image(image, "My Alt Image");
          this.add(dropEnabledUpload);
