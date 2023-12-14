@@ -8,9 +8,9 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -70,21 +70,18 @@ public class GestionUser extends VerticalLayout {
         autoAdd.setItems(Autorisation.values());
         autoAdd.setValue(Autorisation.CONSULTATION);
         
-        Button menuPrinc = new Button(VaadinIcon.HOME.create());
-
         HorizontalLayout hl3 = new HorizontalLayout(UserAdd, passAdd, autoAdd);
 
         try {
             this.TableUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), GestionAdmin.GetUser(this.getMain().getInfoSess().getCon()), true);
             this.TablePreUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()), false);
-            this.add(menuPrinc,Hl1, RechercheUserField, this.TableUser, new Hr(), Hl2, hl3, RecherchePreUserField, this.TablePreUser);;
+            this.add(Hl1, RechercheUserField, this.TableUser, new Hr(), Hl2, hl3, RecherchePreUserField, this.TablePreUser);;
         } catch (SQLException ex) {
             Notification.show("Server error, try again");
         }
 
-        this.setAlignSelf(Alignment.CENTER, Hl1, Hl2, hl3);
-        this.setAlignSelf(Alignment.START,menuPrinc);
-
+        this.setAlignSelf(Alignment.CENTER, Hl1, Hl2, hl3); 
+        
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
             try {
@@ -120,11 +117,7 @@ public class GestionUser extends VerticalLayout {
                 Notification.show("server error, try again");
             }
             ;
-        });
-        
-        menuPrinc.addClickListener((e)->{
-            this.controlleur.goMainContent();
-        });
+        });        
 
         addButton.addClickListener((e) -> {
             // Contrôle de saisie.
@@ -155,14 +148,14 @@ public class GestionUser extends VerticalLayout {
     public void refreshTableUser(Connection con, List<Utilisateur> data) throws SQLException {
         this.remove(this.TableUser);
         this.TableUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), data, true);
-        this.addComponentAtIndex(3, this.TableUser);
+        this.addComponentAtIndex(2, this.TableUser);
 
     }
 
     public void refreshTablePreUser(Connection con, List<Utilisateur> data) throws SQLException {
         this.remove(this.TablePreUser);
         this.TablePreUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), data, false);
-        this.addComponentAtIndex(7, this.TablePreUser);
+        this.addComponentAtIndex(6, this.TablePreUser);
     }
 
     //Get() and Set():     
