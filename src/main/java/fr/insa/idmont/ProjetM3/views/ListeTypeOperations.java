@@ -9,7 +9,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,7 +26,7 @@ public class ListeTypeOperations extends Grid<TypeOperations>{
     
     
     
-    // Constructeur du GRID affichant la liste des utilisateurs;
+    // Constructeur du GRID affichant la liste des types d'opérations;
     public ListeTypeOperations(Connection con, List<TypeOperations> data, boolean mode) throws SQLException {
         this.con = con;
         this.mode = mode;

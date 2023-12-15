@@ -10,7 +10,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Operations;
-import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -66,10 +65,11 @@ public class ListeOperations extends Grid<Operations> {
 
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
-        this.getColumns().get(4).setEditorComponent(actions);
+        this.getColumns().get(3).setEditorComponent(actions);
 
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
+        this.getColumns().get(2).setSortable(true);
 
         this.setItems(data);
 

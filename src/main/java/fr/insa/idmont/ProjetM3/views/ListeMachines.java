@@ -9,7 +9,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import fr.insa.idmont.ProjetM3.DataBase_Model.Operations;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ListeMachines extends Grid<Machines> {
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(Machines::getId).setHeader("Id");
         this.addColumn(Machines::getRef).setHeader("Ref");
-        this.addColumn(Machines::getDef).setHeader("Def");
+        this.addColumn(Machines::getDes).setHeader("Des");
         this.addColumn(Machines::getPuissance).setHeader("Puissance");
         
 
