@@ -18,13 +18,14 @@ import java.util.List;
  *
  * @author Henry Adèle
  */
+/* 
 public class ListeMachines extends Grid<Machines> {
-    
+       
     Connection con;
     boolean mode; // True -> User, False -> PreUser
     
     
-    
+
     
     // Constructeur du GRID affichant la liste des opérations;
     public ListeMachines(Connection con, List<Machines> data, boolean mode) throws SQLException {
@@ -77,9 +78,11 @@ public class ListeMachines extends Grid<Machines> {
 
     
     
-    
+   
     
     
     
 }
+
 }
+*/

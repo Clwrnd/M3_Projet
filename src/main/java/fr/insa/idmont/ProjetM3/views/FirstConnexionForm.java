@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -40,14 +41,17 @@ public class FirstConnexionForm extends VerticalLayout {
         EntryPw.addClassName("error");
         PasswordField newPassField = new PasswordField("New Password");
         newPassField.addClassName("error");
+        PasswordField confirmPass = new PasswordField("Confirm your new password");
+        confirmPass.addClassName("error");
         Button valide = new Button("Let's start!");
         valide.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button retour = new Button("Retour", new Icon(VaadinIcon.ARROW_LEFT));
         H2 reg = new H2("First connexion");
         Paragraph info = new Paragraph("Enter the login details provided by your administrator and personalize your password.");
+        HorizontalLayout DownSideHl = new HorizontalLayout(retour, valide);
 
-        this.add(retour, reg, info, EntryUsername, EntryPw, newPassField, valide);
-        this.setAlignSelf(Alignment.CENTER, reg, info, EntryUsername, EntryPw, newPassField, valide);
+        this.add(reg, info, EntryUsername, EntryPw, newPassField, confirmPass, DownSideHl);
+        this.setAlignSelf(Alignment.CENTER, reg, info, EntryUsername, EntryPw, newPassField, confirmPass, DownSideHl);
         this.setAlignSelf(Alignment.START, retour);
 
         // Action bouton valider: 
@@ -58,17 +62,22 @@ public class FirstConnexionForm extends VerticalLayout {
             String username = EntryUsername.getValue();
             String pw = EntryPw.getValue();
             String newpw = newPassField.getValue();
+            String confirmPassSt = confirmPass.getValue();
             Optional<Utilisateur> user = null;
             try {
                 user = this.controlleur.TestPreIdentifiants(username, pw);
             } catch (SQLException ex) {
             }
             if (user.isPresent() && newpw.length() >= 6 && newpw.length() < 50) {
-                try {
-                    this.controlleur.CreationCompte(username, newpw, user.get().getAutorisation().toString(), user.get().getId());
-                    this.main.getInfoSess().setUtilActuel(Optional.of(new Utilisateur(this.controlleur.getID(username, newpw), username, newpw, user.get().getAutorisation())));
-                    this.controlleur.goMainContentSig();
-                } catch (SQLException ex) {
+                if (newpw.equals(confirmPassSt)) {
+                    try {
+                        this.controlleur.CreationCompte(username, newpw, user.get().getAutorisation().toString(), user.get().getId());
+                        this.main.getInfoSess().setUtilActuel(Optional.of(new Utilisateur(this.controlleur.getID(username, newpw), username, newpw, user.get().getAutorisation())));
+                        this.controlleur.goMainContentSig();
+                    } catch (SQLException ex) {
+                    }
+                } else {
+                    confirmPass.setHelperText("Passwords don't match");
                 }
             } else if (user.isEmpty()) {
                 EntryPw.setHelperText("Incorect Username or Password");

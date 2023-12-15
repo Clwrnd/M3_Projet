@@ -28,12 +28,12 @@ import java.util.List;
 // Affichage des utilisateurs
 public class ListeUtilisateur extends Grid<Utilisateur> {
 
-    TextField userField;
-    PasswordField pwField;
-    ComboBox<Autorisation> selecAutori;
-    TextField id;
-    Connection con;
-    boolean mode; // True -> User, False -> PreUser
+    private TextField userField;
+    private PasswordField pwField;
+    private ComboBox<Autorisation> selecAutori;
+    private TextField id;
+    private Connection con;
+    private boolean mode; // True -> User, False -> PreUser
 
     // Constructeur du GRID affichant la liste des utilisateurs;
     public ListeUtilisateur(Connection con, List<Utilisateur> data, boolean mode) throws SQLException {

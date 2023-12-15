@@ -8,6 +8,7 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
@@ -62,6 +63,8 @@ public class GestionUser extends VerticalLayout {
         TextField RecherchePreUserField = new TextField("Search a user");
         RecherchePreUserField.setValue("Press enter");
 
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("New User");
         TextField UserAdd = new TextField("Username");
         UserAdd.addClassName("error");
         PasswordField passAdd = new PasswordField("Password");
@@ -69,19 +72,24 @@ public class GestionUser extends VerticalLayout {
         ComboBox<Autorisation> autoAdd = new ComboBox<>("Autorisation");
         autoAdd.setItems(Autorisation.values());
         autoAdd.setValue(Autorisation.CONSULTATION);
-        
-        HorizontalLayout hl3 = new HorizontalLayout(UserAdd, passAdd, autoAdd);
+        Button save = new Button("Confirm");
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        dialog.getFooter().add(cancelButton);
+        dialog.getFooter().add(save);
+
+        VerticalLayout hl3 = new VerticalLayout(UserAdd, passAdd, autoAdd);
+        dialog.add(hl3);
 
         try {
             this.TableUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), GestionAdmin.GetUser(this.getMain().getInfoSess().getCon()), true);
             this.TablePreUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()), false);
-            this.add(Hl1, RechercheUserField, this.TableUser, new Hr(), Hl2, hl3, RecherchePreUserField, this.TablePreUser);;
+            this.add(Hl1, RechercheUserField, this.TableUser, new Hr(), Hl2, RecherchePreUserField, this.TablePreUser);;
         } catch (SQLException ex) {
             Notification.show("Server error, try again");
         }
 
-        this.setAlignSelf(Alignment.CENTER, Hl1, Hl2, hl3); 
-        
+        this.setAlignSelf(Alignment.CENTER, Hl1, Hl2, hl3);
+
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
             try {
@@ -117,10 +125,14 @@ public class GestionUser extends VerticalLayout {
                 Notification.show("server error, try again");
             }
             ;
-        });        
+        });
 
         addButton.addClickListener((e) -> {
-            // Contrôle de saisie.
+            dialog.open();
+        });
+
+        save.addClickListener((e) -> {
+            // Contrôle de saisie.   
             UserAdd.setHelperText(null);
             passAdd.setHelperText(null);
             if (UserAdd.getValue().length() > 30 || UserAdd.getValue().length() == 0) {
@@ -132,6 +144,7 @@ public class GestionUser extends VerticalLayout {
                     if (GestionAdmin.TestUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1 || GestionAdmin.TestPreUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1) {
                         UserAdd.setHelperText("Username already exists");
                     } else {
+                        dialog.close();
                         this.controlleur.AddPreUser(UserAdd.getValue(), passAdd.getValue(), autoAdd.getValue().toString());
                         refreshTablePreUser(this.main.getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()));
                     }
@@ -142,8 +155,6 @@ public class GestionUser extends VerticalLayout {
         });
     }
 
-    
-    
     // Méthodes :
     public void refreshTableUser(Connection con, List<Utilisateur> data) throws SQLException {
         this.remove(this.TableUser);

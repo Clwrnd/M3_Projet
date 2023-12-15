@@ -9,8 +9,8 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  * @author Henry Adèle
  */
 public class Produits {
-    
-     private int id;
+
+    private int id;
     private String ref;
     private String des;
 
@@ -19,50 +19,41 @@ public class Produits {
         this.ref = ref;
         this.des = des;
     }
-    
 
-    /**
-     * @return the id
-     */
+    
+    // Get() et Set():
+
     public int getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * @return the ref
-     */
     public String getRef() {
         return ref;
     }
 
-    /**
-     * @param ref the ref to set
-     */
     public void setRef(String ref) {
         this.ref = ref;
     }
 
-    /**
-     * @return the des
-     */
     public String getDes() {
         return des;
     }
 
-    /**
-     * @param des the des to set
-     */
+
     public void setDes(String des) {
         this.des = des;
     }
-    
-    
-    
+
+    public void setIdString(String id) {
+        this.id = Integer.valueOf(id);
+    }
+
+    public String getIdString() {
+        return String.valueOf(id);
+    }
+
 }

@@ -53,11 +53,11 @@ public class ListeOperations extends Grid<Operations> {
     
     
     Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
-            try {
+        /*    try {
                  save();
             } catch (SQLException ex) {
 
-            }
+            }*/
         });
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,

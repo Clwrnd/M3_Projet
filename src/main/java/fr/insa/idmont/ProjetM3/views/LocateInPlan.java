@@ -9,10 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.server.StreamResource;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 
@@ -30,8 +27,7 @@ public class LocateInPlan extends HorizontalLayout {
       
         MemoryBuffer memoryBuffer = new MemoryBuffer();
         Upload dropEnabledUpload = new Upload(memoryBuffer);
-        dropEnabledUpload.setDropAllowed(true);
-        dropEnabledUpload.setAcceptedFileTypes("image/jpg", "image/png");
+       // dropEnabledUpload.setAcceptedFileTypes("image/jpg", "image/png");
         dropEnabledUpload.addAllFinishedListener(event -> {
         InputStream inputStream = memoryBuffer.getInputStream();
         Image image = new Image(new StreamResource(memoryBuffer.getFileName(), () -> {;
