@@ -4,11 +4,15 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.theme.lumo.Lumo;
 import fr.insa.idmont.ProjetM3.controlleur.MainContent;
 
 public class InterfacePrinc extends AppLayout {
@@ -47,10 +51,17 @@ public class InterfacePrinc extends AppLayout {
 
         Span permState = new Span(this.getMain().getInfoSess().getUtilActuel().get().getAutorisation().toString());
         permState.getElement().getThemeList().add("badge primary");
-        permState.getStyle().set("margin-left", "auto");
-        permState.getStyle().set("margin-right", "5px");
+               
+        Checkbox themeToggle = new Checkbox("");
+        themeToggle.addValueChangeListener(e -> {
+            setTheme(e.getValue());
+        });
+        
+        HorizontalLayout hl3 = new HorizontalLayout(permState,new H4("|"),VaadinIcon.MOON.create(),themeToggle);
+        hl3.getStyle().set("margin-left", "auto");
+        hl3.getStyle().set("margin-right", "5px");
 
-        this.addToNavbar(permState);
+        this.addToNavbar(hl3);
 
         // Ajout/Mise en visibilité des éléments spécifique aux autorisation      
         switch (this.main.getInfoSess().getUtilActuel().get().getAutorisation()) {
@@ -70,6 +81,14 @@ public class InterfacePrinc extends AppLayout {
         locaMach.addClickListener((e) -> {
             this.controlleur.GoToLocateInPlan();
         });
+    }
+    
+    
+    
+    private void setTheme(boolean dark) {
+        var js = "document.documentElement.setAttribute('theme', $0)";
+
+        getElement().executeJs(js, dark ? Lumo.DARK : Lumo.LIGHT);
     }
 
     //Get() and Set():   

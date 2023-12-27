@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fr.insa.idmont.ProjetM3.views;
+package fr.insa.idmont.ProjetM3.ExtendedGrid;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -111,7 +111,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
 
     }
 
-    public void save() throws SQLException {
+    private void save() throws SQLException {
         // Contrôle de saisie.
         this.userField.setHelperText(null);
         this.pwField.setHelperText(null);

@@ -5,4 +5,8 @@ vaadin-password-field.error > [slot="helper"] {
     color : red ;
 }
 
+vaadin-integer-field.error > [slot="helper"]{
+    color : red ;
+}
+
 

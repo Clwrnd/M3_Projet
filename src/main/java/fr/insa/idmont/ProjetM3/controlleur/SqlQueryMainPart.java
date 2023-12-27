@@ -4,6 +4,7 @@
  */
 package fr.insa.idmont.ProjetM3.controlleur;
 
+import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,6 +21,8 @@ import java.util.List;
  */
 // Requête partie principale:
 public class SqlQueryMainPart {
+    
+    // ------------------------------------ Produit :
 
     public static List<Produits> GetProduit(Connection con) {
         ArrayList<Produits> liste = new ArrayList<>();
@@ -38,7 +41,7 @@ public class SqlQueryMainPart {
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
                 + " from Tproduits"
-                + " where username = ?")) {
+                + " where ref = ?")) {
             pst.setString(1, prod);
             ResultSet res = pst.executeQuery();
             if (res.next()) {
@@ -104,6 +107,99 @@ public class SqlQueryMainPart {
                                                        """)) {
             pt.setString(1, ref);
             pt.setString(2, des);
+            pt.executeUpdate();
+        } catch (SQLException ex) {
+
+        }
+    }
+
+    // ------------------------------------ Machine :
+    
+    public static List<Machines> GetMachine(Connection con) throws SQLException {
+        ArrayList<Machines> liste = new ArrayList<>();
+        try (Statement st = con.createStatement()) {
+            ResultSet res = st.executeQuery("SELECT * FROM Tmachine  ");
+            while (res.next()) {
+                liste.add(new Machines(res.getInt(1), res.getString(2), res.getString(3), res.getInt(4)));
+            }
+            return liste;
+        } catch (SQLException ex) {
+            return liste;
+        }
+    }
+
+    public static int TestMachine(Connection con, String mach) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "select *"
+                + " from Tmachine"
+                + " where ref = ?")) {
+            pst.setString(1, mach);
+            ResultSet res = pst.executeQuery();
+            if (res.next()) {
+                return res.getInt(1);
+            } else {
+                return -1;
+            }
+        } catch (SQLException ex) {
+            return -1;
+        }
+    }
+
+    public static void EditMachine(Connection con, String newRef, String newDes, int id, int puissance) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "update Tmachine  "
+                + " set ref=?,des=?,puissance=?"
+                + " where id = ?")) {
+            pst.setString(1, newRef);
+            pst.setString(2, newDes);
+            pst.setInt(3, puissance);
+            pst.setInt(4, id);
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+        }
+    }
+
+    public static void deleteMachine(Connection con, Iterator<Machines> iterator) {
+        Iterator<Machines> it = iterator;
+        while (it.hasNext()) {
+            try (PreparedStatement pst = con.prepareStatement(
+                    "delete "
+                    + " from Tmachine"
+                    + " where id = ?")) {
+                pst.setInt(1, iterator.next().getId());
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+
+            }
+        }
+    }
+
+    public static List<Machines> SearchMachine(Connection con, String ref) {
+        ArrayList<Machines> liste = new ArrayList<>();
+        try (PreparedStatement st = con.prepareStatement(
+                "select *"
+                + " from Tmachine"
+                + " where ref like ?")) {
+            st.setString(1, "%" + ref + "%");
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                liste.add(new Machines(res.getInt(1), res.getString(2), res.getString(3), res.getInt(4)));
+            }
+            return liste;
+        } catch (SQLException ex) {
+            return liste;
+        }
+
+    }
+
+    public static void addMachine(Connection con, String ref, String des, int puissance) {
+        try (PreparedStatement pt = con.prepareStatement("""
+                                                       INSERT INTO Tmachine (ref,des,puissance)
+                                                       VALUES (?,?,?)
+                                                       """)) {
+            pt.setString(1, ref);
+            pt.setString(2, des);
+            pt.setInt(3, puissance);
             pt.executeUpdate();
         } catch (SQLException ex) {
 

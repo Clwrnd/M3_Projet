@@ -78,6 +78,16 @@ public class Machines {
         this.puissance = puissance;
     }
     
+    public void setIdString(String id) {
+        this.id = Integer.valueOf(id);
+    }
+
+    public String getIdString() {
+        return String.valueOf(id);
+    }
+
+    
+    
     
     
     

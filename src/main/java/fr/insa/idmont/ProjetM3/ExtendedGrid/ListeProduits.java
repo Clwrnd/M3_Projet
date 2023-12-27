@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fr.insa.idmont.ProjetM3.views;
+package fr.insa.idmont.ProjetM3.ExtendedGrid;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class ListeProduits extends Grid<Produits> {
 
-    Connection con;
+    private Connection con;
     private TextField refField;
     private TextField desField;
     private TextField idField;
@@ -119,4 +119,3 @@ public class ListeProduits extends Grid<Produits> {
     }
 
 }
-
