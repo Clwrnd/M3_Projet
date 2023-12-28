@@ -205,5 +205,35 @@ public class SqlQueryMainPart {
 
         }
     }
+    
+    public static void EditTypeOperation(Connection con, String newDes, int id) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "update Ttype_operation  "
+                + " des=? "
+                + " where id = ?")) {
+            pst.setString(1, newDes);
+            pst.setInt(2, id);
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+                
+        }
+    }
+    
+    public static int TestTypeOperation(Connection con, String type_operation) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "select *"
+                + " from Ttype_operation "
+                + " where ref = ?")) {
+            pst.setString(1, type_operation);
+            ResultSet res = pst.executeQuery();
+            if (res.next()) {
+                return res.getInt(1);
+            } else {
+                return -1;
+            }
+        } catch (SQLException ex) {
+            return -1;
+        }
+    }
 
 }

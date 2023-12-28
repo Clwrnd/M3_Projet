@@ -8,8 +8,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
+import fr.insa.idmont.ProjetM3.controlleur.SqlQueryMainPart;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -22,6 +25,8 @@ public class ListeTypeOperations extends Grid<TypeOperations>{
     
     Connection con;
     boolean mode; // True -> User, False -> PreUser
+    private TextField desField;
+    private TextField idField;
     
     
     
@@ -35,7 +40,7 @@ public class ListeTypeOperations extends Grid<TypeOperations>{
 
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(TypeOperations::getId).setHeader("Id");
-        this.addColumn(TypeOperations::getDes).setHeader("Des");
+        this.addColumn(TypeOperations::getDes).setHeader("Description");
         
 
         this.addComponentColumn(user -> {
@@ -50,13 +55,14 @@ public class ListeTypeOperations extends Grid<TypeOperations>{
         });
     
     
-         Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
+        Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
         /*    try {
                  save();
             } catch (SQLException ex) {
 
             }*/
         });
+        
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
@@ -72,7 +78,25 @@ public class ListeTypeOperations extends Grid<TypeOperations>{
         this.setItems(data);
 
     }
-    
+        
+    private void save() {
+        // Contrôle de saisie.
+        this.desField.setHelperText(null);
+        if (this.desField.getValue().length() > 30 || this.desField.getValue().length() == 0) {
+            this.desField.setHelperText("1-30 characters exiged ");
+        } else {
+            try {
+                int i = SqlQueryMainPart.TestTypeOperation(con, this.refField.getValue());
+                if (i == Integer.valueOf(this.idField.getValue()) || i == -1) {
+                    SqlQueryMainPart.EditTypeOperation(con, this.desField.getValue(), Integer.parseInt(this.idField.getValue()));
+                    this.getEditor().save();
+                }
+            } catch (SQLException ex) {
+                Notification.show("Server error, try again");
+            }
+        }
+
+    }
     
     
 }
