@@ -86,7 +86,7 @@ public class ListeTypeOperations extends Grid<TypeOperations>{
             this.desField.setHelperText("1-30 characters exiged ");
         } else {
             try {
-                int i = SqlQueryMainPart.TestTypeOperation(con, this.refField.getValue());
+                int i = SqlQueryMainPart.TestTypeOperation(con, this.desField.getValue());
                 if (i == Integer.valueOf(this.idField.getValue()) || i == -1) {
                     SqlQueryMainPart.EditTypeOperation(con, this.desField.getValue(), Integer.parseInt(this.idField.getValue()));
                     this.getEditor().save();

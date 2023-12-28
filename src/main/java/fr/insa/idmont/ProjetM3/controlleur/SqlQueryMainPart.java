@@ -223,7 +223,7 @@ public class SqlQueryMainPart {
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
                 + " from Ttype_operation "
-                + " where ref = ?")) {
+                + " where des = ?")) {
             pst.setString(1, type_operation);
             ResultSet res = pst.executeQuery();
             if (res.next()) {
