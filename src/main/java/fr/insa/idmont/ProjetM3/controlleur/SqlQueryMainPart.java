@@ -204,7 +204,7 @@ public class SqlQueryMainPart {
 
         }
     }
-
+    
     // ------------------------------------ Machine :
     public static List<TypeOperations> GetTO(Connection con) throws SQLException {
         ArrayList<TypeOperations> liste = new ArrayList<>();

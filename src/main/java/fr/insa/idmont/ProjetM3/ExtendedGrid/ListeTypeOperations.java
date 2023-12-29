@@ -37,7 +37,8 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
 
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(TypeOperations::getId).setHeader("Id");
-        this.addColumn(TypeOperations::getDes).setHeader("Des");
+        this.addColumn(TypeOperations::getDes).setHeader("Description");
+        
 
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
