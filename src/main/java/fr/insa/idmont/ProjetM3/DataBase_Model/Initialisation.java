@@ -28,10 +28,8 @@ public class Initialisation {
             String pw = "52686b49";
             Connection con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, user, pw);
             con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-            System.out.println("Réussite de la connexcion");
             return con;
         } catch (SQLException ex) {
-            System.out.println("Echec de la connexcion");
             return null;
         }
     }

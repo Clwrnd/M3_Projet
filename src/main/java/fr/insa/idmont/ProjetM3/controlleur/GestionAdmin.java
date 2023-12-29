@@ -21,8 +21,9 @@ import java.util.List;
  *
  * @author cidmo
  */
-public class GestionAdmin {        
-        GestionUser viewGest;
+public class GestionAdmin {
+
+    GestionUser viewGest;
 
     public static List<Utilisateur> GetPreUser(Connection con) {
         ArrayList<Utilisateur> liste = new ArrayList<>();
@@ -38,8 +39,6 @@ public class GestionAdmin {
     }
 
     //Différents costructeurs des controleurs de la partie principale:
-
-
     public GestionAdmin(GestionUser vienGest) {
         this.viewGest = vienGest;
     }
@@ -96,7 +95,7 @@ public class GestionAdmin {
                 pst.setInt(1, iteraeur.next().getId());
                 pst.executeUpdate();
             } catch (SQLException ex) {
-
+                throw ex;
             }
         }
     }
@@ -152,7 +151,7 @@ public class GestionAdmin {
         }
     }
 
-    public void DeletePreUser() {
+    public void DeletePreUser() throws SQLException {
         int i;
         Iterator<Utilisateur> iteraeur = this.viewGest.getTablePreUser().getSelectedItems().iterator();
         while (iteraeur.hasNext()) {
@@ -163,7 +162,7 @@ public class GestionAdmin {
                 pst.setInt(1, iteraeur.next().getId());
                 pst.executeUpdate();
             } catch (SQLException ex) {
-
+                throw ex;
             }
         }
     }
@@ -200,8 +199,8 @@ public class GestionAdmin {
 
         }
     }
-    
-     public void goMainContent() {
+
+    public void goMainContent() {
         this.viewGest.getMain().removeAll();
         this.viewGest.getMain().add(new InterfacePrinc(this.viewGest.getMain()));
     }

@@ -1,12 +1,12 @@
 package fr.insa.idmont.ProjetM3.views;
 
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -23,13 +23,14 @@ public class InterfacePrinc extends AppLayout {
     // Constructeur de l'interface principale
     public InterfacePrinc(MainView mainn) {
 
-        // Initialisation de l'AppLayout
+        // Initialisation de l'AppLayout    
         DrawerToggle toggle = new DrawerToggle();
         H4 title = new H4("Ligne de production");
         Tab Machine = new Tab(VaadinIcon.HAMMER.create(), new Span("Machines")); // :0  
         Tab Produit = new Tab(VaadinIcon.CART.create(), new Span("Produits"));   // :1
-        Tab Administration = new Tab(VaadinIcon.USER.create(), new Span("Administration")); // :2
-        Tabs tabs = new Tabs(Machine, Produit, Administration);
+        Tab TypeOp = new Tab(VaadinIcon.AUTOMATION.create(), new Span("Type d'opérations")); //2
+        Tab Administration = new Tab(VaadinIcon.USER.create(), new Span("Administration")); // :3
+        Tabs tabs = new Tabs(Machine, Produit, TypeOp, Administration);
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
 
         addToDrawer(tabs);
@@ -38,7 +39,6 @@ public class InterfacePrinc extends AppLayout {
         getElement().getStyle().set("width", "100%");
         this.setPrimarySection(Section.NAVBAR);
 
-        
         //Création de l'interface:
         this.main = mainn;
         this.controlleur = new MainContent(this);
@@ -51,15 +51,22 @@ public class InterfacePrinc extends AppLayout {
 
         Span permState = new Span(this.getMain().getInfoSess().getUtilActuel().get().getAutorisation().toString());
         permState.getElement().getThemeList().add("badge primary");
-               
+
         Checkbox themeToggle = new Checkbox("");
         themeToggle.addValueChangeListener(e -> {
             setTheme(e.getValue());
         });
-        
-        HorizontalLayout hl3 = new HorizontalLayout(permState,new H4("|"),VaadinIcon.MOON.create(),themeToggle);
+
+        HorizontalLayout hl3 = new HorizontalLayout(permState, new H4("|"), VaadinIcon.MOON.create(), themeToggle);
         hl3.getStyle().set("margin-left", "auto");
         hl3.getStyle().set("margin-right", "5px");
+
+        addToDrawer(logOutButton);
+        logOutButton.setWidth(50, Unit.PIXELS);
+        logOutButton.getStyle().set("margin-top", "auto");
+        logOutButton.getStyle().set("margin-bottom", "5px");
+        logOutButton.getStyle().set("margin-left", "5px");
+        logOutButton.getStyle().set("margin-right", "auto");
 
         this.addToNavbar(hl3);
 
@@ -82,9 +89,7 @@ public class InterfacePrinc extends AppLayout {
             this.controlleur.GoToLocateInPlan();
         });
     }
-    
-    
-    
+
     private void setTheme(boolean dark) {
         var js = "document.documentElement.setAttribute('theme', $0)";
 

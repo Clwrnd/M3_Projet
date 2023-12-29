@@ -6,6 +6,7 @@ package fr.insa.idmont.ProjetM3.controlleur;
 
 import fr.insa.idmont.ProjetM3.views.AffichMachine;
 import fr.insa.idmont.ProjetM3.views.AffichProduit;
+import fr.insa.idmont.ProjetM3.views.AffichTypeOp;
 import fr.insa.idmont.ProjetM3.views.GestionUser;
 import fr.insa.idmont.ProjetM3.views.InterfacePrinc;
 import fr.insa.idmont.ProjetM3.views.LocateInPlan;
@@ -15,7 +16,6 @@ import fr.insa.idmont.ProjetM3.views.LocateInPlan;
  * @author cidmo
  */
 // Controlleur partie principale:
-
 public class MainContent {
 
     InterfacePrinc viewPrinc;
@@ -35,9 +35,13 @@ public class MainContent {
     public void GoToProduit() {
         this.viewPrinc.setContent(new AffichProduit(this.viewPrinc.getMain()));
     }
-    
+
     public void GoToMachine() {
         this.viewPrinc.setContent(new AffichMachine(this.viewPrinc.getMain()));
+    }
+
+    public void GoToTypeOp() {
+        this.viewPrinc.setContent(new AffichTypeOp(this.viewPrinc.getMain()));
     }
 
     ;
@@ -53,6 +57,9 @@ public class MainContent {
                 GoToProduit();
                 break;
             case (2):
+                GoToTypeOp();
+                break;
+            case (3):
                 GoToAdminInterface();
                 break;
 

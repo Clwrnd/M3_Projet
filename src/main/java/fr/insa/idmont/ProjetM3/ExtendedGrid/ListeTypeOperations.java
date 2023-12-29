@@ -8,8 +8,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
+import fr.insa.idmont.ProjetM3.controlleur.SqlQueryMainPart;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -18,25 +23,21 @@ import java.util.List;
  *
  * @author Henry Adèle
  */
-public class ListeTypeOperations extends Grid<TypeOperations>{
-    
-    Connection con;
-    boolean mode; // True -> User, False -> PreUser
-    
-    
-    
-    
-    // Constructeur du GRID affichant la liste des types d'opérations;
-    public ListeTypeOperations(Connection con, List<TypeOperations> data, boolean mode) throws SQLException {
-        this.con = con;
-        this.mode = mode;
+public class ListeTypeOperations extends Grid<TypeOperations> {
 
+    Connection con;
+    private TextField desField;
+    private IntegerField idField;
+
+    // Constructeur du GRID affichant la liste des types d'opérations;
+    public ListeTypeOperations(Connection con, List<TypeOperations> data) throws SQLException {
+        
+        this.con = con;
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(TypeOperations::getId).setHeader("Id");
         this.addColumn(TypeOperations::getDes).setHeader("Des");
-        
 
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
@@ -48,15 +49,27 @@ public class ListeTypeOperations extends Grid<TypeOperations>{
             });
             return editButton;
         });
-    
-    
-         Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
-        /*    try {
-                 save();
-            } catch (SQLException ex) {
 
-            }*/
+        // Initialisation de l'éditeur et associations des composants avec ce dernier:
+        this.getEditor().setBinder(new Binder<>(TypeOperations.class));
+        this.getEditor().setBuffered(true);
+
+        this.idField = new IntegerField();
+        this.idField.setReadOnly(true);
+        this.idField.setSizeFull();
+        this.getEditor().getBinder().forField(idField).bind(TypeOperations::getId, TypeOperations::setId);
+        this.getColumns().get(0).setEditorComponent(idField);
+
+        this.desField = new TextField();
+        this.desField.setWidthFull();
+        this.desField.setClassName("error");
+        this.getEditor().getBinder().forField(desField).bind(TypeOperations::getDes, TypeOperations::setDes);
+        this.getColumns().get(1).setEditorComponent(desField);
+
+        Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
+            save();
         });
+
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
@@ -72,7 +85,26 @@ public class ListeTypeOperations extends Grid<TypeOperations>{
         this.setItems(data);
 
     }
-    
-    
-    
+
+    private void save() {
+        // Contrôle de saisie.
+        this.desField.setHelperText(null);
+        if (this.desField.getValue().length() > 30 || this.desField.getValue().length() == 0) {
+            this.desField.setHelperText("1-30 characters exiged");
+        } else {
+            try {
+                int i = SqlQueryMainPart.TestTO(con, this.desField.getValue());
+                if (i == this.idField.getValue() || i == -1) {
+                    SqlQueryMainPart.EditTO(con, this.desField.getValue(), this.idField.getValue());
+                    this.getEditor().save();
+                } else {
+                    this.desField.setHelperText("Operation type already exists");
+                }
+            } catch (SQLException ex) {
+                Notification.show("Server error, try again");
+            }
+        }
+
+    }
+
 }

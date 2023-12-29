@@ -77,6 +77,7 @@ public class ListeMachines extends Grid<Machines> {
         this.getColumns().get(2).setEditorComponent(desField);
         
         this.puisField = new IntegerField();
+        this.puisField.setMax(999999999);
         this.puisField.setWidthFull();
         this.puisField.setClassName("error");
         this.getEditor().getBinder().forField(puisField).bind(Machines::getPuissance, Machines::setPuissance);
@@ -113,7 +114,7 @@ public class ListeMachines extends Grid<Machines> {
         } else if (this.desField.getValue().length() > 30 || this.desField.getValue().length() == 0) {
             this.desField.setHelperText("1-30 characters exiged ");
         } else if (this.puisField.isEmpty()) {
-            this.puisField.setHelperText("Enter a value");
+            this.puisField.setHelperText("Enter a valid value");
         } else {
             try {
                 int i = SqlQueryMainPart.TestMachine(con, this.refField.getValue());

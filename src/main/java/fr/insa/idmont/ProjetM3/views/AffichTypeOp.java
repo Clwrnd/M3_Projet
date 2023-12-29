@@ -14,10 +14,9 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
-import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
-import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeMachines;
+import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
+import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeTypeOperations;
 import fr.insa.idmont.ProjetM3.controlleur.SqlQueryMainPart;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,15 +26,15 @@ import java.util.List;
  *
  * @author cidmo
  */
-public class AffichMachine extends VerticalLayout {
+public class AffichTypeOp extends VerticalLayout {
 
     private MainView main;
-    private ListeMachines TableMachine;
+    private ListeTypeOperations tableTO;
 
-    public AffichMachine(MainView main) {
+    public AffichTypeOp(MainView main) {
         this.main = main;
 
-        H2 titre1 = new H2("Machine");
+        H2 titre1 = new H2("Operation type");
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
@@ -46,29 +45,23 @@ public class AffichMachine extends VerticalLayout {
         Hl1.setAlignSelf(FlexComponent.Alignment.END, deleteButton1);
         Hl1.setAlignSelf(FlexComponent.Alignment.CENTER, titre1);
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
-        TextField RechercheMachine = new TextField("Search a machine");
-        RechercheMachine.setValue("Press enter");
+        TextField RechercheTO = new TextField("Search an operation type");
+        RechercheTO.setValue("Press enter");
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("New Machine");
-        TextField refAdd = new TextField("Référence");
-        refAdd.addClassName("error");
+        dialog.setHeaderTitle("New operation type");
         TextField desAdd = new TextField("Description");
         desAdd.addClassName("error");
-        IntegerField puisAdd = new IntegerField("Puissance (W)");
-        puisAdd.setMax(999999999);
-        puisAdd.addClassName("error");
         Button save = new Button("Confirm");
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
 
-        VerticalLayout Hl2 = new VerticalLayout(refAdd, desAdd, puisAdd);
-        dialog.add(Hl2);
+        dialog.add(desAdd);
 
         try {
-            this.TableMachine = new ListeMachines(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
-            this.add(Hl1, RechercheMachine, this.TableMachine);;
+            this.tableTO = new ListeTypeOperations(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
+            this.add(Hl1, RechercheTO, this.tableTO);;
         } catch (SQLException ex) {
             Notification.show("Server error, try again");
         }
@@ -77,16 +70,16 @@ public class AffichMachine extends VerticalLayout {
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
             try {
-                SqlQueryMainPart.deleteMachine(this.main.getInfoSess().getCon(), this.TableMachine.getSelectedItems().iterator());
-                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
+                SqlQueryMainPart.deleteTO(this.main.getInfoSess().getCon(), this.tableTO.getSelectedItems().iterator());
+                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
             } catch (SQLException ex) {
                 Notification.show("Try again and verify there is no constraint on this item");
             }
         });
 
-        RechercheMachine.addKeyPressListener(Key.ENTER, (e) -> {
+        RechercheTO.addKeyPressListener(Key.ENTER, (e) -> {
             try {
-                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchMachine(this.main.getInfoSess().getCon(), RechercheMachine.getValue()));
+                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchTO(this.main.getInfoSess().getCon(), RechercheTO.getValue()));
             } catch (SQLException ex) {
                 Notification.show("server error, try again");
 
@@ -96,25 +89,19 @@ public class AffichMachine extends VerticalLayout {
 
         addButton.addClickListener((e) -> dialog.open());
         save.addClickListener((e) -> {
-            refAdd.setHelperText(null);
             desAdd.setHelperText(null);
-            puisAdd.setHelperText(null);
 
-            if (refAdd.getValue().length() > 30 || refAdd.getValue().length() == 0) {
-                refAdd.setHelperText("1-30 characters exiged");
-            } else if (desAdd.getValue().length() > 30 || desAdd.getValue().length() == 0) {
-                desAdd.setHelperText("1-30 characters exiged ");
-            } else if (puisAdd.isEmpty()) {
-                puisAdd.setHelperText("Enter a valid value");
+            if (desAdd.getValue().length() > 30 || desAdd.getValue().length() == 0) {
+                desAdd.setHelperText("1-30 characters exiged");
             } else {
                 try {
-                    int i = SqlQueryMainPart.TestMachine(this.main.getInfoSess().getCon(), refAdd.getValue());
+                    int i = SqlQueryMainPart.TestTO(this.main.getInfoSess().getCon(), desAdd.getValue());
                     if (i == -1) {
-                        SqlQueryMainPart.addMachine(this.main.getInfoSess().getCon(), refAdd.getValue(), desAdd.getValue(), puisAdd.getValue());
+                        SqlQueryMainPart.addTO(this.main.getInfoSess().getCon(), desAdd.getValue());
                         dialog.close();
-                        refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
+                        refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
                     } else {
-                        refAdd.setHelperText("Machine already exists");
+                        desAdd.setHelperText("Operation type already exists");
                     }
                 } catch (SQLException ex) {
                     Notification.show("Server error, try again");
@@ -125,10 +112,10 @@ public class AffichMachine extends VerticalLayout {
 
     }
 
-    private void refreshTableMachine(Connection con, List<Machines> data) throws SQLException {
-        this.remove(this.TableMachine);
-        this.TableMachine = new ListeMachines(con, data);
-        this.add(this.TableMachine);
+    private void refreshTableTO(Connection con, List<TypeOperations> data) throws SQLException {
+        this.remove(this.tableTO);
+        this.tableTO = new ListeTypeOperations(con, data);
+        this.add(this.tableTO);
     }
 
 }

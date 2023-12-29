@@ -75,7 +75,7 @@ public class AffichProduit extends VerticalLayout {
                 SqlQueryMainPart.deleteProd(this.main.getInfoSess().getCon(), this.TableProduit.getSelectedItems().iterator());
                 refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()));
             } catch (SQLException ex) {
-                Notification.show("server error, try again");
+                Notification.show("Try again and verify there is no constraint on this item");
             }
         });
 
