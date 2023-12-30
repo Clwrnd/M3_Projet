@@ -28,9 +28,6 @@ public class MainContent {
         this.viewPrinc.setContent(new GestionUser(this.viewPrinc.getMain()));
     }
 
-    public void GoToLocateInPlan() {
-        this.viewPrinc.setContent(new LocateInPlan(this.viewPrinc.getMain()));
-    }
 
     public void GoToProduit() {
         this.viewPrinc.setContent(new AffichProduit(this.viewPrinc.getMain()));

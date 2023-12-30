@@ -4,49 +4,143 @@
  */
 package fr.insa.idmont.ProjetM3.views;
 
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.DomEvent;
+import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.shared.Registration;
 import java.io.InputStream;
-
-
-
-
 
 /**
  *
  * @author cidmo
  */
 public class LocateInPlan extends HorizontalLayout {
+
     private MainView main;
+    private Image plan;
+    private AffichMachine parent;
 
-    public LocateInPlan(MainView main) {
+    public LocateInPlan(MainView main, AffichMachine parent) {
         this.main = main;
-      
-        MemoryBuffer memoryBuffer = new MemoryBuffer();
-        Upload dropEnabledUpload = new Upload(memoryBuffer);
-       // dropEnabledUpload.setAcceptedFileTypes("image/jpg", "image/png");
-        dropEnabledUpload.addAllFinishedListener(event -> {
-        InputStream inputStream = memoryBuffer.getInputStream();
-        Image image = new Image(new StreamResource(memoryBuffer.getFileName(), () -> {;
-            try {
-                return inputStream;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }), "alt text");
-      add(image);     
-}); 
-        
-         //Image image2 = new Image(image, "My Alt Image");
-         this.add(dropEnabledUpload);
-        
+        this.parent = parent;
 
-        
+        MemoryBuffer memoryBuffer = new MemoryBuffer();
+        MyUpload uploadBut = new MyUpload();
+        uploadBut.setReceiver(memoryBuffer);
+        uploadBut.setUploadButton(new Button("Upload plan"));
+        uploadBut.setAcceptedFileTypes("image/JPEG", "image/png");
+
+        NumberField X = new NumberField("Position X:");
+        X.setWidth(100, Unit.PIXELS);
+        NumberField Y = new NumberField("Positon Y:");
+        Y.setWidth(100, Unit.PIXELS);
+        X.setReadOnly(true);
+        Y.setReadOnly(true);
+
+        NumberField Xclick = new NumberField("Clic X:");
+        Xclick.setWidth(100, Unit.PIXELS);
+        NumberField Yclick = new NumberField("Clic Y:");
+        Yclick.setWidth(100, Unit.PIXELS);
+        Xclick.setReadOnly(true);
+        Yclick.setReadOnly(true);
+
+        HorizontalLayout coordinateMoving = new HorizontalLayout(X, Y);
+        HorizontalLayout coordinateClick = new HorizontalLayout(Xclick, Yclick);
+        coordinateClick.setVisible(false);
+        coordinateMoving.setVisible(false);
+        TextField des = new TextField("Location");
+        des.addClassName("error");
+        Hr hr1 = new Hr();
+        hr1.setVisible(false);
+        Hr hr2 = new Hr();
+        hr2.setVisible(false);
+        VerticalLayout info = new VerticalLayout(des, new Hr(), uploadBut, hr1, coordinateMoving, hr2, coordinateClick);
+
+        this.add(info);
+
+        uploadBut.addAllFinishedListener(event -> {
+            InputStream inputStream = memoryBuffer.getInputStream();
+            plan = new Image(new StreamResource(memoryBuffer.getFileName(), () -> {;
+                try {
+                    return inputStream;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }), "");
+            add(plan);
+            this.plan.addClassName("onPlan");
+            coordinateMoving.setVisible(true);
+            hr1.setVisible(true);
+            hr2.setVisible(true);
+
+            this.plan.getElement().addEventListener("mousemove", (e) -> {
+                X.setValue(Double.valueOf(e.getEventData().getNumber("event.offsetX")));
+                Y.setValue(Double.valueOf(e.getEventData().getNumber("event.offsetY")));
+            }).addEventData("event.offsetX")
+                    .addEventData("event.offsetY");
+
+            this.plan.getElement().addEventListener("click", (e) -> {
+                coordinateClick.setVisible(true);
+                Xclick.setValue(Double.valueOf(e.getEventData().getNumber("event.offsetX")));
+                Yclick.setValue(Double.valueOf(e.getEventData().getNumber("event.offsetY")));
+            }).addEventData("event.offsetX")
+                    .addEventData("event.offsetY");
+
+        });
+
+        uploadBut.addFileRemoveListener((e) -> {
+            hr1.setVisible(false);
+            hr2.setVisible(false);
+            coordinateClick.setVisible(false);
+            coordinateMoving.setVisible(false);
+            this.remove(plan);
+        });
+
+        this.parent.getSave2().addClickListener((e) -> {
+            des.setHelperText(null);
+            if (des.isEmpty() || des.getValue().length() > 30) {
+                des.setHelperText("1-30 characters exiged");
+            } else if (Xclick.isEmpty() || Yclick.isEmpty()) {
+                Notification.show("Locate the machine");
+            } else {
+                this.parent.getClickX().setValue(Xclick.getValue()); 
+                this.parent.getClickY().setValue(Yclick.getValue()); 
+                this.parent.getDes().setValue(des.getValue());  
+                this.parent.getInfo().setVisible(true);
+                
+                this.parent.getDialog2().close();
+            }
+        });
+
     }
-    
-    
+
+    class MyUpload extends Upload {
+
+        Registration addFileRemoveListener(ComponentEventListener<FileRemoveEvent> listener) {
+            return super.addListener(FileRemoveEvent.class, listener);
+        }
+    }
+
+    @DomEvent("file-remove")
+    public static class FileRemoveEvent extends ComponentEvent<Upload> {
+
+        public FileRemoveEvent(Upload source, boolean fromClient) {
+            super(source, fromClient);
+        }
+    }
+
 }

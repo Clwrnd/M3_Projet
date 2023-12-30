@@ -27,7 +27,7 @@ import java.util.List;
  */
 // Affichage des utilisateurs
 public class ListeUtilisateur extends Grid<Utilisateur> {
-
+    
     private TextField userField;
     private PasswordField pwField;
     private ComboBox<Autorisation> selecAutori;
@@ -39,7 +39,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
     public ListeUtilisateur(Connection con, List<Utilisateur> data, boolean mode) throws SQLException {
         this.con = con;
         this.mode = mode;
-
+        
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
         // Ajout des colonnes et des composants d'éditions:
@@ -47,7 +47,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.addColumn(Utilisateur::getNom).setHeader("Username");
         this.addColumn(Utilisateur::getPass).setHeader("Passwrod");
         this.addColumn(Utilisateur::getAutorisation).setHeader("Permissions");
-
+        
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {
@@ -62,63 +62,68 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         // Initialisation de l'éditeur et associations des composants avec ce dernier:
         this.getEditor().setBinder(new Binder<>(Utilisateur.class));
         this.getEditor().setBuffered(true);
-
+        
         this.userField = new TextField();
         this.userField.setWidthFull();
         this.userField.setClassName("error");
         this.getEditor().getBinder().forField(userField).bind(Utilisateur::getNom, Utilisateur::setNom);
         this.getColumns().get(1).setEditorComponent(userField);
-
+        
         this.pwField = new PasswordField();
         this.pwField.setWidthFull();
         this.pwField.setClassName("error");
         this.getEditor().getBinder().forField(pwField).bind(Utilisateur::getPass, Utilisateur::setPass);
         this.getColumns().get(2).setEditorComponent(pwField);
-
+        
         this.selecAutori = new ComboBox<>();
         this.selecAutori.setItems(Autorisation.values());
         this.selecAutori.setWidthFull();
+        this.selecAutori.setAllowCustomValue(false);
+        this.selecAutori.addClassName("error");
         this.getEditor().getBinder().forField(selecAutori).bind(Utilisateur::getAutorisation, Utilisateur::setAutorisation);
         this.getColumns().get(3).setEditorComponent(selecAutori);
-
+        
         this.id = new TextField();
         this.id.setReadOnly(true);
         this.id.setSizeFull();
         this.getEditor().getBinder().forField(id).bind(Utilisateur::getIdString, Utilisateur::setIdString);
         this.getColumns().get(0).setEditorComponent(id);
-
+        
         Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
             try {
                 save();
             } catch (SQLException ex) {
-
+                
             }
         });
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
         saveBut.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
-
+        
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
         this.getColumns().get(4).setEditorComponent(actions);
-
+        
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
         this.getColumns().get(3).setSortable(true);
-
+        
         this.setItems(data);
-
+        
     }
-
+    
     private void save() throws SQLException {
         // Contrôle de saisie.
         this.userField.setHelperText(null);
         this.pwField.setHelperText(null);
+        this.selecAutori.setHelperText(null);
         if (this.userField.getValue().length() > 30 || this.userField.getValue().length() == 0) {
             this.userField.setHelperText("1-30 characters exiged");
         } else if (this.pwField.getValue().length() < 6 || this.pwField.getValue().length() > 50) {
             this.pwField.setHelperText("6-50 characters exiged ");
+        } else if (this.selecAutori.isEmpty()) {
+            this.selecAutori.setHelperText("Enter a value");
         } else {
             try {
                 int i = GestionAdmin.TestUsername(con, this.userField.getValue());
@@ -136,7 +141,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
                 Notification.show("Server error, try again");
             }
         }
-
+        
     }
-
+    
 }
