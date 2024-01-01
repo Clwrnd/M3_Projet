@@ -45,14 +45,14 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(Utilisateur::getId).setHeader("Id");
         this.addColumn(Utilisateur::getNom).setHeader("Username");
-        this.addColumn(Utilisateur::getPass).setHeader("Passwrod");
+        this.addColumn(Utilisateur::getPass).setHeader("Password");
         this.addColumn(Utilisateur::getAutorisation).setHeader("Permissions");
         
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
-                    this.getEditor().cancel();
+                    this.getEditor().cancel(); 
                 }
                 this.getEditor().editItem(user);
             });
@@ -96,6 +96,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
                 
             }
         });
+        
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);

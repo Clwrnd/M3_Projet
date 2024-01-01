@@ -292,5 +292,38 @@ public class SqlQueryMainPart {
 
         }
     }
+    
+    // ------------------------------------ Realise :
+
+    public static int TestRealise(Connection con, String idMachine) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "select *"
+                + " from Trealise"
+                + " where id_machine = ?")) {
+            pst.setString(1, idMachine);
+            ResultSet res = pst.executeQuery();
+            if (res.next()) {
+                return res.getInt(1);
+            } else {
+                return -1;
+            }
+        } catch (SQLException ex) {
+            return -1;
+        }
+    }
+    
+    public static void EditRealise(Connection con, int idTypeOperation, float duree, int idMachine) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "update Tproduits  "
+                + " set id_type=?,duree=?"
+                + " where id_machine = ?")) {
+            pst.setInt(1, idTypeOperation);
+            pst.setFloat(2, duree);
+            pst.setInt(3, idMachine);
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+        }
+    }
+    
 
 }
