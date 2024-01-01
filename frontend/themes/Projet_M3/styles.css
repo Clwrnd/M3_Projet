@@ -10,4 +10,12 @@ vaadin-integer-field.error > [slot="helper"]{
 }
 
 
+vaadin-combo-box.error > [slot="helper"] {
+    color: red;
+}
+
+.onPlan{
+   cursor: crosshair;
+}
+
 

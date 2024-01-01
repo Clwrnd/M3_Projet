@@ -44,11 +44,6 @@ public class InterfacePrinc extends AppLayout {
         this.controlleur = new MainContent(this);
         LgOutButton logOutButton = new LgOutButton(this.main);
 
-        Button AdminBt = new Button("Admin options");
-        AdminBt.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        Button locaMach = new Button("Locate machine");
-        AdminBt.setVisible(false);
-
         Span permState = new Span(this.getMain().getInfoSess().getUtilActuel().get().getAutorisation().toString());
         permState.getElement().getThemeList().add("badge primary");
 
@@ -73,7 +68,7 @@ public class InterfacePrinc extends AppLayout {
         // Ajout/Mise en visibilité des éléments spécifique aux autorisation      
         switch (this.main.getInfoSess().getUtilActuel().get().getAutorisation()) {
             case ADMINISTRATION:
-                AdminBt.setVisible(true);
+                
                 break;
             case MODIFICATION:
                 break;
@@ -85,9 +80,7 @@ public class InterfacePrinc extends AppLayout {
             this.controlleur.setContent(tabs.getSelectedIndex());
         });
 
-        locaMach.addClickListener((e) -> {
-            this.controlleur.GoToLocateInPlan();
-        });
+
     }
 
     private void setTheme(boolean dark) {
