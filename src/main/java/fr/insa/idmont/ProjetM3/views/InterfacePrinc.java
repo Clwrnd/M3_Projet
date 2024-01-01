@@ -3,8 +3,6 @@ package fr.insa.idmont.ProjetM3.views;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
@@ -19,11 +17,14 @@ public class InterfacePrinc extends AppLayout {
 
     private MainView main;
     private MainContent controlleur;
+    private final Checkbox themeToggle;
 
     // Constructeur de l'interface principale
     public InterfacePrinc(MainView mainn) {
 
-        // Initialisation de l'AppLayout    
+        this.addClassName("x");
+        
+        // Initialisation de l'AppLayout            
         DrawerToggle toggle = new DrawerToggle();
         H4 title = new H4("Ligne de production");
         Tab Machine = new Tab(VaadinIcon.HAMMER.create(), new Span("Machines")); // :0  
@@ -47,7 +48,7 @@ public class InterfacePrinc extends AppLayout {
         Span permState = new Span(this.getMain().getInfoSess().getUtilActuel().get().getAutorisation().toString());
         permState.getElement().getThemeList().add("badge primary");
 
-        Checkbox themeToggle = new Checkbox("");
+        this.themeToggle = new Checkbox("");
         themeToggle.addValueChangeListener(e -> {
             setTheme(e.getValue());
         });

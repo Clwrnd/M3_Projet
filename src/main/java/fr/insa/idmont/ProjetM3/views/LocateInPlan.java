@@ -36,13 +36,13 @@ public class LocateInPlan extends HorizontalLayout {
     public LocateInPlan(MainView main, AffichMachine parent) {
         this.main = main;
         this.parent = parent;
-
+                
         MemoryBuffer memoryBuffer = new MemoryBuffer();
         MyUpload uploadBut = new MyUpload();
         uploadBut.setReceiver(memoryBuffer);
         uploadBut.setUploadButton(new Button("Upload plan"));
         uploadBut.setAcceptedFileTypes("image/JPEG", "image/png");
-
+ 
         NumberField X = new NumberField("Position X:");
         X.setWidth(100, Unit.PIXELS);
         NumberField Y = new NumberField("Positon Y:");
@@ -117,12 +117,14 @@ public class LocateInPlan extends HorizontalLayout {
             } else if (Xclick.isEmpty() || Yclick.isEmpty()) {
                 Notification.show("Locate the machine");
             } else {
-                this.parent.getClickX().setValue(Xclick.getValue()); 
-                this.parent.getClickY().setValue(Yclick.getValue()); 
-                this.parent.getDes().setValue(des.getValue());  
+                this.parent.getClickX().setValue(Xclick.getValue()); this.parent.setXc(Xclick.getValue());
+                this.parent.getClickY().setValue(Yclick.getValue()); this.parent.setYc(Yclick.getValue());
+                this.parent.getDes().setValue(des.getValue()); this.parent.setDesC(des.getValue());
                 this.parent.getInfo().setVisible(true);
                 
                 this.parent.getDialog2().close();
+                
+                Xclick.setValue(null); Yclick.setValue(null); des.setValue("");
             }
         });
 

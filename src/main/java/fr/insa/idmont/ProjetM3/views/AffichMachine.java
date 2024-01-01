@@ -10,7 +10,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -36,13 +35,20 @@ public class AffichMachine extends VerticalLayout {
     private ListeMachines TableMachine;
     private Button save2;
     private TextField des;
-    private NumberField clickX ;
+    private NumberField clickX;
     private NumberField clickY;
     private Dialog dialog2;
     private HorizontalLayout info;
+    private Button locateBut;
+    private double Xc;
+    private double Yc;
+    private String desC;
 
     public AffichMachine(MainView main) {
         this.main = main;
+        this.Xc = -1;
+        this.Yc = -1;
+        this.desC = null;
 
         H2 titre1 = new H2("Machine");
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
@@ -67,12 +73,12 @@ public class AffichMachine extends VerticalLayout {
         IntegerField puisAdd = new IntegerField("Puissance (W)");
         puisAdd.setMax(999999999);
         puisAdd.addClassName("error");
-        Button locateBut = new Button("Localisation",VaadinIcon.BULLSEYE.create());
+        this.locateBut = new Button("Localisation", VaadinIcon.BULLSEYE.create());
         Button save = new Button("Confirm");
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
-        
+
         this.des = new TextField("Specification");
         this.des.setReadOnly(true);
         this.clickX = new NumberField("X:");
@@ -80,22 +86,20 @@ public class AffichMachine extends VerticalLayout {
         this.clickY = new NumberField("Y:");
         this.clickY.setWidth(100, Unit.PIXELS);
         this.clickX.setReadOnly(true);
-        this. clickY.setReadOnly(true);        
+        this.clickY.setReadOnly(true);
         this.info = new HorizontalLayout(getDes(), getClickX(), getClickY());
 
         VerticalLayout Hl2 = new VerticalLayout(refAdd, desAdd, puisAdd, locateBut, getInfo());
         info.setVisible(false);
-        Hl2.setAlignSelf(Alignment.CENTER, refAdd, desAdd, puisAdd,locateBut);
+        Hl2.setAlignSelf(Alignment.CENTER, refAdd, desAdd, puisAdd, locateBut);
         dialog.add(Hl2);
-        
+
         this.dialog2 = new Dialog();
         dialog2.setHeaderTitle("Locate");
         this.save2 = new Button("Confirm");
         Button cancelButton2 = new Button("Cancel", e -> getDialog2().close());
         dialog2.getFooter().add(cancelButton2);
         dialog2.getFooter().add(save2);
-        
-        
 
         try {
             this.TableMachine = new ListeMachines(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
@@ -126,6 +130,7 @@ public class AffichMachine extends VerticalLayout {
         });
 
         addButton.addClickListener((e) -> dialog.open());
+
         save.addClickListener((e) -> {
             refAdd.setHelperText(null);
             desAdd.setHelperText(null);
@@ -137,6 +142,8 @@ public class AffichMachine extends VerticalLayout {
                 desAdd.setHelperText("1-30 characters exiged ");
             } else if (puisAdd.isEmpty()) {
                 puisAdd.setHelperText("Enter a valid value");
+            } else if (this.Xc == -1 || this.Yc == -1 || this.desC == null) {
+                Notification.show("Add a location !");
             } else {
                 try {
                     int i = SqlQueryMainPart.TestMachine(this.main.getInfoSess().getCon(), refAdd.getValue());
@@ -144,6 +151,10 @@ public class AffichMachine extends VerticalLayout {
                         SqlQueryMainPart.addMachine(this.main.getInfoSess().getCon(), refAdd.getValue(), desAdd.getValue(), puisAdd.getValue());
                         dialog.close();
                         refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
+                        this.Xc = -1;
+                        this.Yc = -1;
+                        this.desC = null;
+                        this.info.setVisible(false);
                     } else {
                         refAdd.setHelperText("Machine already exists");
                     }
@@ -156,7 +167,7 @@ public class AffichMachine extends VerticalLayout {
 
         locateBut.addClickListener((e) -> {
             dialog2.removeAll();
-            dialog2.add(new LocateInPlan(this.main,this));
+            dialog2.add(new LocateInPlan(this.main, this));
             dialog2.open();
         });
 
@@ -208,6 +219,27 @@ public class AffichMachine extends VerticalLayout {
      */
     public HorizontalLayout getInfo() {
         return info;
+    }
+
+    /**
+     * @param Xc the Xc to set
+     */
+    public void setXc(double Xc) {
+        this.Xc = Xc;
+    }
+
+    /**
+     * @param Yc the Yc to set
+     */
+    public void setYc(double Yc) {
+        this.Yc = Yc;
+    }
+
+    /**
+     * @param desC the desC to set
+     */
+    public void setDesC(String desC) {
+        this.desC = desC;
     }
 
 }
