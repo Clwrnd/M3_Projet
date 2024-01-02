@@ -1,4 +1,4 @@
-package fr.insa.idmont.ProjetM3.views;
+package fr.insa.idmont.ProjetM3.View;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

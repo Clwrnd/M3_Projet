@@ -1,10 +1,10 @@
-package fr.insa.idmont.ProjetM3.controlleur;
+package fr.insa.idmont.ProjetM3.Controleur;
 
 import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
-import fr.insa.idmont.ProjetM3.views.Identification;
-import fr.insa.idmont.ProjetM3.views.InterfacePrinc;
-import fr.insa.idmont.ProjetM3.views.FirstConnexionForm;
+import fr.insa.idmont.ProjetM3.View.Identification;
+import fr.insa.idmont.ProjetM3.View.InterfacePrinc;
+import fr.insa.idmont.ProjetM3.View.FirstConnexionForm;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -1,4 +1,4 @@
-package fr.insa.idmont.ProjetM3.views;
+package fr.insa.idmont.ProjetM3.View;
 
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;

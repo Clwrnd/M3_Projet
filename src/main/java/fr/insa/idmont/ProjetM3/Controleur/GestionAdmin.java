@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fr.insa.idmont.ProjetM3.controlleur;
+package fr.insa.idmont.ProjetM3.Controleur;
 
 import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
-import fr.insa.idmont.ProjetM3.views.GestionUser;
-import fr.insa.idmont.ProjetM3.views.InterfacePrinc;
+import fr.insa.idmont.ProjetM3.Affichage.GestionUser;
+import fr.insa.idmont.ProjetM3.View.InterfacePrinc;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

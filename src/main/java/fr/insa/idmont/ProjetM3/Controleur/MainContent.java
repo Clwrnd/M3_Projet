@@ -2,14 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fr.insa.idmont.ProjetM3.controlleur;
+package fr.insa.idmont.ProjetM3.Controleur;
 
-import fr.insa.idmont.ProjetM3.views.AffichMachine;
-import fr.insa.idmont.ProjetM3.views.AffichProduit;
-import fr.insa.idmont.ProjetM3.views.AffichTypeOp;
-import fr.insa.idmont.ProjetM3.views.GestionUser;
-import fr.insa.idmont.ProjetM3.views.InterfacePrinc;
-import fr.insa.idmont.ProjetM3.views.LocateInPlan;
+import fr.insa.idmont.ProjetM3.Affichage.AffichMachine;
+import fr.insa.idmont.ProjetM3.Affichage.AffichProduit;
+import fr.insa.idmont.ProjetM3.Affichage.AffichRealise;
+import fr.insa.idmont.ProjetM3.Affichage.AffichTypeOp;
+import fr.insa.idmont.ProjetM3.Affichage.GestionUser;
+import fr.insa.idmont.ProjetM3.View.InterfacePrinc;
+import fr.insa.idmont.ProjetM3.View.LocateInPlan;
 
 /**
  *
@@ -28,7 +29,6 @@ public class MainContent {
         this.viewPrinc.setContent(new GestionUser(this.viewPrinc.getMain()));
     }
 
-
     public void GoToProduit() {
         this.viewPrinc.setContent(new AffichProduit(this.viewPrinc.getMain()));
     }
@@ -39,6 +39,10 @@ public class MainContent {
 
     public void GoToTypeOp() {
         this.viewPrinc.setContent(new AffichTypeOp(this.viewPrinc.getMain()));
+    }
+
+    public void GoToRealise() {
+        this.viewPrinc.setContent(new AffichRealise(this.viewPrinc.getMain()));
     }
 
     ;
@@ -57,6 +61,9 @@ public class MainContent {
                 GoToTypeOp();
                 break;
             case (3):
+                GoToRealise();
+                break;
+            case (4):
                 GoToAdminInterface();
                 break;
 

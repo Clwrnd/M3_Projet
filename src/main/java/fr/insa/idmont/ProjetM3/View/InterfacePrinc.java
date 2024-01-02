@@ -1,4 +1,4 @@
-package fr.insa.idmont.ProjetM3.views;
+package fr.insa.idmont.ProjetM3.View;
 
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.theme.lumo.Lumo;
-import fr.insa.idmont.ProjetM3.controlleur.MainContent;
+import fr.insa.idmont.ProjetM3.Controleur.MainContent;
 
 public class InterfacePrinc extends AppLayout {
 
@@ -30,8 +30,9 @@ public class InterfacePrinc extends AppLayout {
         Tab Machine = new Tab(VaadinIcon.HAMMER.create(), new Span("Machines")); // :0  
         Tab Produit = new Tab(VaadinIcon.CART.create(), new Span("Produits"));   // :1
         Tab TypeOp = new Tab(VaadinIcon.AUTOMATION.create(), new Span("Type d'opérations")); //2
-        Tab Administration = new Tab(VaadinIcon.USER.create(), new Span("Administration")); // :3
-        Tabs tabs = new Tabs(Machine, Produit, TypeOp, Administration);
+        Tab Realise = new Tab(VaadinIcon.TWIN_COL_SELECT.create(),new Span("Réalisation machine")); //3
+        Tab Administration = new Tab(VaadinIcon.USER.create(), new Span("Administration")); // :4
+        Tabs tabs = new Tabs(Machine, Produit, TypeOp, Realise,Administration);
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
 
         addToDrawer(tabs);

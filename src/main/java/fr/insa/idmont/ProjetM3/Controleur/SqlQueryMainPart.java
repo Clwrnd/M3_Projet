@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fr.insa.idmont.ProjetM3.controlleur;
+package fr.insa.idmont.ProjetM3.Controleur;
 
 import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
@@ -205,7 +205,7 @@ public class SqlQueryMainPart {
         }
     }
     
-    // ------------------------------------ Machine :
+    // ------------------------------------ Type Opérations :
     public static List<TypeOperations> GetTO(Connection con) throws SQLException {
         ArrayList<TypeOperations> liste = new ArrayList<>();
         try (Statement st = con.createStatement()) {

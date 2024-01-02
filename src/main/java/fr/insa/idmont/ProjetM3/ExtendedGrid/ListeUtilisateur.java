@@ -15,7 +15,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Autorisation;
-import fr.insa.idmont.ProjetM3.controlleur.GestionAdmin;
+import fr.insa.idmont.ProjetM3.Controleur.GestionAdmin;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import java.sql.Connection;
 import java.sql.SQLException;

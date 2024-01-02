@@ -13,7 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
-import fr.insa.idmont.ProjetM3.controlleur.SqlQueryMainPart;
+import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;

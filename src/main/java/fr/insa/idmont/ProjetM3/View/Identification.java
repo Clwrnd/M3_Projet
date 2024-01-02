@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package fr.insa.idmont.ProjetM3.views;
+package fr.insa.idmont.ProjetM3.View;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -12,7 +12,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import fr.insa.idmont.ProjetM3.controlleur.Connexion;
+import fr.insa.idmont.ProjetM3.Controleur.Connexion;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import java.sql.SQLException;
 import java.util.Optional;
