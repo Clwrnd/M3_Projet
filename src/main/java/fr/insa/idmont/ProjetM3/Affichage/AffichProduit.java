@@ -46,7 +46,7 @@ public class AffichProduit extends VerticalLayout {
         Hl1.setAlignSelf(Alignment.CENTER, titre1);
         Hl1.setAlignSelf(Alignment.START, addButton);
         TextField RechercheProduit = new TextField("Search a product");
-        RechercheProduit.setValue("Press enter");
+        RechercheProduit.setPlaceholder("Press enter");
 
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("New Product");

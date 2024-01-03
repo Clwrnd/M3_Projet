@@ -9,13 +9,21 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  * @author Henry Adèle
  */
 public class TypeOperations {
-    
+
     private int id;
     private String des;
+
+    @Override
+    public String toString() {
+        return des;
+    }
 
     public TypeOperations(int id, String des) {
         this.id = id;
         this.des = des;
+    }
+
+    public TypeOperations() {
     }
 
     /**
@@ -45,9 +53,5 @@ public class TypeOperations {
     public void setDes(String des) {
         this.des = des;
     }
-    
-    
-    
-    
-    
+
 }

@@ -64,7 +64,7 @@ public class AffichMachine extends VerticalLayout {
         Hl1.setAlignSelf(FlexComponent.Alignment.CENTER, titre1);
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
         TextField RechercheMachine = new TextField("Search a machine");
-        RechercheMachine.setValue("Press enter");
+        RechercheMachine.setPlaceholder("Press enter");
 
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("New Machine");

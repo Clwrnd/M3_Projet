@@ -11,14 +11,36 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
 public class Operations {
 
     private int id;
-    private int idtype;
-    private int idproduit;
+    private TypeOperations typeOP;
+    private Produits produit;
 
-    public Operations(int id, int idtype, int idproduit) {
+    public Operations(int id, TypeOperations to, Produits prod) {
         this.id = id;
-        this.idtype = idtype;
-        this.idproduit = idproduit;
-    }   
+        this.typeOP = to;
+        this.produit = prod;
+    }
+
+    public String getDesTO() {
+        return getTypeOP().getDes();
+    }
+
+    public void setDesTO(String des) {
+        this.getTypeOP().setDes(des);
+    }
+
+    /**
+     * @return the typeOP
+     */
+    public TypeOperations getTypeOP() {
+        return typeOP;
+    }
+
+    /**
+     * @return the produit
+     */
+    public Produits getProduit() {
+        return produit;
+    }
 
     /**
      * @return the id
@@ -27,43 +49,8 @@ public class Operations {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
+    public int getIdType() {
+        return this.typeOP.getId();
     }
 
-    /**
-     * @return the idtype
-     */
-    public int getIdtype() {
-        return idtype;
-    }
-
-    /**
-     * @param idtype the idtype to set
-     */
-    public void setIdtype(int idtype) {
-        this.idtype = idtype;
-    }
-
-    /**
-     * @return the idproduit
-     */
-    public int getIdproduit() {
-        return idproduit;
-    }
-
-    /**
-     * @param idproduit the idproduit to set
-     */
-    public void setIdproduit(int idproduit) {
-        this.idproduit = idproduit;
-    }
-    
-    
-    
-
-    
 }

@@ -6,12 +6,14 @@ package fr.insa.idmont.ProjetM3.ExtendedGrid;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import fr.insa.idmont.ProjetM3.Affichage.AffichOperation;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
 import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
 import java.sql.Connection;
@@ -42,13 +44,22 @@ public class ListeProduits extends Grid<Produits> {
 
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
+            Button planButton = new Button(VaadinIcon.TASKS.create());
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel();
                 }
                 this.getEditor().editItem(user);
+
             });
-            return editButton;
+            planButton.addClickListener((e) -> {
+                if (this.getEditor().isOpen()) {
+                    this.getEditor().cancel();
+                }
+                planFabrication(user.getId());
+
+            });
+            return new HorizontalLayout(editButton, planButton);
         });
 
         // Initialisation de l'éditeur et associations des composants avec ce dernier:
@@ -116,6 +127,12 @@ public class ListeProduits extends Grid<Produits> {
             }
         }
 
+    }
+
+    private void planFabrication(int id) {
+        Dialog diagPlan = new Dialog();
+        diagPlan.add(new AffichOperation(con, id));
+        diagPlan.open();
     }
 
 }

@@ -20,6 +20,11 @@ public class Produits {
         this.des = des;
     }
 
+    public Produits() {
+    }
+    
+    
+
     
     // Get() et Set():
 

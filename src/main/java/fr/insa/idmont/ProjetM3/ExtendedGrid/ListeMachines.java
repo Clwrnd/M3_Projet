@@ -24,17 +24,18 @@ import java.util.List;
  * @author Henry Adèle
  */
 public class ListeMachines extends Grid<Machines> {
-    
+
     private Connection con;
     private TextField refField;
     private TextField desField;
     private TextField idField;
     private IntegerField puisField;
+    private Button LocaFiedl;
 
     // Constructeur du GRID affichant la liste des opérations;
     public ListeMachines(Connection con, List<Machines> data) throws SQLException {
         this.con = con;
-        
+
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
         // Ajout des colonnes et des composants d'éditions:
@@ -42,7 +43,8 @@ public class ListeMachines extends Grid<Machines> {
         this.addColumn(Machines::getRef).setHeader("Ref");
         this.addColumn(Machines::getDes).setHeader("Des");
         this.addColumn(Machines::getPuissance).setHeader("Puissance (W)");
-        
+        this.addColumn(Machines::getLoc).setHeader("Désignation plan: X-Y");
+
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {
@@ -57,51 +59,55 @@ public class ListeMachines extends Grid<Machines> {
         // Initialisation de l'éditeur et associations des composants avec ce dernier:
         this.getEditor().setBinder(new Binder<>(Machines.class));
         this.getEditor().setBuffered(true);
-        
+
         this.idField = new TextField();
         this.idField.setReadOnly(true);
         this.idField.setSizeFull();
         this.getEditor().getBinder().forField(idField).bind(Machines::getIdString, Machines::setIdString);
         this.getColumns().get(0).setEditorComponent(idField);
-        
+
         this.refField = new TextField();
         this.refField.setWidthFull();
         this.refField.setClassName("error");
         this.getEditor().getBinder().forField(refField).bind(Machines::getRef, Machines::setRef);
         this.getColumns().get(1).setEditorComponent(refField);
-        
+
         this.desField = new TextField();
         this.desField.setWidthFull();
         this.desField.setClassName("error");
         this.getEditor().getBinder().forField(desField).bind(Machines::getDes, Machines::setDes);
         this.getColumns().get(2).setEditorComponent(desField);
-        
+
         this.puisField = new IntegerField();
         this.puisField.setMax(999999999);
         this.puisField.setWidthFull();
         this.puisField.setClassName("error");
         this.getEditor().getBinder().forField(puisField).bind(Machines::getPuissance, Machines::setPuissance);
         this.getColumns().get(3).setEditorComponent(puisField);
-        
+
+        this.LocaFiedl = new Button(VaadinIcon.BULLSEYE.create());
+        this.LocaFiedl.setWidthFull();
+        this.getColumns().get(4).setEditorComponent(LocaFiedl);
+
         Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
-            save();           
+            save();
         });
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
         saveBut.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
-        
+
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
-        this.getColumns().get(4).setEditorComponent(actions);
-        
+        this.getColumns().get(5).setEditorComponent(actions);
+
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
         this.getColumns().get(2).setSortable(true);
         this.getColumns().get(3).setSortable(true);
-        
+
         this.setItems(data);
-        
+
     }
 
     private void save() {
@@ -128,7 +134,7 @@ public class ListeMachines extends Grid<Machines> {
                 Notification.show("Server error, try again");
             }
         }
-        
+
     }
-    
+
 }

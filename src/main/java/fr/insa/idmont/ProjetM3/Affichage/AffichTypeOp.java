@@ -47,7 +47,7 @@ public class AffichTypeOp extends VerticalLayout {
         Hl1.setAlignSelf(FlexComponent.Alignment.CENTER, titre1);
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
         TextField RechercheTO = new TextField("Search an operation type");
-        RechercheTO.setValue("Press enter");
+        RechercheTO.setPlaceholder("Press enter");
 
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("New operation type");

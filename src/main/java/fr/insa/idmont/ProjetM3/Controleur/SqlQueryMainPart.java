@@ -5,6 +5,7 @@
 package fr.insa.idmont.ProjetM3.Controleur;
 
 import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Operations;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
 import java.sql.Connection;
@@ -204,7 +205,7 @@ public class SqlQueryMainPart {
 
         }
     }
-    
+
     // ------------------------------------ Type Opérations :
     public static List<TypeOperations> GetTO(Connection con) throws SQLException {
         ArrayList<TypeOperations> liste = new ArrayList<>();
@@ -292,9 +293,8 @@ public class SqlQueryMainPart {
 
         }
     }
-    
-    // ------------------------------------ Realise :
 
+    // ------------------------------------ Realise :
     public static int TestRealise(Connection con, String idMachine) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
@@ -311,7 +311,7 @@ public class SqlQueryMainPart {
             return -1;
         }
     }
-    
+
     public static void EditRealise(Connection con, int idTypeOperation, float duree, int idMachine) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
                 "update Tproduits  "
@@ -324,6 +324,74 @@ public class SqlQueryMainPart {
         } catch (SQLException ex) {
         }
     }
-    
+
+    // -------------------------------------------- Operations:
+    public static void AssociationOpDes(Connection con, ArrayList<Operations> liste) throws SQLException {
+
+        for (Operations op : liste) {
+            try (PreparedStatement st = con.prepareStatement(
+                    "select *"
+                    + " from Ttype_operation"
+                    + " where id=? ")) {
+                st.setInt(1, op.getIdType());
+                ResultSet res = st.executeQuery();
+                if (res.next()) {
+                    op.setDesTO(res.getString(2));
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            }
+        }
+    }
+
+    public static List<Operations> GetOp(Connection con, int idproduit) {
+        ArrayList<Operations> liste = new ArrayList<>();
+        try (PreparedStatement st = con.prepareStatement(
+                "select *"
+                + " from Toperations"
+                + " where id_produit=? ")) {
+            st.setInt(1, idproduit);
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                Operations op = new Operations(res.getInt(1), new TypeOperations(), new Produits());
+                op.getTypeOP().setId(res.getInt(2));
+                op.getProduit().setId(idproduit);
+                liste.add(op);
+            }
+            AssociationOpDes(con, liste);
+            return liste;
+        } catch (SQLException ex) {
+            return liste;
+        }
+
+    }
+
+    public static void deleteOp(Connection con, Iterator<Operations> iterator) throws SQLException {
+        Iterator<Operations> it = iterator;
+        while (it.hasNext()) {
+            try (PreparedStatement pst = con.prepareStatement(
+                    "delete "
+                    + " from Toperations"
+                    + " where id = ?")) {
+                pst.setInt(1, iterator.next().getId());
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            }
+        }
+    }
+
+    public static void addOp(Connection con, int idtype, int idproduit) {
+        try (PreparedStatement pt = con.prepareStatement("""
+                                                       INSERT INTO Toperations (idtype,id_produit)
+                                                       VALUES (?,?)
+                                                       """)) {
+            pt.setInt(1, idtype);
+            pt.setInt(2, idproduit);
+            pt.executeUpdate();
+        } catch (SQLException ex) {
+
+        }
+    }
 
 }
