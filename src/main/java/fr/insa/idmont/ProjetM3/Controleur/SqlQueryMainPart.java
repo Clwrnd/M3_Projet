@@ -7,6 +7,7 @@ package fr.insa.idmont.ProjetM3.Controleur;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Operations;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -324,7 +325,34 @@ public class SqlQueryMainPart {
         } catch (SQLException ex) {
         }
     }
-
+    
+    public static List<Realise> GetRealise(Connection con) {
+        ArrayList<Realise> liste = new ArrayList<>();
+        try (Statement st = con.createStatement()) {
+            ResultSet res = st.executeQuery("SELECT * FROM Trealise  ");
+            while (res.next()) {
+                liste.add(new Realise(res.getInt(1), res.getInt(2)));
+            }
+            return liste;
+        } catch (SQLException ex) {
+            return liste;
+        }
+    }
+    
+    public static void deleteRealise(Connection con, Iterator<Realise> iterator) throws SQLException {
+        Iterator<Realise> it = iterator;
+        while (it.hasNext()) {
+            try (PreparedStatement pst = con.prepareStatement(
+                    "delete "
+                    + " from TRealise"
+                    + " where idMachine = ?")) {
+                pst.setInt(1, iterator.next().getIdMachine());
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            }
+        }
+    }
     // -------------------------------------------- Operations:
     public static void AssociationOpDes(Connection con, ArrayList<Operations> liste) throws SQLException {
 
@@ -394,4 +422,22 @@ public class SqlQueryMainPart {
         }
     }
 
+    
+    public static List<Realise> SearchRealise(Connection con, String Ref) {
+        ArrayList<Realise> liste = new ArrayList<>();
+        try (PreparedStatement st = con.prepareStatement(
+                "select *"
+                + " from Tmachines"
+                + " where ref like ?")) {
+            st.setString(1, "%" + Ref + "%");
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                liste.add(new Realise(res.getInt(1), res.getInt(2)));
+            }
+            return liste;
+        } catch (SQLException ex) {
+            return liste;
+        }
+
+    }
 }

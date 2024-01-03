@@ -4,20 +4,35 @@
  */
 package fr.insa.idmont.ProjetM3.Affichage;
 
+import com.vaadin.flow.component.Key;
+import static com.vaadin.flow.component.Tag.A;
+
+import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
+import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeRealise;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
+import static fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart.SearchRealise;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
+import static fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart.SearchRealise;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
 import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeRealise;
 import fr.insa.idmont.ProjetM3.View.MainView;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +43,7 @@ public class AffichRealise extends VerticalLayout {
     private MainView main;
     private ListeRealise TableOpM;
 
-    public AffichRealise(MainView main) {
+    public AffichRealise(MainView main) throws SQLException {
         this.main = main;
 
         H2 titre1 = new H2("Machine operations");
@@ -51,19 +66,36 @@ public class AffichRealise extends VerticalLayout {
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
+        
+        this.TableOpM = new ListeRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()) );
+        this.add(Hl1, RechercheRealise, this.TableOpM);
+        ;
+        this.setAlignSelf(Alignment.CENTER, Hl1);
+      
+        //Actions des composants:
+        deleteButton1.addClickListener((e) -> {
+            try {
+                SqlQueryMainPart.deleteRealise(this.main.getInfoSess().getCon(), this.TableOpM.getSelectedItems().iterator());
+            } catch (SQLException ex) {
+                Logger.getLogger(AffichRealise.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()));
+            } catch (SQLException ex) {
+                Logger.getLogger(AffichRealise.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
 
         /*
-        try {
-            this.TableOpM = new ListeRealise(this.main.getInfoSess().getCon(), !!!! A compléter avec la méthode getRealise (à faire) );
-            this.add(Hl1, RechercheProduit, this.TableProduit);;
-        } catch (SQLException ex) {
-            Notification.show("Server error, try again");
-        }
-        this.setAlignSelf(Alignment.CENTER, Hl1);
-         */
+        RechercheRealise.addKeyPressListener(Key.ENTER, (e) -> {
+            refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchMachine(this.main.getInfoSess().getCon(), SearchRealise.getValue()));
+        });
+        */
     }
+    
+    
+    private void refreshTableRealise(Connection con, List<Realise> data) throws SQLException {
 
-    private void refreshTableProduct(Connection con, List<Realise> data) throws SQLException {
         this.remove(this.TableOpM);
         this.TableOpM = new ListeRealise(con, data);
         this.add(this.TableOpM);

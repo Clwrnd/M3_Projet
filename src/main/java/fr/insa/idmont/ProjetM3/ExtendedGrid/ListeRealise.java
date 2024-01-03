@@ -29,8 +29,8 @@ import java.util.logging.Logger;
 public class ListeRealise extends Grid<Realise> {
     
     private Connection con;
-    private TextField idTypeOperation;
-    private TextField idMachine;
+    private TextField TypeOperation;
+    private TextField Machine;
     private TextField duree;
     private ComboBox selecTO;
     
@@ -40,8 +40,8 @@ public class ListeRealise extends Grid<Realise> {
         
         this.setSelectionMode(Grid.SelectionMode.MULTI);
         
-        this.addColumn(Realise::getIdMachine).setHeader("Machine");
-        this.addColumn(Realise::getIdTypeOperation).setHeader("Operation");
+        this.addColumn(Realise::getRefM).setHeader("Machine");
+        this.addColumn(Realise::getDesTO).setHeader("Operation");
         this.addColumn(Realise::getDuree).setHeader("Durée");
         
         this.addComponentColumn(user -> {
@@ -59,16 +59,16 @@ public class ListeRealise extends Grid<Realise> {
         this.getEditor().setBinder(new Binder<>(Realise.class));
         this.getEditor().setBuffered(true);
         
-        this.idMachine = new TextField();
-        this.idMachine.setWidthFull();
-        this.idMachine.setClassName("error");
-        this.getColumns().get(1).setEditorComponent(idMachine);
+        this.Machine = new TextField();
+        this.Machine.setWidthFull();
+        this.Machine.setClassName("error");
+        this.getColumns().get(1).setEditorComponent(Machine);
         
         this.selecTO = new ComboBox<>();
         this.selecTO.setItems(GetTO(con));
         this.selecTO.setWidthFull();
-        this.getEditor().getBinder().forField(idTypeOperation).bind(Realise::getIdStringTO, Realise::setIdStringTO);
-        this.getColumns().get(0).setEditorComponent(idTypeOperation);
+        this.getEditor().getBinder().forField(TypeOperation).bind(Realise::getDesTO, Realise::setDesTO);
+        this.getColumns().get(0).setEditorComponent(TypeOperation);
         
         this.duree = new TextField();
         this.duree.setWidthFull();
@@ -102,12 +102,12 @@ public class ListeRealise extends Grid<Realise> {
         
         
     private void save() throws SQLException {
-        int i = SqlQueryMainPart.TestRealise(con, this.idMachine.getValue());
-        if (i == Integer.valueOf(this.idMachine.getValue()) || i == -1) {
-            SqlQueryMainPart.EditRealise(con, Integer.parseInt(this.idTypeOperation.getValue()), Float.valueOf(this.duree.getValue()), Integer.parseInt(this.idMachine.getValue()));
+        int i = SqlQueryMainPart.TestRealise(con, this.Machine.getValue());
+        if (i == Integer.valueOf(this.Machine.getValue()) || i == -1) {
+            SqlQueryMainPart.EditRealise(con, Integer.parseInt(this.TypeOperation.getValue()), Float.valueOf(this.duree.getValue()), Integer.parseInt(this.Machine.getValue()));
             this.getEditor().save();
         } else {
-            this.idMachine.setHelperText("Machine already exists");
+            this.Machine.setHelperText("Machine already exists");
         }
     }
      

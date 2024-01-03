@@ -10,40 +10,39 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  */
 public class Realise {
     
+    private Machines Machine;
+    private TypeOperations TypeOperation;
     private int idMachine;
     private int idTypeOperation;
     private float duree;
 
-    public int getIdMachine() {
-        return idMachine;
-    }
-
-    public void setIdMachine(int idMachine) {
+    public Realise(int idMachine, int idTypeOperation) {
         this.idMachine = idMachine;
-    }
-
-    public int getIdTypeOperation() {
-        return idTypeOperation;
-    }
-
-    public void setIdTypeOperation(int idTypeOperation) {
         this.idTypeOperation = idTypeOperation;
     }
-    
-    public void setIdStringM(String id) {
-        this.idMachine = Integer.valueOf(idMachine);
+
+    public Machines getMachine(int id) {
+        return Machine;
+    }
+
+    public TypeOperations getTO(int id) {
+        return TypeOperation;
     }
     
-    public String getIdStringM() {
-        return String.valueOf(idMachine);
+    public void setRefM(String Ref) {
+        this.Machine.setRef(Ref); 
     }
     
-    public void setIdStringTO(String id) {
-        this.idTypeOperation = Integer.valueOf(idTypeOperation);
+    public String getRefM() {
+        return this.Machine.getRef();
     }
     
-    public String getIdStringTO() {
-        return String.valueOf(idTypeOperation);
+    public void setDesTO(String Des) {
+        this.TypeOperation.setDes(Des); 
+    }
+    
+    public String getDesTO() {
+        return this.TypeOperation.getDes();
     }
 
     public float getDuree() {
@@ -61,4 +60,9 @@ public class Realise {
     public String getStringDuree() {
         return String.valueOf(duree);
     }
+
+    public int getIdMachine() {
+        return idMachine;
+    }
+    
 }
