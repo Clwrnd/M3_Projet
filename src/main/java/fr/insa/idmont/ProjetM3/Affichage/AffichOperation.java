@@ -21,6 +21,7 @@ import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
 import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeOperations;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,7 +88,9 @@ public class AffichOperation extends VerticalLayout {
             if (ToChoix.isEmpty()) {
                 ToChoix.setHelperText("Choose a value");
             } else {
-                SqlQueryMainPart.addOp(con, ToChoix.getValue().getId(), idproduit);
+                List<Operations> existant = SqlQueryMainPart.GetOp(con, idproduit);
+                int id =SqlQueryMainPart.addOp(con, ToChoix.getValue().getId(), idproduit);
+                AddPrecedence(existant,id);
                 dialog.close();
                 try {
                     refreshTableOp(con, SqlQueryMainPart.GetOp(con, idproduit));
@@ -104,6 +107,15 @@ public class AffichOperation extends VerticalLayout {
         this.remove(this.TableOp);
         this.TableOp = new ListeOperations(con, data);
         this.add(this.TableOp);
+    }
+
+    private void AddPrecedence(List<Operations> existant,int id) {
+        int taille = existant.size();
+        if(taille==0){
+            // Ne rien faire
+        } else {
+            SqlQueryMainPart.addPrecedence(con,existant.get(taille-1).getId(),id );
+        }
     }
 
 }

@@ -67,10 +67,9 @@ public class InterfacePrinc extends AppLayout {
 
         this.addToNavbar(hl3);
 
-        // Ajout/Mise en visibilité des éléments spécifique aux autorisation      
+        // Ajout/Mise en visibilité des éléments spécifiques aux autorisations      
         switch (this.main.getInfoSess().getUtilActuel().get().getAutorisation()) {
-            case ADMINISTRATION:
-                
+            case ADMINISTRATION:               
                 break;
             case MODIFICATION:
                 break;

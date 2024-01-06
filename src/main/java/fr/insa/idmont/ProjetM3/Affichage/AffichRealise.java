@@ -4,27 +4,15 @@
  */
 package fr.insa.idmont.ProjetM3.Affichage;
 
-import com.vaadin.flow.component.Key;
-import static com.vaadin.flow.component.Tag.A;
-
-import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
-import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeRealise;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
-import static fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart.SearchRealise;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
-import static fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart.SearchRealise;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
 import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeRealise;
 import fr.insa.idmont.ProjetM3.View.MainView;

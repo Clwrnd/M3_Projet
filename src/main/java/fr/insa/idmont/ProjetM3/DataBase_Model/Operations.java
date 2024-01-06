@@ -52,5 +52,5 @@ public class Operations {
     public int getIdType() {
         return this.typeOP.getId();
     }
-
+    
 }

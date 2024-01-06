@@ -15,6 +15,7 @@ import com.vaadin.flow.data.binder.Binder;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
 import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
 import static fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart.GetTO;
+import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class ListeRealise extends Grid<Realise> {
     private TextField TypeOperation;
     private TextField Machine;
     private TextField duree;
-    private ComboBox selecTO;
+    private ComboBox<TypeOperations> selecTO;
     
     public ListeRealise(Connection con, List<Realise> data) throws SQLException {
         
@@ -67,8 +68,8 @@ public class ListeRealise extends Grid<Realise> {
         this.selecTO = new ComboBox<>();
         this.selecTO.setItems(GetTO(con));
         this.selecTO.setWidthFull();
-        this.getEditor().getBinder().forField(TypeOperation).bind(Realise::getDesTO, Realise::setDesTO);
-        this.getColumns().get(0).setEditorComponent(TypeOperation);
+        this.getEditor().getBinder().forField(selecTO).bind(Realise::getTO, Realise::setTypeOperation);
+        this.getColumns().get(0).setEditorComponent(selecTO);
         
         this.duree = new TextField();
         this.duree.setWidthFull();
@@ -90,11 +91,11 @@ public class ListeRealise extends Grid<Realise> {
 
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
-        this.getColumns().get(4).setEditorComponent(actions);
+        this.getColumns().get(3).setEditorComponent(actions);
 
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
-        this.getColumns().get(3).setSortable(true);
+        this.getColumns().get(2).setSortable(true);
 
         this.setItems(data);
 

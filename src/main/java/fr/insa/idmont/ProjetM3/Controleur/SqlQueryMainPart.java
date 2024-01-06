@@ -4,8 +4,10 @@
  */
 package fr.insa.idmont.ProjetM3.Controleur;
 
+import static fr.insa.idmont.ProjetM3.Controleur.AlgoGestionPrecedence.Tri;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Operations;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Precedence;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
@@ -325,7 +327,7 @@ public class SqlQueryMainPart {
         } catch (SQLException ex) {
         }
     }
-    
+
     public static List<Realise> GetRealise(Connection con) {
         ArrayList<Realise> liste = new ArrayList<>();
         try (Statement st = con.createStatement()) {
@@ -338,7 +340,7 @@ public class SqlQueryMainPart {
             return liste;
         }
     }
-    
+
     public static void deleteRealise(Connection con, Iterator<Realise> iterator) throws SQLException {
         Iterator<Realise> it = iterator;
         while (it.hasNext()) {
@@ -353,6 +355,25 @@ public class SqlQueryMainPart {
             }
         }
     }
+
+    public static List<Realise> SearchRealise(Connection con, String Ref) {
+        ArrayList<Realise> liste = new ArrayList<>();
+        try (PreparedStatement st = con.prepareStatement(
+                "select *"
+                + " from Tmachines"
+                + " where ref like ?")) {
+            st.setString(1, "%" + Ref + "%");
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                liste.add(new Realise(res.getInt(1), res.getInt(2)));
+            }
+            return liste;
+        } catch (SQLException ex) {
+            return liste;
+        }
+
+    }
+
     // -------------------------------------------- Operations:
     public static void AssociationOpDes(Connection con, ArrayList<Operations> liste) throws SQLException {
 
@@ -386,7 +407,18 @@ public class SqlQueryMainPart {
                 op.getProduit().setId(idproduit);
                 liste.add(op);
             }
+            if(!liste.isEmpty()) {
             AssociationOpDes(con, liste);
+            if(!GetPrec(con, liste).isEmpty()){
+            List<Integer> test = Tri(GetPrec(con, liste));
+            liste = AlgoGestionPrecedence.Ordre(liste, test);   
+            }
+            for(Operations op: liste)
+            {
+                System.out.println(op.getId());
+            
+            }
+                }           
             return liste;
         } catch (SQLException ex) {
             return liste;
@@ -409,35 +441,79 @@ public class SqlQueryMainPart {
         }
     }
 
-    public static void addOp(Connection con, int idtype, int idproduit) {
+    public static int addOp(Connection con, int idtype, int idproduit) {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Toperations (idtype,id_produit)
                                                        VALUES (?,?)
-                                                       """)) {
+                                                       """,Statement.RETURN_GENERATED_KEYS)) {
             pt.setInt(1, idtype);
             pt.setInt(2, idproduit);
             pt.executeUpdate();
+                        
+            ResultSet generatedKeys = pt.getGeneratedKeys(); 
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }    
+        } catch (SQLException ex) {
+        }
+        return -1;
+    }
+
+    // -------------------------------------------- Précédence:
+    public static List<Precedence> GetPrec(Connection con, List<Operations> list) throws SQLException {
+        ArrayList<Precedence> pliste = new ArrayList<>();
+        for (Operations op : list) {
+            try (PreparedStatement st = con.prepareStatement(
+                    "select *"
+                    + " from Tprecedence"
+                    + " where opavant=? OR opapres=? ")) {
+                st.setInt(1, op.getId());
+                st.setInt(2, op.getId());
+                ResultSet res = st.executeQuery();
+                while (res.next()) {
+                    pliste.add(new Precedence(res.getInt(1), res.getInt(2)));
+                }
+
+            } catch (SQLException ex) {
+            }
+        }
+        return pliste;
+    }
+    
+    
+    public static void addPrecedence(Connection con, int avant, int apres) {
+        try (PreparedStatement pt = con.prepareStatement("""
+                                                       INSERT INTO Tprecedence (opavant,opapres)
+                                                       VALUES (?,?)
+                                                       """)) {
+            pt.setInt(1, avant);
+            pt.setInt(2, apres);
+            pt.executeUpdate();
         } catch (SQLException ex) {
 
+        }       
+        
+    }
+    
+    public static void EditPrecedence2(Connection con, int aid,int nid,int av,int ap) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "update Tprecedence  "
+                + " set opavant=?,opapres=?"
+                + " where opavant = ? AND opapres =? ")) {
+            pst.setInt(1, nid);
+            pst.setInt(2, aid);
+            pst.setInt(3, av);
+            pst.setInt(4, ap);
+            pst.executeUpdate();
+            System.out.println("ok2");
+        } catch (SQLException ex) {
         }
     }
+    
 
     
-    public static List<Realise> SearchRealise(Connection con, String Ref) {
-        ArrayList<Realise> liste = new ArrayList<>();
-        try (PreparedStatement st = con.prepareStatement(
-                "select *"
-                + " from Tmachines"
-                + " where ref like ?")) {
-            st.setString(1, "%" + Ref + "%");
-            ResultSet res = st.executeQuery();
-            while (res.next()) {
-                liste.add(new Realise(res.getInt(1), res.getInt(2)));
-            }
-            return liste;
-        } catch (SQLException ex) {
-            return liste;
-        }
+    
+    
+    
 
-    }
 }

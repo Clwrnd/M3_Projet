@@ -25,7 +25,7 @@ public class Realise {
         return Machine;
     }
 
-    public TypeOperations getTO(int id) {
+    public TypeOperations getTO() {
         return TypeOperation;
     }
     
@@ -63,6 +63,13 @@ public class Realise {
 
     public int getIdMachine() {
         return idMachine;
+    }
+
+    /**
+     * @param TypeOperation the TypeOperation to set
+     */
+    public void setTypeOperation(TypeOperations TypeOperation) {
+        this.TypeOperation = TypeOperation;
     }
     
     
