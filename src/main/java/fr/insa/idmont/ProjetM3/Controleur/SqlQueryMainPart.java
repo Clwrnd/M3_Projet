@@ -407,18 +407,13 @@ public class SqlQueryMainPart {
                 op.getProduit().setId(idproduit);
                 liste.add(op);
             }
-            if(!liste.isEmpty()) {
-            AssociationOpDes(con, liste);
-            if(!GetPrec(con, liste).isEmpty()){
-            List<Integer> test = Tri(GetPrec(con, liste));
-            liste = AlgoGestionPrecedence.Ordre(liste, test);   
+            if (!liste.isEmpty()) {
+                AssociationOpDes(con, liste);
+                if (!GetPrec(con, liste).isEmpty()) {
+                    List<Integer> test = Tri(GetPrec(con, liste));
+                    liste = AlgoGestionPrecedence.Ordre(liste, test);
+                }
             }
-            for(Operations op: liste)
-            {
-                System.out.println(op.getId());
-            
-            }
-                }           
             return liste;
         } catch (SQLException ex) {
             return liste;
@@ -445,18 +440,31 @@ public class SqlQueryMainPart {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Toperations (idtype,id_produit)
                                                        VALUES (?,?)
-                                                       """,Statement.RETURN_GENERATED_KEYS)) {
+                                                       """, Statement.RETURN_GENERATED_KEYS)) {
             pt.setInt(1, idtype);
             pt.setInt(2, idproduit);
             pt.executeUpdate();
-                        
-            ResultSet generatedKeys = pt.getGeneratedKeys(); 
+
+            ResultSet generatedKeys = pt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
-            }    
+            }
         } catch (SQLException ex) {
         }
         return -1;
+    }
+    
+        public static void deleteOpAll(Connection con,int id) throws SQLException {
+            try (PreparedStatement pst = con.prepareStatement(
+                    "delete "
+                    + " from Toperations"
+                    + " where id_produit = ?")) {
+                pst.setInt(1, id);
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            }
+        
     }
 
     // -------------------------------------------- Précédence:
@@ -479,8 +487,7 @@ public class SqlQueryMainPart {
         }
         return pliste;
     }
-    
-    
+
     public static void addPrecedence(Connection con, int avant, int apres) {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Tprecedence (opavant,opapres)
@@ -491,11 +498,11 @@ public class SqlQueryMainPart {
             pt.executeUpdate();
         } catch (SQLException ex) {
 
-        }       
-        
+        }
+
     }
-    
-    public static void EditPrecedence2(Connection con, int aid,int nid,int av,int ap) throws SQLException {
+
+    public static void EditPrecedence2(Connection con, int aid, int nid, int av, int ap) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
                 "update Tprecedence  "
                 + " set opavant=?,opapres=?"
@@ -505,15 +512,63 @@ public class SqlQueryMainPart {
             pst.setInt(3, av);
             pst.setInt(4, ap);
             pst.executeUpdate();
-            System.out.println("ok2");
         } catch (SQLException ex) {
         }
     }
-    
 
+    public static void deletePrece(Connection con, Iterator<Operations> iterator, List<Operations> opL) throws SQLException {
+            Operations it= iterator.next();
+        
+            if (opL.indexOf(it) == 0) {
+                try (PreparedStatement pst = con.prepareStatement(
+                        "delete "
+                        + " from Tprecedence"
+                        + " where opavant = ?")) {
+                    pst.setInt(1, it.getId());
+                    pst.executeUpdate();
+                } catch (SQLException ex) {
+                    throw ex;
+                }
+            } else if (opL.indexOf(it) == opL.size() - 1) {
+                try (PreparedStatement pst = con.prepareStatement(
+                        "delete "
+                        + " from Tprecedence"
+                        + " where opapres = ?")) {
+                    pst.setInt(1, it.getId());
+                    pst.executeUpdate();
+                } catch (SQLException ex) {
+                    throw ex;
+                }
+            } else {
+                try (PreparedStatement pst = con.prepareStatement(
+                        "delete "
+                        + " from Tprecedence"
+                        + " where opavant = ?")) {
+                    pst.setInt(1, it.getId());
+                    pst.executeUpdate();
+                } catch (SQLException ex) {
+                    throw ex;
+                }
+                EditPrecedence2(con, opL.get(opL.indexOf(it)+1).getId(), opL.get(opL.indexOf(it)-1).getId(),opL.get(opL.indexOf(it)-1).getId(),it.getId() );
+            }            
+        
+    }
     
-    
-    
-    
+     public static void DeletePreceAll(Connection con, List<Operations> list) throws SQLException {
+        for (Operations op : list) {
+            System.out.println("ok");
+            try (PreparedStatement st = con.prepareStatement(
+                    "DELETE "
+                    + " from Tprecedence"
+                    + " where opavant=? OR opapres=? ")) {
+                st.setInt(1, op.getId());
+                st.setInt(2, op.getId());
+                st.executeUpdate();
+                
+                
+            } catch (SQLException ex) {
+            }
+        }
+    }
 
 }

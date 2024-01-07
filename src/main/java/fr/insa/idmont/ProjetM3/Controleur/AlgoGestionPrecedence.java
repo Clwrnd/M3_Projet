@@ -7,7 +7,6 @@ package fr.insa.idmont.ProjetM3.Controleur;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Operations;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Precedence;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,9 +35,6 @@ public class AlgoGestionPrecedence {
                 } else {
                     // Ne rien faire (reboucler)
                 }
-            }
-            for(Integer a :list){
-                System.out.println("test "+ a);
             }
             
         }

@@ -42,21 +42,21 @@ public class ListeProduits extends Grid<Produits> {
         this.addColumn(Produits::getRef).setHeader("Référence");
         this.addColumn(Produits::getDes).setHeader("Description");
 
-        this.addComponentColumn(user -> {
+        this.addComponentColumn(produit -> {
             Button editButton = new Button("Edit");
             Button planButton = new Button(VaadinIcon.TASKS.create());
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel();
                 }
-                this.getEditor().editItem(user);
+                this.getEditor().editItem(produit);
 
             });
             planButton.addClickListener((e) -> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel();
                 }
-                planFabrication(user.getId());
+                planFabrication(produit.getId(),produit.getRef());
 
             });
             return new HorizontalLayout(editButton, planButton);
@@ -129,9 +129,9 @@ public class ListeProduits extends Grid<Produits> {
 
     }
 
-    private void planFabrication(int id) {
+    private void planFabrication(int id,String ref) {
         Dialog diagPlan = new Dialog();
-        diagPlan.add(new AffichOperation(con, id));
+        diagPlan.add(new AffichOperation(con, id,ref));
         diagPlan.open();
     }
 

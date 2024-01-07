@@ -21,7 +21,6 @@ import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
 import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeOperations;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,18 +32,23 @@ public class AffichOperation extends VerticalLayout {
     private Connection con;
     private ListeOperations TableOp;
 
-    public AffichOperation(Connection con, int idproduit) {
+    public AffichOperation(Connection con, int idproduit,String ref) {
         this.con = con;
 
-        H2 titre1 = new H2("Plan de fabrication");
+        H2 titre1 = new H2("Plan de fabrication: "+ref);
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
+        Button deleteAllButton = new Button(VaadinIcon.EXCLAMATION_CIRCLE_O.create());
+        deleteAllButton.addThemeVariants(ButtonVariant.LUMO_ICON,
+                ButtonVariant.LUMO_ERROR);
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
+        deleteButton1.setTooltipText("Supprimer un élément");
+        deleteAllButton.setTooltipText("Supprimer tout !");
 
         Button addButton = new Button(VaadinIcon.PLUS.create());
         addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
-        HorizontalLayout Hl1 = new HorizontalLayout(deleteButton1, titre1, addButton);
-        Hl1.setAlignSelf(FlexComponent.Alignment.END, deleteButton1);
+        HorizontalLayout Hl1 = new HorizontalLayout(deleteAllButton,deleteButton1, titre1, addButton);
+        Hl1.setAlignSelf(FlexComponent.Alignment.END, deleteAllButton,deleteButton1);
         Hl1.setAlignSelf(FlexComponent.Alignment.CENTER, titre1);
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
 
@@ -68,13 +72,24 @@ public class AffichOperation extends VerticalLayout {
 
         deleteButton1.addClickListener((e) -> {
             try {
+                SqlQueryMainPart.deletePrece(con, this.TableOp.getSelectedItems().iterator(), this.TableOp.getData());
                 SqlQueryMainPart.deleteOp(this.con, this.TableOp.getSelectedItems().iterator());
                 refreshTableOp(this.con, SqlQueryMainPart.GetOp(this.con, idproduit));
             } catch (SQLException ex) {
                 Notification.show("Try again and verify there is no constraint on this item");
             }
         });
+        deleteAllButton.addClickListener((e) -> {
+            try {
+                SqlQueryMainPart.DeletePreceAll(con,this.TableOp.getData());
+                SqlQueryMainPart.deleteOpAll(this.con, idproduit);
+                refreshTableOp(this.con, SqlQueryMainPart.GetOp(this.con, idproduit));
+            } catch (SQLException ex) {
+                Notification.show("Try again and verify there is no constraint on this item");
+            }
+        });
 
+        
         addButton.addClickListener((e) -> {
             dialog.open();
             try {
