@@ -6,9 +6,11 @@ package fr.insa.idmont.ProjetM3.Controleur;
 
 import fr.insa.idmont.ProjetM3.Affichage.AffichMachine;
 import fr.insa.idmont.ProjetM3.Affichage.AffichProduit;
+import fr.insa.idmont.ProjetM3.Affichage.AffichRealise;
 import fr.insa.idmont.ProjetM3.Affichage.AffichTypeOp;
 import fr.insa.idmont.ProjetM3.Affichage.GestionUser;
 import fr.insa.idmont.ProjetM3.View.InterfacePrinc;
+import java.sql.SQLException;
 
 /**
  *
@@ -39,13 +41,13 @@ public class MainContent {
         this.viewPrinc.setContent(new AffichTypeOp(this.viewPrinc.getMain()));
     }
 
-    /*  public void GoToRealise() {
+      public void GoToRealise() {
         this.viewPrinc.setContent(new AffichRealise(this.viewPrinc.getMain()));
     }
-*/
+
     ;
 
-    public void setContent(int i) {
+    public void setContent(int i)  {
 
         switch (i) {
 
@@ -59,7 +61,7 @@ public class MainContent {
                 GoToTypeOp();
                 break;
             case (3):
-                //GoToRealise();
+                GoToRealise();
                 break;
             case (4):
                 GoToAdminInterface();

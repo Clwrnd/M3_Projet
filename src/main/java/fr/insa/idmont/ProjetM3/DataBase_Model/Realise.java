@@ -12,16 +12,17 @@ public class Realise {
     
     private Machines Machine;
     private TypeOperations TypeOperation;
-    private int idMachine;
-    private int idTypeOperation;
-    private float duree;
+    private double duree;
 
-    public Realise(int idMachine, int idTypeOperation) {
-        this.idMachine = idMachine;
-        this.idTypeOperation = idTypeOperation;
+    public Realise(Machines Machine, TypeOperations TypeOperation, double duree) {
+        this.Machine = Machine;
+        this.TypeOperation = TypeOperation;
+        this.duree = duree;
     }
 
-    public Machines getMachine(int id) {
+    
+
+    public Machines getMachine() {
         return Machine;
     }
 
@@ -29,47 +30,37 @@ public class Realise {
         return TypeOperation;
     }
     
-    public void setRefM(String Ref) {
-        this.Machine.setRef(Ref); 
-    }
-    
-    public String getRefM() {
-        return this.Machine.getRef();
-    }
-    
-    public void setDesTO(String Des) {
-        this.TypeOperation.setDes(Des); 
-    }
-    
-    public String getDesTO() {
-        return this.TypeOperation.getDes();
-    }
 
-    public float getDuree() {
-        return duree;
-    }
-
-    public void setDuree(float duree) {
-        this.duree = duree;
-    }
-    
-    public void setStringDuree(String duree) {
-        this.duree = Float.valueOf(duree);
-    }
-    
-    public String getStringDuree() {
-        return String.valueOf(duree);
-    }
-
-    public int getIdMachine() {
-        return idMachine;
-    }
 
     /**
      * @param TypeOperation the TypeOperation to set
      */
     public void setTypeOperation(TypeOperations TypeOperation) {
         this.TypeOperation = TypeOperation;
+    }
+
+
+
+
+    /**
+     * @param Machine the Machine to set
+     */
+    public void setMachine(Machines Machine) {
+        this.Machine = Machine;
+    }
+
+    /**
+     * @return the duree
+     */
+    public double getDuree() {
+        return duree;
+    }
+
+    /**
+     * @param duree the duree to set
+     */
+    public void setDuree(double duree) {
+        this.duree = duree;
     }
     
     

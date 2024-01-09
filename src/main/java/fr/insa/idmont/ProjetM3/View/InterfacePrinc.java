@@ -12,6 +12,9 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.theme.lumo.Lumo;
 import fr.insa.idmont.ProjetM3.Controleur.MainContent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InterfacePrinc extends AppLayout {
 
@@ -40,6 +43,7 @@ public class InterfacePrinc extends AppLayout {
         setPrimarySection(Section.DRAWER);
         getElement().getStyle().set("width", "100%");
         this.setPrimarySection(Section.NAVBAR);
+        tabs.setSelectedTab(null);
 
         //Création de l'interface:
         this.main = mainn;
@@ -79,7 +83,7 @@ public class InterfacePrinc extends AppLayout {
 
         tabs.addSelectedChangeListener((e) -> {
             this.controlleur.setContent(tabs.getSelectedIndex());
-        });
+ });
 
 
     }

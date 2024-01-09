@@ -9,81 +9,87 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.data.binder.Binder;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
 import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
 import static fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart.GetTO;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Simon
  */
 public class ListeRealise extends Grid<Realise> {
-    
+
     private Connection con;
-    private TextField TypeOperation;
-    private TextField Machine;
-    private TextField duree;
-    private ComboBox<TypeOperations> selecTO;
-    
+    private ComboBox<TypeOperations> TypeOperation;
+    private ComboBox<Machines> Machine;
+    private NumberField duree;
+
     public ListeRealise(Connection con, List<Realise> data) throws SQLException {
-        
-        this.con = con;        
-        
+
+        this.con = con;
         this.setSelectionMode(Grid.SelectionMode.MULTI);
-        
-        this.addColumn(Realise::getRefM).setHeader("Machine");
-        this.addColumn(Realise::getDesTO).setHeader("Operation");
+
+        this.addColumn(Realise::getMachine).setHeader("Machine");
+        this.addColumn(Realise::getTO).setHeader("Operation");
         this.addColumn(Realise::getDuree).setHeader("Durée");
-        
+
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
-                    this.getEditor().cancel(); 
+                    this.getEditor().cancel();
                 }
                 this.getEditor().editItem(user);
             });
             return editButton;
         });
-        
+
+        this.addComponentColumn(realise -> {
+            Button info = new Button(VaadinIcon.INFO.create());
+            info.addThemeVariants(ButtonVariant.LUMO_ICON,
+                    ButtonVariant.LUMO_TERTIARY);
+            info.addClickListener((e) -> {
+
+            });
+            return info;
+        });
+
         // Initialisation de l'éditeur et associations des composants avec ce dernier:
         this.getEditor().setBinder(new Binder<>(Realise.class));
         this.getEditor().setBuffered(true);
-        
-        this.Machine = new TextField();
+
+        this.Machine = new ComboBox<>();
+        this.Machine.setItems(SqlQueryMainPart.GetMachine(con));
         this.Machine.setWidthFull();
         this.Machine.setClassName("error");
-        this.getColumns().get(1).setEditorComponent(Machine);
-        
-        this.selecTO = new ComboBox<>();
-        this.selecTO.setItems(GetTO(con));
-        this.selecTO.setWidthFull();
-        this.getEditor().getBinder().forField(selecTO).bind(Realise::getTO, Realise::setTypeOperation);
-        this.getColumns().get(0).setEditorComponent(selecTO);
-        
-        this.duree = new TextField();
+        this.getEditor().getBinder().forField(Machine).bind(Realise::getMachine, Realise::setMachine);
+        this.getColumns().get(0).setEditorComponent(Machine);
+
+        this.TypeOperation = new ComboBox<>();
+        this.TypeOperation.setItems(GetTO(con));
+        this.TypeOperation.setWidthFull();
+        this.getEditor().getBinder().forField(TypeOperation).bind(Realise::getTO, Realise::setTypeOperation);
+        this.getColumns().get(1).setEditorComponent(TypeOperation);
+
+        this.duree = new NumberField();
         this.duree.setWidthFull();
         this.duree.setClassName("error");
-        this.getEditor().getBinder().forField(duree).bind(Realise::getStringDuree, Realise::setStringDuree);
-        this.getColumns().get(1).setEditorComponent(duree);
+        this.getEditor().getBinder().forField(duree).bind(Realise::getDuree, Realise::setDuree);
+        this.getColumns().get(2).setEditorComponent(duree);
 
-        Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {try {
+        Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
             save();
-            } catch (SQLException ex) {
-                Logger.getLogger(ListeRealise.class.getName()).log(Level.SEVERE, null, ex);
-            }
-});       
-        
+        });
+
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
@@ -100,18 +106,28 @@ public class ListeRealise extends Grid<Realise> {
         this.setItems(data);
 
     }
-        
-        
-    private void save() throws SQLException {
-        int i = SqlQueryMainPart.TestRealise(con, this.Machine.getValue());
-        if (i == Integer.valueOf(this.Machine.getValue()) || i == -1) {
-            SqlQueryMainPart.EditRealise(con, Integer.parseInt(this.TypeOperation.getValue()), Float.valueOf(this.duree.getValue()), Integer.parseInt(this.Machine.getValue()));
-            this.getEditor().save();
-        } else {
-            this.Machine.setHelperText("Machine already exists");
-        }
-    }
-     
-    }
-    
 
+    private void save() {
+        this.Machine.setHelperText(null);
+        this.TypeOperation.setHelperText(null);
+        this.duree.setHelperText(null);
+
+        if (this.Machine.isEmpty()) {
+            this.Machine.setHelperText("Entrez une valeur");
+        } else if (this.TypeOperation.isEmpty()) {
+            this.TypeOperation.setHelperText("Entrez une valeur");
+        } else if (this.duree.isEmpty()) {
+            this.duree.setHelperText("Entrez une valeur");
+        } else {
+            try {
+                SqlQueryMainPart.EditRealise(con, this.TypeOperation.getValue().getId(),this.duree.getValue() ,this.Machine.getValue().getId(),this.getEditor().getItem().getTO().getId(),  this.getEditor().getItem().getDuree(),this.getEditor().getItem().getMachine().getId());
+                this.getEditor().save();
+            } catch (SQLException ex) {
+                Notification.show("Server error, try again");
+            }
+
+        }
+
+    }
+
+}

@@ -9,6 +9,9 @@ vaadin-integer-field.error > [slot="helper"]{
     color : red ;
 }
 
+vaadin-number-field.error > [slot="helper"]{
+    color : red ;
+}
 
 vaadin-combo-box.error > [slot="helper"] {
     color: red;

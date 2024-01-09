@@ -13,6 +13,10 @@ public class TypeOperations {
     private int id;
     private String des;
 
+    public TypeOperations(int aInt) {
+        this.id= aInt;
+    }
+
     @Override
     public String toString() {
         return des;

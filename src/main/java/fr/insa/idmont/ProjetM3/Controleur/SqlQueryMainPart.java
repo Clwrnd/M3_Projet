@@ -298,31 +298,55 @@ public class SqlQueryMainPart {
     }
 
     // ------------------------------------ Realise :
-    public static int TestRealise(Connection con, String idMachine) throws SQLException {
+    public static void addRealise(Connection con, int idM,int idOp,double duree)throws SQLException{
+        try (PreparedStatement pt = con.prepareStatement("""
+                                                       INSERT INTO Trealise (id_machine,id_type,duree)
+                                                       VALUES (?,?,?)
+                                                       """)) {
+            pt.setInt(1,idM);
+            pt.setInt(2, idOp);
+            pt.setDouble(3, duree);
+            pt.executeUpdate();
+        } catch (SQLException ex) {
+
+        }
+    }
+    
+    
+    
+    public static boolean TestRealise(Connection con, int idMachine, int idTO,double duree) throws SQLException {
+        int[] test = new int[2];
+        test[0] = -1;
+        test[1] = -1;
         try (PreparedStatement pst = con.prepareStatement(
                 "select *"
                 + " from Trealise"
-                + " where id_machine = ?")) {
-            pst.setString(1, idMachine);
+                + " where id_machine = ? AND id_type=? AND duree=?")) {
+            pst.setInt(1, idMachine);
+            pst.setInt(2, idTO);
+            pst.setDouble(3, duree);
             ResultSet res = pst.executeQuery();
             if (res.next()) {
-                return res.getInt(1);
+                return false;
             } else {
-                return -1;
+                return true;
             }
         } catch (SQLException ex) {
-            return -1;
+            return false;
         }
     }
 
-    public static void EditRealise(Connection con, int idTypeOperation, float duree, int idMachine) throws SQLException {
+    public static void EditRealise(Connection con, int idTypeOperation, double duree, int idMachine, int idTO, double dr, int idM) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
-                "update Tproduits  "
-                + " set id_type=?,duree=?"
-                + " where id_machine = ?")) {
+                "update Trealise  "
+                + " set id_type=?,duree=?,id_machine= ?"
+                + " where id_machine = ? AND id_type=? AND duree=?")) {
             pst.setInt(1, idTypeOperation);
-            pst.setFloat(2, duree);
+            pst.setDouble(2, duree);
             pst.setInt(3, idMachine);
+            pst.setInt(4, idM);
+            pst.setInt(5, idTO);
+            pst.setDouble(6, dr);
             pst.executeUpdate();
         } catch (SQLException ex) {
         }
@@ -333,22 +357,63 @@ public class SqlQueryMainPart {
         try (Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("SELECT * FROM Trealise  ");
             while (res.next()) {
-                liste.add(new Realise(res.getInt(1), res.getInt(2)));
+                liste.add(new Realise(new  Machines(res.getInt(1)), new TypeOperations(res.getInt(2)),res.getDouble(3)));
             }
+            AssociationMachDes(con, liste);
+            AssociationOpDesRe(con, liste);
             return liste;
         } catch (SQLException ex) {
             return liste;
+        }
+    }
+    
+    public static void AssociationMachDes(Connection con, ArrayList<Realise> liste) throws SQLException {
+
+        for (Realise rea : liste) {
+            try (PreparedStatement st = con.prepareStatement(
+                    "select *"
+                    + " from Tmachine"
+                    + " where id=? ")) {
+                st.setInt(1, rea.getMachine().getId());
+                ResultSet res = st.executeQuery();
+                if (res.next()) {
+                    rea.getMachine().setRef(res.getString(2));
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            }
+        }
+    }
+    
+    public static void AssociationOpDesRe(Connection con, ArrayList<Realise> liste) throws SQLException {
+
+        for (Realise re : liste) {
+            try (PreparedStatement st = con.prepareStatement(
+                    "select *"
+                    + " from Ttype_operation"
+                    + " where id=? ")) {
+                st.setInt(1, re.getTO().getId());
+                ResultSet res = st.executeQuery();
+                if (res.next()) {
+                    re.getTO().setDes(res.getString(2));
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            }
         }
     }
 
     public static void deleteRealise(Connection con, Iterator<Realise> iterator) throws SQLException {
         Iterator<Realise> it = iterator;
         while (it.hasNext()) {
+            Realise r = it.next();
             try (PreparedStatement pst = con.prepareStatement(
                     "delete "
-                    + " from TRealise"
-                    + " where idMachine = ?")) {
-                pst.setInt(1, iterator.next().getIdMachine());
+                    + " from Trealise"
+                    + " where id_machine = ? AND id_type=? AND duree = ? ")) {
+                pst.setInt(1, r.getMachine().getId());
+                pst.setInt(2, r.getTO().getId());
+                pst.setDouble(3, r.getDuree());
                 pst.executeUpdate();
             } catch (SQLException ex) {
                 throw ex;
@@ -365,7 +430,7 @@ public class SqlQueryMainPart {
             st.setString(1, "%" + Ref + "%");
             ResultSet res = st.executeQuery();
             while (res.next()) {
-                liste.add(new Realise(res.getInt(1), res.getInt(2)));
+                // liste.add(new Realise(res.getInt(1), res.getInt(2)));
             }
             return liste;
         } catch (SQLException ex) {
@@ -453,18 +518,18 @@ public class SqlQueryMainPart {
         }
         return -1;
     }
-    
-        public static void deleteOpAll(Connection con,int id) throws SQLException {
-            try (PreparedStatement pst = con.prepareStatement(
-                    "delete "
-                    + " from Toperations"
-                    + " where id_produit = ?")) {
-                pst.setInt(1, id);
-                pst.executeUpdate();
-            } catch (SQLException ex) {
-                throw ex;
-            }
-        
+
+    public static void deleteOpAll(Connection con, int id) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "delete "
+                + " from Toperations"
+                + " where id_produit = ?")) {
+            pst.setInt(1, id);
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+            throw ex;
+        }
+
     }
 
     // -------------------------------------------- Précédence:
@@ -517,44 +582,44 @@ public class SqlQueryMainPart {
     }
 
     public static void deletePrece(Connection con, Iterator<Operations> iterator, List<Operations> opL) throws SQLException {
-            Operations it= iterator.next();
-        
-            if (opL.indexOf(it) == 0) {
-                try (PreparedStatement pst = con.prepareStatement(
-                        "delete "
-                        + " from Tprecedence"
-                        + " where opavant = ?")) {
-                    pst.setInt(1, it.getId());
-                    pst.executeUpdate();
-                } catch (SQLException ex) {
-                    throw ex;
-                }
-            } else if (opL.indexOf(it) == opL.size() - 1) {
-                try (PreparedStatement pst = con.prepareStatement(
-                        "delete "
-                        + " from Tprecedence"
-                        + " where opapres = ?")) {
-                    pst.setInt(1, it.getId());
-                    pst.executeUpdate();
-                } catch (SQLException ex) {
-                    throw ex;
-                }
-            } else {
-                try (PreparedStatement pst = con.prepareStatement(
-                        "delete "
-                        + " from Tprecedence"
-                        + " where opavant = ?")) {
-                    pst.setInt(1, it.getId());
-                    pst.executeUpdate();
-                } catch (SQLException ex) {
-                    throw ex;
-                }
-                EditPrecedence2(con, opL.get(opL.indexOf(it)+1).getId(), opL.get(opL.indexOf(it)-1).getId(),opL.get(opL.indexOf(it)-1).getId(),it.getId() );
-            }            
-        
+        Operations it = iterator.next();
+
+        if (opL.indexOf(it) == 0) {
+            try (PreparedStatement pst = con.prepareStatement(
+                    "delete "
+                    + " from Tprecedence"
+                    + " where opavant = ?")) {
+                pst.setInt(1, it.getId());
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            }
+        } else if (opL.indexOf(it) == opL.size() - 1) {
+            try (PreparedStatement pst = con.prepareStatement(
+                    "delete "
+                    + " from Tprecedence"
+                    + " where opapres = ?")) {
+                pst.setInt(1, it.getId());
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            }
+        } else {
+            try (PreparedStatement pst = con.prepareStatement(
+                    "delete "
+                    + " from Tprecedence"
+                    + " where opavant = ?")) {
+                pst.setInt(1, it.getId());
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            }
+            EditPrecedence2(con, opL.get(opL.indexOf(it) + 1).getId(), opL.get(opL.indexOf(it) - 1).getId(), opL.get(opL.indexOf(it) - 1).getId(), it.getId());
+        }
+
     }
-    
-     public static void DeletePreceAll(Connection con, List<Operations> list) throws SQLException {
+
+    public static void DeletePreceAll(Connection con, List<Operations> list) throws SQLException {
         for (Operations op : list) {
             System.out.println("ok");
             try (PreparedStatement st = con.prepareStatement(
@@ -564,8 +629,7 @@ public class SqlQueryMainPart {
                 st.setInt(1, op.getId());
                 st.setInt(2, op.getId());
                 st.executeUpdate();
-                
-                
+
             } catch (SQLException ex) {
             }
         }

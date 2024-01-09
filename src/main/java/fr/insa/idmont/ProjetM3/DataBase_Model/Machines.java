@@ -25,6 +25,12 @@ public class Machines {
         this.puissance = puissance;
     }
 
+    public Machines(int id) {
+        this.id = id;
+    }
+    
+    
+
     /**
      * @return the id
      */
@@ -140,5 +146,16 @@ public class Machines {
         this.X = X;
         this.Y = Y;
     }
+
+    @Override
+    public String toString() {
+        return ref;
+    }
+    
+    
+    
+    
+    
+    
 
 }
