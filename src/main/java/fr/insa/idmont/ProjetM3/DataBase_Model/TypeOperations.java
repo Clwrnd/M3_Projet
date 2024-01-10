@@ -8,20 +8,23 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  *
  * @author Henry Adèle
  */
+// Objet Type Operations, permmetant la gestion de cette entité SQL en java.
 public class TypeOperations {
 
     private int id;
     private String des;
 
     public TypeOperations(int aInt) {
-        this.id= aInt;
+        this.id = aInt;
     }
 
+    // Méthode héritées modifié:
     @Override
     public String toString() {
         return des;
     }
 
+    // Getteurs et Setteurs:
     public TypeOperations(int id, String des) {
         this.id = id;
         this.des = des;
@@ -30,30 +33,18 @@ public class TypeOperations {
     public TypeOperations() {
     }
 
-    /**
-     * @return the id
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * @return the des
-     */
     public String getDes() {
         return des;
     }
 
-    /**
-     * @param des the des to set
-     */
     public void setDes(String des) {
         this.des = des;
     }

@@ -28,30 +28,37 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- *
  * @author cidmo
  */
+
+// Composant gérant l'affichage effectif des machines et des sous-composant le permettant.
 public class AffichMachine extends VerticalLayout {
 
     private MainView main;
     private ListeMachines TableMachine;
+
     private Button save2;
-    private TextField des;
-    private NumberField clickX;
-    private NumberField clickY;
+    private Button ButtonLocalisation;
+    private TextField desF;
+    private NumberField clickXField;
+    private NumberField clickYField;
+    private HorizontalLayout infoBandereaux;
+
     private Dialog dialog2;
-    private HorizontalLayout info;
-    private Button locateBut;
+
     private double Xc;
     private double Yc;
     private String desC;
 
     public AffichMachine(MainView main) {
+
+        // Initialisation des variables permettant la récupération des données.
         this.main = main;
         this.Xc = -1;
         this.Yc = -1;
         this.desC = null;
 
+        // Création des composant et mise en place de leurs dispositions.
         H2 titre1 = new H2("Machine");
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -75,25 +82,25 @@ public class AffichMachine extends VerticalLayout {
         IntegerField puisAdd = new IntegerField("Puissance (W)");
         puisAdd.setMax(999999999);
         puisAdd.addClassName("error");
-        this.locateBut = new Button("Localisation", VaadinIcon.BULLSEYE.create());
+        this.ButtonLocalisation = new Button("Localisation", VaadinIcon.BULLSEYE.create());
         Button save = new Button("Confirm");
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
 
-        this.des = new TextField("Specification");
-        this.des.setReadOnly(true);
-        this.clickX = new NumberField("X:");
-        this.clickX.setWidth(100, Unit.PIXELS);
-        this.clickY = new NumberField("Y:");
-        this.clickY.setWidth(100, Unit.PIXELS);
-        this.clickX.setReadOnly(true);
-        this.clickY.setReadOnly(true);
-        this.info = new HorizontalLayout(getDes(), getClickX(), getClickY());
+        this.desF = new TextField("Specification");
+        this.desF.setReadOnly(true);
+        this.clickXField = new NumberField("X:");
+        this.clickXField.setWidth(100, Unit.PIXELS);
+        this.clickYField = new NumberField("Y:");
+        this.clickYField.setWidth(100, Unit.PIXELS);
+        this.clickXField.setReadOnly(true);
+        this.clickYField.setReadOnly(true);
+        this.infoBandereaux = new HorizontalLayout(getDesF(), getClickX(), getClickY());
 
-        VerticalLayout Hl2 = new VerticalLayout(refAdd, desAdd, puisAdd, locateBut, getInfo());
-        info.setVisible(false);
-        Hl2.setAlignSelf(Alignment.CENTER, refAdd, desAdd, puisAdd, locateBut);
+        VerticalLayout Hl2 = new VerticalLayout(refAdd, desAdd, puisAdd, ButtonLocalisation, getInfo());
+        infoBandereaux.setVisible(false);
+        Hl2.setAlignSelf(Alignment.CENTER, refAdd, desAdd, puisAdd, ButtonLocalisation);
         dialog.add(Hl2);
 
         this.dialog2 = new Dialog();
@@ -110,6 +117,7 @@ public class AffichMachine extends VerticalLayout {
             Notification.show("Server error, try again");
         }
         this.setAlignSelf(FlexComponent.Alignment.CENTER, Hl1);
+        
 
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
@@ -134,6 +142,7 @@ public class AffichMachine extends VerticalLayout {
         addButton.addClickListener((e) -> dialog.open());
 
         save.addClickListener((e) -> {
+            // Controle de saisie.
             refAdd.setHelperText(null);
             desAdd.setHelperText(null);
             puisAdd.setHelperText(null);
@@ -156,7 +165,7 @@ public class AffichMachine extends VerticalLayout {
                         this.Xc = -1;
                         this.Yc = -1;
                         this.desC = null;
-                        this.info.setVisible(false);
+                        this.infoBandereaux.setVisible(false);
                     } else {
                         refAdd.setHelperText("Machine already exists");
                     }
@@ -167,7 +176,7 @@ public class AffichMachine extends VerticalLayout {
 
         });
 
-        locateBut.addClickListener((e) -> {
+        ButtonLocalisation.addClickListener((e) -> {
             dialog2.removeAll();
             dialog2.add(new LocateInPlan(this.main, this));
             dialog2.open();
@@ -175,71 +184,46 @@ public class AffichMachine extends VerticalLayout {
 
     }
 
+    // Méthodes:
     private void refreshTableMachine(Connection con, List<Machines> data) throws SQLException {
         this.remove(this.TableMachine);
         this.TableMachine = new ListeMachines(con, data);
         this.add(this.TableMachine);
     }
 
-    /**
-     * @return the save2
-     */
+    // Getteurs et Setteur.
     public Button getSave2() {
         return save2;
     }
 
-    /**
-     * @return the des
-     */
-    public TextField getDes() {
-        return des;
+    public TextField getDesF() {
+        return desF;
     }
 
-    /**
-     * @return the clickX
-     */
     public NumberField getClickX() {
-        return clickX;
+        return clickXField;
     }
 
-    /**
-     * @return the clickY
-     */
     public NumberField getClickY() {
-        return clickY;
+        return clickYField;
     }
 
-    /**
-     * @return the dialog2
-     */
     public Dialog getDialog2() {
         return dialog2;
     }
 
-    /**
-     * @return the info
-     */
     public HorizontalLayout getInfo() {
-        return info;
+        return infoBandereaux;
     }
 
-    /**
-     * @param Xc the Xc to set
-     */
     public void setXc(double Xc) {
         this.Xc = Xc;
     }
 
-    /**
-     * @param Yc the Yc to set
-     */
     public void setYc(double Yc) {
         this.Yc = Yc;
     }
 
-    /**
-     * @param desC the desC to set
-     */
     public void setDesC(String desC) {
         this.desC = desC;
     }

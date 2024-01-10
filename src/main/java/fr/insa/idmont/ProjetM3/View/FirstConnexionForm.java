@@ -23,6 +23,7 @@ import java.util.Optional;
  *
  * @author cidmo
  */
+// Interface de premières connexion d'un utilisateur
 public class FirstConnexionForm extends VerticalLayout {
 
     private MainView main;

@@ -25,9 +25,9 @@ import java.util.List;
  *
  * @author cidmo
  */
-// Affichage des utilisateurs
+// Création du tableau affichant les données
 public class ListeUtilisateur extends Grid<Utilisateur> {
-    
+
     private TextField userField;
     private PasswordField pwField;
     private ComboBox<Autorisation> selecAutori;
@@ -39,7 +39,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
     public ListeUtilisateur(Connection con, List<Utilisateur> data, boolean mode) throws SQLException {
         this.con = con;
         this.mode = mode;
-        
+
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
         // Ajout des colonnes et des composants d'éditions:
@@ -47,12 +47,12 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.addColumn(Utilisateur::getNom).setHeader("Username");
         this.addColumn(Utilisateur::getPass).setHeader("Password");
         this.addColumn(Utilisateur::getAutorisation).setHeader("Permissions");
-        
+
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
-                    this.getEditor().cancel(); 
+                    this.getEditor().cancel();
                 }
                 this.getEditor().editItem(user);
             });
@@ -62,19 +62,19 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         // Initialisation de l'éditeur et associations des composants avec ce dernier:
         this.getEditor().setBinder(new Binder<>(Utilisateur.class));
         this.getEditor().setBuffered(true);
-        
+
         this.userField = new TextField();
         this.userField.setWidthFull();
         this.userField.setClassName("error");
         this.getEditor().getBinder().forField(userField).bind(Utilisateur::getNom, Utilisateur::setNom);
         this.getColumns().get(1).setEditorComponent(userField);
-        
+
         this.pwField = new PasswordField();
         this.pwField.setWidthFull();
         this.pwField.setClassName("error");
         this.getEditor().getBinder().forField(pwField).bind(Utilisateur::getPass, Utilisateur::setPass);
         this.getColumns().get(2).setEditorComponent(pwField);
-        
+
         this.selecAutori = new ComboBox<>();
         this.selecAutori.setItems(Autorisation.values());
         this.selecAutori.setWidthFull();
@@ -82,38 +82,38 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.selecAutori.addClassName("error");
         this.getEditor().getBinder().forField(selecAutori).bind(Utilisateur::getAutorisation, Utilisateur::setAutorisation);
         this.getColumns().get(3).setEditorComponent(selecAutori);
-        
+
         this.id = new TextField();
         this.id.setReadOnly(true);
         this.id.setSizeFull();
         this.getEditor().getBinder().forField(id).bind(Utilisateur::getIdString, Utilisateur::setIdString);
         this.getColumns().get(0).setEditorComponent(id);
-        
+
         Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
             try {
                 save();
             } catch (SQLException ex) {
-                
+
             }
         });
-        
+
         Button cancelBut = new Button(VaadinIcon.CLOSE.create(), e -> this.getEditor().cancel());
         cancelBut.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
         saveBut.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
-        
+
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
         this.getColumns().get(4).setEditorComponent(actions);
-        
+
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
         this.getColumns().get(3).setSortable(true);
-        
+
         this.setItems(data);
-        
+
     }
-    
+
     private void save() throws SQLException {
         // Contrôle de saisie.
         this.userField.setHelperText(null);
@@ -142,7 +142,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
                 Notification.show("Server error, try again");
             }
         }
-        
+
     }
-    
+
 }

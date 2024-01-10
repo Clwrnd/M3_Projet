@@ -4,7 +4,6 @@
  */
 package fr.insa.idmont.ProjetM3.DataBase_Model;
 
-import fr.insa.idmont.ProjetM3.DataBase_Model.Utilisateur;
 import java.sql.Connection;
 import java.util.Optional;
 
@@ -12,6 +11,7 @@ import java.util.Optional;
  *
  * @author cidmo
  */
+// Classe permettant un accès à différents informations/objets sur la session et l'utilisateur actuel:
 public class InfoSession {
 
     private Optional<Utilisateur> utilActuel;

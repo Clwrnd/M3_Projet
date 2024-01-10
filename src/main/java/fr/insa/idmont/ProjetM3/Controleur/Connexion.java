@@ -15,6 +15,7 @@ import java.util.Optional;
  *
  * @author cidmo
  */
+// Controleurs et requêtes SQL partie connexion
 public class Connexion {
 
     Identification viewLog;

@@ -10,13 +10,12 @@ import fr.insa.idmont.ProjetM3.Affichage.AffichRealise;
 import fr.insa.idmont.ProjetM3.Affichage.AffichTypeOp;
 import fr.insa.idmont.ProjetM3.Affichage.GestionUser;
 import fr.insa.idmont.ProjetM3.View.InterfacePrinc;
-import java.sql.SQLException;
 
 /**
  *
  * @author cidmo
  */
-// Controlleur partie principale:
+// Controleur partie principale:
 public class MainContent {
 
     InterfacePrinc viewPrinc;

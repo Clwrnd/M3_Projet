@@ -30,6 +30,7 @@ import java.util.List;
  *
  * @author cidmo
  */
+// Composant gérant l'affichage des sous composants permettant la gestion des utilisateurs par un admninistrateur.
 public class GestionUser extends VerticalLayout {
 
     private MainView main;
@@ -184,9 +185,6 @@ public class GestionUser extends VerticalLayout {
         return main;
     }
 
-    /**
-     * @return the TablePreUser
-     */
     public ListeUtilisateur getTablePreUser() {
         return TablePreUser;
     }

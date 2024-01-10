@@ -26,6 +26,7 @@ import java.util.List;
  *
  * @author Simon
  */
+// Création du tableau affichant les données
 public class ListeRealise extends Grid<Realise> {
 
     private Connection con;
@@ -38,6 +39,7 @@ public class ListeRealise extends Grid<Realise> {
         this.con = con;
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
+        // Constructeur du GRID affichant la liste des opérations;
         this.addColumn(Realise::getMachine).setHeader("Machine");
         this.addColumn(Realise::getTO).setHeader("Operation");
         this.addColumn(Realise::getDuree).setHeader("Durée");
@@ -108,6 +110,7 @@ public class ListeRealise extends Grid<Realise> {
     }
 
     private void save() {
+        // Controle de saisie:
         this.Machine.setHelperText(null);
         this.TypeOperation.setHelperText(null);
         this.duree.setHelperText(null);
@@ -120,7 +123,7 @@ public class ListeRealise extends Grid<Realise> {
             this.duree.setHelperText("Entrez une valeur");
         } else {
             try {
-                SqlQueryMainPart.EditRealise(con, this.TypeOperation.getValue().getId(),this.duree.getValue() ,this.Machine.getValue().getId(),this.getEditor().getItem().getTO().getId(),  this.getEditor().getItem().getDuree(),this.getEditor().getItem().getMachine().getId());
+                SqlQueryMainPart.EditRealise(con, this.TypeOperation.getValue().getId(), this.duree.getValue(), this.Machine.getValue().getId(), this.getEditor().getItem().getTO().getId(), this.getEditor().getItem().getDuree(), this.getEditor().getItem().getMachine().getId());
                 this.getEditor().save();
             } catch (SQLException ex) {
                 Notification.show("Server error, try again");

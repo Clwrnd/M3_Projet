@@ -27,6 +27,7 @@ import java.util.List;
  *
  * @author cidmo
  */
+// Composant gérant l'affichage effectif des types d'opérations et des sous-composant le permettant.
 public class AffichTypeOp extends VerticalLayout {
 
     private MainView main;
@@ -35,6 +36,7 @@ public class AffichTypeOp extends VerticalLayout {
     public AffichTypeOp(MainView main) {
         this.main = main;
 
+        // Création des composant et mise en place de leurs dispositions.
         H2 titre1 = new H2("Operation type");
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -113,6 +115,7 @@ public class AffichTypeOp extends VerticalLayout {
 
     }
 
+    //Méthode:
     private void refreshTableTO(Connection con, List<TypeOperations> data) throws SQLException {
         this.remove(this.tableTO);
         this.tableTO = new ListeTypeOperations(con, data);

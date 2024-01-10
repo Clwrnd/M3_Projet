@@ -8,6 +8,7 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  *
  * @author Henry Adèle
  */
+// Objet Machine, permmetant la gestion de cette entité SQL en java.
 public class Machines {
 
     private int id;
@@ -28,61 +29,36 @@ public class Machines {
     public Machines(int id) {
         this.id = id;
     }
-    
-    
 
-    /**
-     * @return the id
-     */
+    // Getteurs et Setteurs:
     public int getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * @return the ref
-     */
     public String getRef() {
         return ref;
     }
 
-    /**
-     * @param ref the ref to set
-     */
     public void setRef(String ref) {
         this.ref = ref;
     }
 
-    /**
-     * @return the des
-     */
     public String getDes() {
         return des;
     }
 
-    /**
-     * @param des the des to set
-     */
     public void setDes(String des) {
         this.des = des;
     }
 
-    /**
-     * @return the puissance
-     */
     public int getPuissance() {
         return puissance;
     }
 
-    /**
-     * @param puissance the puissance to set
-     */
     public void setPuissance(int puissance) {
         this.puissance = puissance;
     }
@@ -95,44 +71,26 @@ public class Machines {
         return String.valueOf(id);
     }
 
-    /**
-     * @return the DesignationPlan
-     */
     public String getDesignationPlan() {
         return DesignationPlan;
     }
 
-    /**
-     * @param DesignationPlan the DesignationPlan to set
-     */
     public void setDesignationPlan(String DesignationPlan) {
         this.DesignationPlan = DesignationPlan;
     }
 
-    /**
-     * @return the X
-     */
     public int getX() {
         return X;
     }
 
-    /**
-     * @param X the X to set
-     */
     public void setX(int X) {
         this.X = X;
     }
 
-    /**
-     * @return the Y
-     */
     public int getY() {
         return Y;
     }
 
-    /**
-     * @param Y the Y to set
-     */
     public void setY(int Y) {
         this.Y = Y;
     }
@@ -147,15 +105,10 @@ public class Machines {
         this.Y = Y;
     }
 
+    // Méthodes héritées modifé.
     @Override
     public String toString() {
         return ref;
     }
-    
-    
-    
-    
-    
-    
 
 }

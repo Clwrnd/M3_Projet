@@ -23,6 +23,7 @@ import java.util.List;
  *
  * @author Henry Adèle
  */
+// Création du tableau affichant les données
 public class ListeTypeOperations extends Grid<TypeOperations> {
 
     Connection con;
@@ -31,14 +32,13 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
 
     // Constructeur du GRID affichant la liste des types d'opérations;
     public ListeTypeOperations(Connection con, List<TypeOperations> data) throws SQLException {
-        
+
         this.con = con;
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(TypeOperations::getId).setHeader("Id");
         this.addColumn(TypeOperations::getDes).setHeader("Description");
-        
 
         this.addComponentColumn(user -> {
             Button editButton = new Button("Edit");
