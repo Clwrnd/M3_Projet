@@ -45,7 +45,7 @@ public class ListeRealise extends Grid<Realise> {
         this.addColumn(Realise::getDuree).setHeader("Durée");
 
         this.addComponentColumn(user -> {
-            Button editButton = new Button("modifier");
+            Button editButton = new Button("Modifier");
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel();
@@ -72,7 +72,7 @@ public class ListeRealise extends Grid<Realise> {
         this.Machine = new ComboBox<>();
         this.Machine.setItems(SqlQueryMainPart.GetMachine(con));
         this.Machine.setWidthFull();
-        this.Machine.setClassName("erreur");
+        this.Machine.setClassName("error");
         this.getEditor().getBinder().forField(Machine).bind(Realise::getMachine, Realise::setMachine);
         this.getColumns().get(0).setEditorComponent(Machine);
 
@@ -84,7 +84,7 @@ public class ListeRealise extends Grid<Realise> {
 
         this.duree = new NumberField();
         this.duree.setWidthFull();
-        this.duree.setClassName("erreur");
+        this.duree.setClassName("error");
         this.getEditor().getBinder().forField(duree).bind(Realise::getDuree, Realise::setDuree);
         this.getColumns().get(2).setEditorComponent(duree);
 

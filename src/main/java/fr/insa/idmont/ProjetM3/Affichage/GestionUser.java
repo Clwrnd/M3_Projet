@@ -68,14 +68,14 @@ public class GestionUser extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Nouvel utilisateur");
         TextField UserAdd = new TextField("Nom d'utilisateur");
-        UserAdd.addClassName("erreur");
+        UserAdd.addClassName("error");
         PasswordField passAdd = new PasswordField("Mot de passe");
-        passAdd.addClassName("erreur");
+        passAdd.addClassName("error");
         ComboBox<Autorisation> autoAdd = new ComboBox<>("Autorisation");
         autoAdd.setItems(Autorisation.values());
         autoAdd.setValue(Autorisation.CONSULTATION);
         autoAdd.setAllowCustomValue(false);
-        autoAdd.addClassName("erreur");
+        autoAdd.addClassName("error");
         Button save = new Button("Confirmer");
         Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
@@ -149,7 +149,7 @@ public class GestionUser extends VerticalLayout {
             } else {
                 try {
                     if (GestionAdmin.TestUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1 || GestionAdmin.TestPreUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1) {
-                        UserAdd.setHelperText("Le nom d'utilisateur existe déjà");
+                        UserAdd.setHelperText("Nom déjà existant");
                     } else {
                         dialog.close();
                         this.controlleur.AddPreUser(UserAdd.getValue(), passAdd.getValue(), autoAdd.getValue().toString());

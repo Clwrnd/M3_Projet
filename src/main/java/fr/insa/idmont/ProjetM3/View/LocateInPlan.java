@@ -64,7 +64,7 @@ public class LocateInPlan extends HorizontalLayout {
         coordinateClick.setVisible(false);
         coordinateMoving.setVisible(false);
         TextField des = new TextField("Localisation ");
-        des.addClassName("erreur");
+        des.addClassName("error");
         Hr hr1 = new Hr();
         hr1.setVisible(false);
         Hr hr2 = new Hr();

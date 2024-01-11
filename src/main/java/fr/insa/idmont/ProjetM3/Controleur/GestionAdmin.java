@@ -26,7 +26,7 @@ public class GestionAdmin {
 
     GestionUser viewGest;
 
-    public static List<Utilisateur> GetPreUser(Connection con) {
+    public static List<Utilisateur> GetPreUser(Connection con) throws SQLException{
         ArrayList<Utilisateur> liste = new ArrayList<>();
         try (Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("SELECT * FROM pre_connexion ");
@@ -67,6 +67,7 @@ public class GestionAdmin {
             pst.setInt(4, id);
             pst.executeUpdate();
         } catch (SQLException ex) {
+            throw ex;
         }
     }
 
@@ -81,6 +82,7 @@ public class GestionAdmin {
             pst.setInt(4, id);
             pst.executeUpdate();
         } catch (SQLException ex) {
+            throw ex;
         }
     }
 
@@ -167,7 +169,7 @@ public class GestionAdmin {
         }
     }
 
-    public List<Utilisateur> searchPreUser(String value) {
+    public List<Utilisateur> searchPreUser(String value) throws SQLException{
         ArrayList<Utilisateur> liste = new ArrayList<>();
         try (PreparedStatement st = this.viewGest.getMain().getInfoSess().getCon().prepareStatement(
                 "select *"
@@ -196,7 +198,7 @@ public class GestionAdmin {
             pt.setString(3, Autorisation);
             pt.executeUpdate();
         } catch (SQLException ex) {
-
+            throw ex;
         }
     }
 

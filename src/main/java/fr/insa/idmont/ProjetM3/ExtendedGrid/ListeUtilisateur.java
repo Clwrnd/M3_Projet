@@ -65,13 +65,13 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
 
         this.userField = new TextField();
         this.userField.setWidthFull();
-        this.userField.setClassName("erreur");
+        this.userField.setClassName("error");
         this.getEditor().getBinder().forField(userField).bind(Utilisateur::getNom, Utilisateur::setNom);
         this.getColumns().get(1).setEditorComponent(userField);
 
         this.pwField = new PasswordField();
         this.pwField.setWidthFull();
-        this.pwField.setClassName("erreur");
+        this.pwField.setClassName("error");
         this.getEditor().getBinder().forField(pwField).bind(Utilisateur::getPass, Utilisateur::setPass);
         this.getColumns().get(2).setEditorComponent(pwField);
 
@@ -79,7 +79,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.selecAutori.setItems(Autorisation.values());
         this.selecAutori.setWidthFull();
         this.selecAutori.setAllowCustomValue(false);
-        this.selecAutori.addClassName("erreur");
+        this.selecAutori.addClassName("error");
         this.getEditor().getBinder().forField(selecAutori).bind(Utilisateur::getAutorisation, Utilisateur::setAutorisation);
         this.getColumns().get(3).setEditorComponent(selecAutori);
 
@@ -128,7 +128,8 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         } else {
             try {
                 int i = GestionAdmin.TestUsername(con, this.userField.getValue());
-                if (i == Integer.valueOf(this.id.getValue()) || i == -1) {
+                int j = GestionAdmin.TestPreUsername(con, this.userField.getValue());
+                if (i == Integer.valueOf(this.id.getValue()) || (i == -1&&j==-1)) {
                     this.getEditor().save();
                     if (this.mode) {
                         GestionAdmin.EditUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
@@ -136,7 +137,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
                         GestionAdmin.EditPreUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
                     }
                 } else {
-                    this.userField.setHelperText("Le nom d'utilisateru existe déjà");
+                    this.userField.setHelperText("Nom déjà existant");
                 }
             } catch (SQLException ex) {
                 Notification.show("Erreur serveur, veuillez réessayer");

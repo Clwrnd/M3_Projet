@@ -53,9 +53,9 @@ public class AffichProduit extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Nouveau produit");
         TextField refAdd = new TextField("Référence");
-        refAdd.addClassName("erreur");
+        refAdd.addClassName("error");
         TextField desAdd = new TextField("Description");
-        desAdd.addClassName("erreur");
+        desAdd.addClassName("error");
         Button save = new Button("Confirmer");
         Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);

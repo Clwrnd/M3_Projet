@@ -63,7 +63,7 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
 
         this.desField = new TextField();
         this.desField.setWidthFull();
-        this.desField.setClassName("erreur");
+        this.desField.setClassName("error");
         this.getEditor().getBinder().forField(desField).bind(TypeOperations::getDes, TypeOperations::setDes);
         this.getColumns().get(1).setEditorComponent(desField);
 

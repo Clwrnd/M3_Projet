@@ -69,20 +69,20 @@ public class ListeMachines extends Grid<Machines> {
 
         this.refField = new TextField();
         this.refField.setWidthFull();
-        this.refField.setClassName("erreur");
+        this.refField.setClassName("error");
         this.getEditor().getBinder().forField(refField).bind(Machines::getRef, Machines::setRef);
         this.getColumns().get(1).setEditorComponent(refField);
 
         this.desField = new TextField();
         this.desField.setWidthFull();
-        this.desField.setClassName("erreur");
+        this.desField.setClassName("error");
         this.getEditor().getBinder().forField(desField).bind(Machines::getDes, Machines::setDes);
         this.getColumns().get(2).setEditorComponent(desField);
 
         this.puisField = new IntegerField();
         this.puisField.setMax(999999999);
         this.puisField.setWidthFull();
-        this.puisField.setClassName("erreur");
+        this.puisField.setClassName("error");
         this.getEditor().getBinder().forField(puisField).bind(Machines::getPuissance, Machines::setPuissance);
         this.getColumns().get(3).setEditorComponent(puisField);
 

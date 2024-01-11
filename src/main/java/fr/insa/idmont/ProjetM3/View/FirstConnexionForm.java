@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -37,13 +38,13 @@ public class FirstConnexionForm extends VerticalLayout {
 
         // Création des composants:
         TextField EntryUsername = new TextField("Nom d'utilisateur");
-        EntryUsername.addClassName("erreur");
+        EntryUsername.addClassName("error");
         PasswordField EntryPw = new PasswordField("Mot de passe par défault");
-        EntryPw.addClassName("erreur");
+        EntryPw.addClassName("error");
         PasswordField newPassField = new PasswordField("Nouveau mot de passe");
-        newPassField.addClassName("erreur");
-        PasswordField confirmPass = new PasswordField("Confirmer le nouveau mot de passe");
-        confirmPass.addClassName("erreur");
+        newPassField.addClassName("error");
+        PasswordField confirmPass = new PasswordField("Confirmer le mot de passe");
+        confirmPass.addClassName("error");
         Button valide = new Button("C'est parti !");
         valide.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button retour = new Button("Retour", new Icon(VaadinIcon.ARROW_LEFT));
@@ -76,6 +77,7 @@ public class FirstConnexionForm extends VerticalLayout {
                         this.main.getInfoSess().setUtilActuel(Optional.of(new Utilisateur(this.controlleur.getID(username, newpw), username, newpw, user.get().getAutorisation())));
                         this.controlleur.goMainContentSig();
                     } catch (SQLException ex) {
+                        Notification.show("Erreur serveur, réeesayer");
                     }
                 } else {
                     confirmPass.setHelperText("Les mots de passe ne correspondent pas");

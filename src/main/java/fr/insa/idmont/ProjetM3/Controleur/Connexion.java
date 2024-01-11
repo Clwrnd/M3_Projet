@@ -92,7 +92,6 @@ public class Connexion {
 
     public void CreationCompte(String username, String pw, String auto, int id) throws SQLException {
         Connection con = this.viewSig.getMain().getInfoSess().getCon();
-        con.setAutoCommit(false);
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Identifiant (username,password,autorisation)
                                                        VALUES (?,?,?)
@@ -102,36 +101,14 @@ public class Connexion {
             pt.setString(3, auto);
             pt.executeUpdate();
             DeletePreId(id);
-            con.commit();
         } catch (SQLException ex) {
-            con.rollback();
-        } finally {
-            con.setAutoCommit(true);
-        }
+            throw ex;
+        } 
     }
 
     public void GotoLoginForm() {
         this.viewLog.getMain().removeAll();
         this.viewLog.getMain().add(new FirstConnexionForm(this.viewLog.getMain()));
-    }
-
-    public boolean TestUsername(String username) throws SQLException {
-        Connection con = this.viewSig.getMain().getInfoSess().getCon();
-        try (PreparedStatement pst = con.prepareStatement(
-                "select *"
-                + " from Identifiant"
-                + " where username = ?")) {
-            pst.setString(1, username);
-            ResultSet res = pst.executeQuery();
-
-            if (res.next()) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (SQLException ex) {
-            return false;
-        }
     }
 
     // Suppresion de l'utilisateur dans la table pre_connexion lors de la création du vrai compte
@@ -143,6 +120,7 @@ public class Connexion {
             pst.setInt(1, id);
             pst.executeUpdate();
         } catch (SQLException ex) {
+            throw ex;
         }
     }
 

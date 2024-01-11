@@ -42,7 +42,7 @@ public class Identification extends VerticalLayout {
         newUserBut.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         PasswordField pwEntry = new PasswordField();
         pwEntry.setLabel("Mot de passe");
-        pwEntry.setClassName("erreur");
+        pwEntry.setClassName("error");
 
         TextField EntryUsername = new TextField("Nom d'utilisateur");
 

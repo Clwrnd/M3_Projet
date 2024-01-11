@@ -28,7 +28,7 @@ import java.util.List;
 public class SqlQueryMainPart {
 
     // ------------------------------------ Produit :
-    public static List<Produits> GetProduit(Connection con) {
+    public static List<Produits> GetProduit(Connection con) throws SQLException {
         ArrayList<Produits> liste = new ArrayList<>();
         try (Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("SELECT * FROM Tproduits  ");
@@ -54,7 +54,7 @@ public class SqlQueryMainPart {
                 return -1;
             }
         } catch (SQLException ex) {
-            return -1;
+            throw ex;
         }
     }
 
@@ -68,25 +68,36 @@ public class SqlQueryMainPart {
             pst.setInt(3, id);
             pst.executeUpdate();
         } catch (SQLException ex) {
+            throw ex;
         }
     }
 
     public static void deleteProd(Connection con, Iterator<Produits> iterator) throws SQLException {
         Iterator<Produits> it = iterator;
-        while (it.hasNext()) {
-            try (PreparedStatement pst = con.prepareStatement(
-                    "delete "
-                    + " from Tproduits"
-                    + " where id = ?")) {
-                pst.setInt(1, iterator.next().getId());
-                pst.executeUpdate();
-            } catch (SQLException ex) {
-                throw ex;
+        con.setAutoCommit(false);
+        try {
+            while (it.hasNext()) {
+                try (PreparedStatement pst = con.prepareStatement(
+                        "delete "
+                        + " from Tproduits"
+                        + " where id = ?")) {
+                    pst.setInt(1, iterator.next().getId());
+                    pst.executeUpdate();
+                } catch (SQLException ex) {
+                    throw ex;
+                }
             }
+            con.commit();
+        } catch (SQLException ex2) {
+            con.rollback();
+            throw ex2;
+        } finally {
+            con.setAutoCommit(true);
         }
+
     }
 
-    public static List<Produits> SearchProd(Connection con, String ref) {
+    public static List<Produits> SearchProd(Connection con, String ref) throws SQLException {
         ArrayList<Produits> liste = new ArrayList<>();
         try (PreparedStatement st = con.prepareStatement(
                 "select *"
@@ -104,7 +115,7 @@ public class SqlQueryMainPart {
 
     }
 
-    public static void addProduct(Connection con, String ref, String des) {
+    public static void addProduct(Connection con, String ref, String des) throws SQLException {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Tproduits (ref,des)
                                                        VALUES (?,?)
@@ -113,7 +124,7 @@ public class SqlQueryMainPart {
             pt.setString(2, des);
             pt.executeUpdate();
         } catch (SQLException ex) {
-
+            throw ex;
         }
     }
 
@@ -144,7 +155,7 @@ public class SqlQueryMainPart {
                 return -1;
             }
         } catch (SQLException ex) {
-            return -1;
+            throw ex;
         }
     }
 
@@ -159,25 +170,35 @@ public class SqlQueryMainPart {
             pst.setInt(4, id);
             pst.executeUpdate();
         } catch (SQLException ex) {
+            throw ex;
         }
     }
 
     public static void deleteMachine(Connection con, Iterator<Machines> iterator) throws SQLException {
         Iterator<Machines> it = iterator;
-        while (it.hasNext()) {
-            try (PreparedStatement pst = con.prepareStatement(
-                    "delete "
-                    + " from Tmachine"
-                    + " where id = ?")) {
-                pst.setInt(1, iterator.next().getId());
-                pst.executeUpdate();
-            } catch (SQLException ex) {
-                throw ex;
+        con.setAutoCommit(false);
+        try {
+            while (it.hasNext()) {
+                try (PreparedStatement pst = con.prepareStatement(
+                        "delete "
+                        + " from Tmachine"
+                        + " where id = ?")) {
+                    pst.setInt(1, iterator.next().getId());
+                    pst.executeUpdate();
+                } catch (SQLException ex) {
+                    throw ex;
+                }
             }
+            con.commit();
+        } catch (SQLException ex2) {
+            con.rollback();
+            throw ex2;
+        } finally {
+            con.setAutoCommit(true);
         }
     }
 
-    public static List<Machines> SearchMachine(Connection con, String ref) {
+    public static List<Machines> SearchMachine(Connection con, String ref) throws SQLException {
         ArrayList<Machines> liste = new ArrayList<>();
         try (PreparedStatement st = con.prepareStatement(
                 "select *"
@@ -195,7 +216,7 @@ public class SqlQueryMainPart {
 
     }
 
-    public static void addMachine(Connection con, String ref, String des, int puissance) {
+    public static void addMachine(Connection con, String ref, String des, int puissance) throws SQLException {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Tmachine (ref,des,puissance)
                                                        VALUES (?,?,?)
@@ -205,7 +226,7 @@ public class SqlQueryMainPart {
             pt.setInt(3, puissance);
             pt.executeUpdate();
         } catch (SQLException ex) {
-
+            throw ex;
         }
     }
 
@@ -236,7 +257,7 @@ public class SqlQueryMainPart {
                 return -1;
             }
         } catch (SQLException ex) {
-            return -1;
+            throw ex;
         }
     }
 
@@ -249,21 +270,31 @@ public class SqlQueryMainPart {
             pst.setInt(2, id);
             pst.executeUpdate();
         } catch (SQLException ex) {
+            throw ex;
         }
     }
 
     public static void deleteTO(Connection con, Iterator<TypeOperations> iterator) throws SQLException {
         Iterator<TypeOperations> it = iterator;
-        while (it.hasNext()) {
-            try (PreparedStatement pst = con.prepareStatement(
-                    "delete "
-                    + " from Ttype_operation"
-                    + " where id = ?")) {
-                pst.setInt(1, iterator.next().getId());
-                pst.executeUpdate();
-            } catch (SQLException ex) {
-                throw ex;
+        con.setAutoCommit(false);
+        try {
+            while (it.hasNext()) {
+                try (PreparedStatement pst = con.prepareStatement(
+                        "delete "
+                        + " from Ttype_operation"
+                        + " where id = ?")) {
+                    pst.setInt(1, iterator.next().getId());
+                    pst.executeUpdate();
+                } catch (SQLException ex) {
+                    throw ex;
+                }
             }
+            con.commit();
+        } catch (SQLException ex2) {
+            con.rollback();
+            throw ex2;
+        } finally {
+            con.setAutoCommit(true);
         }
     }
 
@@ -285,7 +316,7 @@ public class SqlQueryMainPart {
 
     }
 
-    public static void addTO(Connection con, String des) {
+    public static void addTO(Connection con, String des) throws SQLException {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Ttype_operation (des)
                                                        VALUES (?)
@@ -293,7 +324,7 @@ public class SqlQueryMainPart {
             pt.setString(1, des);
             pt.executeUpdate();
         } catch (SQLException ex) {
-
+            throw ex;
         }
     }
 
@@ -308,7 +339,7 @@ public class SqlQueryMainPart {
             pt.setDouble(3, duree);
             pt.executeUpdate();
         } catch (SQLException ex) {
-
+            throw ex;
         }
     }
 
@@ -347,10 +378,11 @@ public class SqlQueryMainPart {
             pst.setDouble(6, dr);
             pst.executeUpdate();
         } catch (SQLException ex) {
+            throw ex;
         }
     }
 
-    public static List<Realise> GetRealise(Connection con) {
+    public static List<Realise> GetRealise(Connection con) throws SQLException {
         ArrayList<Realise> liste = new ArrayList<>();
         try (Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("SELECT * FROM Trealise  ");
@@ -403,23 +435,33 @@ public class SqlQueryMainPart {
 
     public static void deleteRealise(Connection con, Iterator<Realise> iterator) throws SQLException {
         Iterator<Realise> it = iterator;
-        while (it.hasNext()) {
-            Realise r = it.next();
-            try (PreparedStatement pst = con.prepareStatement(
-                    "delete "
-                    + " from Trealise"
-                    + " where id_machine = ? AND id_type=? AND duree = ? ")) {
-                pst.setInt(1, r.getMachine().getId());
-                pst.setInt(2, r.getTO().getId());
-                pst.setDouble(3, r.getDuree());
-                pst.executeUpdate();
-            } catch (SQLException ex) {
-                throw ex;
+        con.setAutoCommit(false);
+        try {
+            while (it.hasNext()) {
+                Realise r = it.next();
+                try (PreparedStatement pst = con.prepareStatement(
+                        "delete "
+                        + " from Trealise"
+                        + " where id_machine = ? AND id_type=? AND duree = ? ")) {
+                    pst.setInt(1, r.getMachine().getId());
+                    pst.setInt(2, r.getTO().getId());
+                    pst.setDouble(3, r.getDuree());
+                    pst.executeUpdate();
+                } catch (SQLException ex) {
+                    throw ex;
+                }
             }
+            con.commit();
+        } catch (SQLException ex2) {
+            con.rollback();
+            throw ex2;
+        } finally {
+            con.setAutoCommit(true);
         }
+
     }
 
-/*  public static List<Realise> SearchRealise(Connection con, String Ref) {
+    /*  public static List<Realise> SearchRealise(Connection con, String Ref) {
         ArrayList<Realise> liste = new ArrayList<>();
         try (PreparedStatement st = con.prepareStatement(
                 "select *"
@@ -436,7 +478,7 @@ public class SqlQueryMainPart {
         }
 
     }
-*/
+     */
     // -------------------------------------------- Operations:
     public static void AssociationOpDes(Connection con, ArrayList<Operations> liste) throws SQLException {
 
@@ -456,7 +498,7 @@ public class SqlQueryMainPart {
         }
     }
 
-    public static List<Operations> GetOp(Connection con, int idproduit) {
+    public static List<Operations> GetOp(Connection con, int idproduit) throws SQLException {
         ArrayList<Operations> liste = new ArrayList<>();
         try (PreparedStatement st = con.prepareStatement(
                 "select *"
@@ -486,20 +528,29 @@ public class SqlQueryMainPart {
 
     public static void deleteOp(Connection con, Iterator<Operations> iterator) throws SQLException {
         Iterator<Operations> it = iterator;
-        while (it.hasNext()) {
-            try (PreparedStatement pst = con.prepareStatement(
-                    "delete "
-                    + " from Toperations"
-                    + " where id = ?")) {
-                pst.setInt(1, iterator.next().getId());
-                pst.executeUpdate();
-            } catch (SQLException ex) {
-                throw ex;
+        con.setAutoCommit(false);
+        try {
+            while (it.hasNext()) {
+                try (PreparedStatement pst = con.prepareStatement(
+                        "delete "
+                        + " from Toperations"
+                        + " where id = ?")) {
+                    pst.setInt(1, iterator.next().getId());
+                    pst.executeUpdate();
+                } catch (SQLException ex) {
+                    throw ex;
+                }
             }
+            con.commit();
+        } catch (SQLException ex2) {
+            con.rollback();
+            throw ex2;
+        } finally {
+            con.setAutoCommit(false);
         }
     }
 
-    public static int addOp(Connection con, int idtype, int idproduit) {
+    public static int addOp(Connection con, int idtype, int idproduit) throws SQLException {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Toperations (idtype,id_produit)
                                                        VALUES (?,?)
@@ -533,25 +584,35 @@ public class SqlQueryMainPart {
     // -------------------------------------------- Précédence:
     public static List<Precedence> GetPrec(Connection con, List<Operations> list) throws SQLException {
         ArrayList<Precedence> pliste = new ArrayList<>();
-        for (Operations op : list) {
-            try (PreparedStatement st = con.prepareStatement(
-                    "select *"
-                    + " from Tprecedence"
-                    + " where opavant=? OR opapres=? ")) {
-                st.setInt(1, op.getId());
-                st.setInt(2, op.getId());
-                ResultSet res = st.executeQuery();
-                while (res.next()) {
-                    pliste.add(new Precedence(res.getInt(1), res.getInt(2)));
-                }
+        con.setAutoCommit(false);
+        try {
+            for (Operations op : list) {
+                try (PreparedStatement st = con.prepareStatement(
+                        "select *"
+                        + " from Tprecedence"
+                        + " where opavant=? OR opapres=? ")) {
+                    st.setInt(1, op.getId());
+                    st.setInt(2, op.getId());
+                    ResultSet res = st.executeQuery();
+                    while (res.next()) {
+                        pliste.add(new Precedence(res.getInt(1), res.getInt(2)));
+                    }
 
-            } catch (SQLException ex) {
+                } catch (SQLException ex) {
+                    throw ex;
+                }
             }
+            con.commit();
+        } catch (SQLException ex2) {
+            con.rollback();
+            throw ex2;
+        } finally {
+            con.setAutoCommit(true);
         }
         return pliste;
     }
 
-    public static void addPrecedence(Connection con, int avant, int apres) {
+    public static void addPrecedence(Connection con, int avant, int apres) throws SQLException{
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Tprecedence (opavant,opapres)
                                                        VALUES (?,?)
@@ -560,7 +621,7 @@ public class SqlQueryMainPart {
             pt.setInt(2, apres);
             pt.executeUpdate();
         } catch (SQLException ex) {
-
+            throw ex;
         }
 
     }
@@ -576,6 +637,7 @@ public class SqlQueryMainPart {
             pst.setInt(4, ap);
             pst.executeUpdate();
         } catch (SQLException ex) {
+            throw ex;
         }
     }
 
@@ -629,6 +691,7 @@ public class SqlQueryMainPart {
                 st.executeUpdate();
 
             } catch (SQLException ex) {
+                throw ex;
             }
         }
     }

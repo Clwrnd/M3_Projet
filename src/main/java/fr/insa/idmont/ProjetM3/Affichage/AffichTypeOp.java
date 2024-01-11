@@ -54,7 +54,7 @@ public class AffichTypeOp extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Nouveau type d'opération");
         TextField desAdd = new TextField("Description");
-        desAdd.addClassName("erreur");
+        desAdd.addClassName("error");
         Button save = new Button("Confirmer");
         Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);

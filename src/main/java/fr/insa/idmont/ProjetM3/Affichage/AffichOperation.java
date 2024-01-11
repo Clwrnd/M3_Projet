@@ -22,6 +22,8 @@ import fr.insa.idmont.ProjetM3.ExtendedGrid.ListeOperations;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -106,11 +108,12 @@ public class AffichOperation extends VerticalLayout {
             if (ToChoix.isEmpty()) {
                 ToChoix.setHelperText("Choisir une valeur");
             } else {
-                List<Operations> existant = SqlQueryMainPart.GetOp(con, idproduit);
-                int id = SqlQueryMainPart.addOp(con, ToChoix.getValue().getId(), idproduit);
-                AddPrecedence(existant, id);
-                dialog.close();
                 try {
+                    List<Operations> existant = SqlQueryMainPart.GetOp(con, idproduit);
+                    int id = SqlQueryMainPart.addOp(con, ToChoix.getValue().getId(), idproduit);
+                    AddPrecedence(existant, id);
+                    dialog.close();
+
                     refreshTableOp(con, SqlQueryMainPart.GetOp(con, idproduit));
                 } catch (SQLException ex) {
                     Notification.show("Erreur serveur, réeesayer");
@@ -133,7 +136,11 @@ public class AffichOperation extends VerticalLayout {
         if (taille == 0) {
             // Ne rien faire
         } else {
-            SqlQueryMainPart.addPrecedence(con, existant.get(taille - 1).getId(), id);
+            try {
+                SqlQueryMainPart.addPrecedence(con, existant.get(taille - 1).getId(), id);
+            } catch (SQLException ex) {
+                Notification.show("Erreur serveur, réessayer");
+            }
         }
     }
 

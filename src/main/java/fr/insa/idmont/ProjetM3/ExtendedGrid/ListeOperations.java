@@ -42,20 +42,14 @@ public class ListeOperations extends Grid<Operations> {
 
         this.addComponentColumn(operation -> {
             this.upButton = new Button(VaadinIcon.ANGLE_UP.create());
-            this.upButton.addClassName("erreur");
+            this.upButton.addClassName("error");
             upButton.addClickListener((e) -> {
-                try {
-                    PrecedenceUp(operation);
-                } catch (SQLException ex) {
-                }
+                PrecedenceUp(operation);
             });
             this.downButton = new Button(VaadinIcon.ANGLE_DOWN.create());
-            this.downButton.addClassName("erreur");
+            this.downButton.addClassName("error");
             downButton.addClickListener((e) -> {
-                try {
-                    PrecedenceDown(operation);
-                } catch (SQLException ex) {
-                }
+                PrecedenceDown(operation);
             });
 
             return new HorizontalLayout(upButton, downButton);
@@ -68,30 +62,35 @@ public class ListeOperations extends Grid<Operations> {
     }
 
     // Méthodes:
-    private void PrecedenceUp(Operations op) throws SQLException {
-        if (this.getData().indexOf(op) == 0) {
-            Notification.show("Vous êtes arrivés en haut de liste");
-        } else if (this.getData().indexOf(op) == this.getData().size() - 1) {
-            SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().size() - 2).getId(), op.getId(), this.getData().get(this.getData().size() - 2).getId(), op.getId());
-            if (this.getData().indexOf(op) != 1) {
-                SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(this.getData().size() - 3).getId(), this.getData().get(this.getData().size() - 3).getId(), this.getData().get(this.getData().size() - 2).getId());
-            }
-            Collections.swap(getData(), this.getData().size() - 2, this.getData().indexOf(op));
-            this.setItems(getData());
-        } else {
-            SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId());
-            SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId());
-            if (this.getData().indexOf(op) != 1) {
-                SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(this.getData().indexOf(op) - 2).getId(), this.getData().get(this.getData().indexOf(op) - 2).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId());
-            }
+    private void PrecedenceUp(Operations op) {
+        try {
+            if (this.getData().indexOf(op) == 0) {
+                Notification.show("Vous êtes arrivés en haut de liste");
+            } else if (this.getData().indexOf(op) == this.getData().size() - 1) {
+                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().size() - 2).getId(), op.getId(), this.getData().get(this.getData().size() - 2).getId(), op.getId());
+                if (this.getData().indexOf(op) != 1) {
+                    SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(this.getData().size() - 3).getId(), this.getData().get(this.getData().size() - 3).getId(), this.getData().get(this.getData().size() - 2).getId());
+                }
+                Collections.swap(getData(), this.getData().size() - 2, this.getData().indexOf(op));
+                this.setItems(getData());
+            } else {
+                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId());
+                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId());
+                if (this.getData().indexOf(op) != 1) {
+                    SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(this.getData().indexOf(op) - 2).getId(), this.getData().get(this.getData().indexOf(op) - 2).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId());
+                }
 
-            Collections.swap(getData(), this.getData().indexOf(op) - 1, this.getData().indexOf(op));
-            this.setItems(getData());
+                Collections.swap(getData(), this.getData().indexOf(op) - 1, this.getData().indexOf(op));
+                this.setItems(getData());
+            }
+        } catch (SQLException ex) {
+            Notification.show("Erreur serveur, réessayer");
         }
 
     }
 
-    private void PrecedenceDown(Operations op) throws SQLException {
+    private void PrecedenceDown(Operations op)  {
+        try{
         if (this.getData().indexOf(op) == this.getData().size() - 1) {
             Notification.show("Vous êtes arrivés en bas de liste");
         } else if (this.getData().indexOf(op) == 0) {
@@ -110,7 +109,11 @@ public class ListeOperations extends Grid<Operations> {
 
             Collections.swap(getData(), this.getData().indexOf(op) + 1, this.getData().indexOf(op));
             this.setItems(getData());
+        }            
+        }catch(SQLException ex){
+            Notification.show("Erreur serveur, réessayer");
         }
+
     }
 
     // Get et Set:

@@ -53,14 +53,14 @@ public class AffichRealise extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Nouvelle liaison Machine-opérations");
         ComboBox<Machines> Machine = new ComboBox<>("Machine");
-        Machine.addClassName("erreur");
+        Machine.addClassName("error");
         try {
             Machine.setItems(SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
         } catch (SQLException ex) {
         }
         Button save = new Button("Confirmer");
         ComboBox<TypeOperations> TypeOperation = new ComboBox<>("Type d'opération");
-        TypeOperation.addClassName("erreur");
+        TypeOperation.addClassName("error");
         try {
             TypeOperation.setItems(SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
         } catch (SQLException ex) {
@@ -120,6 +120,7 @@ public class AffichRealise extends VerticalLayout {
                         Machine.setHelperText("Combinaison déja existante");
                     }
                 } catch (SQLException ex) {
+                    Notification.show("Erreur serveur, réessayer");
                 }
             }
 

@@ -75,13 +75,13 @@ public class ListeProduits extends Grid<Produits> {
 
         this.refField = new TextField();
         this.refField.setWidthFull();
-        this.refField.setClassName("erreur");
+        this.refField.setClassName("error");
         this.getEditor().getBinder().forField(refField).bind(Produits::getRef, Produits::setRef);
         this.getColumns().get(1).setEditorComponent(refField);
 
         this.desField = new TextField();
         this.desField.setWidthFull();
-        this.desField.setClassName("erreur");
+        this.desField.setClassName("error");
         this.getEditor().getBinder().forField(desField).bind(Produits::getDes, Produits::setDes);
         this.getColumns().get(2).setEditorComponent(desField);
 
