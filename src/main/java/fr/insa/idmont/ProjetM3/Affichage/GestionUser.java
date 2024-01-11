@@ -43,7 +43,7 @@ public class GestionUser extends VerticalLayout {
         this.controlleur = new GestionAdmin(this);
 
         // Création des composants       
-        H2 titre1 = new H2("User Management");
+        H2 titre1 = new H2("Gestion des utilisateurs");
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
@@ -51,7 +51,7 @@ public class GestionUser extends VerticalLayout {
         Hl1.setAlignSelf(Alignment.END, deleteButton1);
         Hl1.setAlignSelf(Alignment.CENTER, titre1);
 
-        H2 titre2 = new H2("New User Management");
+        H2 titre2 = new H2("Gestion des nouveaux utilisateurs");
         Button deleteButton2 = new Button(VaadinIcon.TRASH.create());
         deleteButton2.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
@@ -59,24 +59,24 @@ public class GestionUser extends VerticalLayout {
         addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
         HorizontalLayout Hl2 = new HorizontalLayout(deleteButton2, titre2, addButton);
 
-        TextField RechercheUserField = new TextField("Search a user");
-        RechercheUserField.setPlaceholder("Press enter");
-        TextField RecherchePreUserField = new TextField("Search a user");
-        RecherchePreUserField.setPlaceholder("Press enter");
+        TextField RechercheUserField = new TextField("Rechercher un utilisateur");
+        RechercheUserField.setPlaceholder("Appuyer sur entrer ");
+        TextField RecherchePreUserField = new TextField("Rechercher un utilisateur");
+        RecherchePreUserField.setPlaceholder("Appuyer sur entrer ");
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("New User");
-        TextField UserAdd = new TextField("Username");
-        UserAdd.addClassName("error");
-        PasswordField passAdd = new PasswordField("Password");
-        passAdd.addClassName("error");
+        dialog.setHeaderTitle("Nouvel utilisateur");
+        TextField UserAdd = new TextField("Nom d'utilisateur");
+        UserAdd.addClassName("erreur");
+        PasswordField passAdd = new PasswordField("Mot de passe");
+        passAdd.addClassName("erreur");
         ComboBox<Autorisation> autoAdd = new ComboBox<>("Autorisation");
         autoAdd.setItems(Autorisation.values());
         autoAdd.setValue(Autorisation.CONSULTATION);
         autoAdd.setAllowCustomValue(false);
-        autoAdd.addClassName("error");
-        Button save = new Button("Confirm");
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        autoAdd.addClassName("erreur");
+        Button save = new Button("Confirmer");
+        Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
 
@@ -88,7 +88,7 @@ public class GestionUser extends VerticalLayout {
             this.TablePreUser = new ListeUtilisateur(this.getMain().getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()), false);
             this.add(Hl1, RechercheUserField, this.TableUser, new Hr(), Hl2, RecherchePreUserField, this.TablePreUser);;
         } catch (SQLException ex) {
-            Notification.show("Server error, try again");
+            Notification.show("Erreur serveur, veuillez réessayer");
         }
 
         this.setAlignSelf(Alignment.CENTER, Hl1, Hl2, hl3);
@@ -99,7 +99,7 @@ public class GestionUser extends VerticalLayout {
                 this.controlleur.DeleteUser();
                 refreshTableUser(this.main.getInfoSess().getCon(), GestionAdmin.GetUser(this.getMain().getInfoSess().getCon()));
             } catch (SQLException ex) {
-                Notification.show("server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
         });
 
@@ -108,7 +108,7 @@ public class GestionUser extends VerticalLayout {
                 this.controlleur.DeletePreUser();
                 refreshTablePreUser(this.main.getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()));
             } catch (SQLException ex) {
-                Notification.show("server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
         });
 
@@ -116,7 +116,7 @@ public class GestionUser extends VerticalLayout {
             try {
                 refreshTableUser(this.main.getInfoSess().getCon(), this.controlleur.searchUser(RechercheUserField.getValue()));
             } catch (SQLException ex) {
-                Notification.show("server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
 
             }
             ;
@@ -125,7 +125,7 @@ public class GestionUser extends VerticalLayout {
             try {
                 refreshTablePreUser(this.main.getInfoSess().getCon(), this.controlleur.searchPreUser(RecherchePreUserField.getValue()));
             } catch (SQLException ex) {
-                Notification.show("server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
             ;
         });
@@ -140,22 +140,22 @@ public class GestionUser extends VerticalLayout {
             passAdd.setHelperText(null);
             autoAdd.setHelperText(null);
             if (UserAdd.getValue().length() > 30 || UserAdd.getValue().length() == 0) {
-                UserAdd.setHelperText("1-30 characters exiged");
+                UserAdd.setHelperText("1-30 caractères demandés");
             } else if (passAdd.getValue().length() < 6 || passAdd.getValue().length() > 50) {
-                passAdd.setHelperText("6-50 characters exiged ");
+                passAdd.setHelperText("6-50 caractères demandés");
             } else if (autoAdd.isEmpty()) {
-                autoAdd.setHelperText("Enter a value");
+                autoAdd.setHelperText("Entrer une valeur");
             } else {
                 try {
                     if (GestionAdmin.TestUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1 || GestionAdmin.TestPreUsername(this.main.getInfoSess().getCon(), UserAdd.getValue()) != -1) {
-                        UserAdd.setHelperText("Username already exists");
+                        UserAdd.setHelperText("Le nom d'utilisateur existe déjà");
                     } else {
                         dialog.close();
                         this.controlleur.AddPreUser(UserAdd.getValue(), passAdd.getValue(), autoAdd.getValue().toString());
                         refreshTablePreUser(this.main.getInfoSess().getCon(), GestionAdmin.GetPreUser(this.getMain().getInfoSess().getCon()));
                     }
                 } catch (SQLException ex) {
-                    Notification.show("Server error, try again");
+                    Notification.show("Erreur serveur, veuillez réessayer");
                 }
             }
         });

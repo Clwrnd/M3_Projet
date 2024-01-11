@@ -41,7 +41,7 @@ public class LocateInPlan extends HorizontalLayout {
         MemoryBuffer memoryBuffer = new MemoryBuffer();
         MyUpload uploadBut = new MyUpload();
         uploadBut.setReceiver(memoryBuffer);
-        uploadBut.setUploadButton(new Button("Upload plan"));
+        uploadBut.setUploadButton(new Button("Uploader un plan"));
         uploadBut.setAcceptedFileTypes("image/JPEG", "image/png");
  
         NumberField X = new NumberField("Position X:");
@@ -62,8 +62,8 @@ public class LocateInPlan extends HorizontalLayout {
         HorizontalLayout coordinateClick = new HorizontalLayout(Xclick, Yclick);
         coordinateClick.setVisible(false);
         coordinateMoving.setVisible(false);
-        TextField des = new TextField("Location");
-        des.addClassName("error");
+        TextField des = new TextField("Localisation ");
+        des.addClassName("erreur");
         Hr hr1 = new Hr();
         hr1.setVisible(false);
         Hr hr2 = new Hr();
@@ -114,9 +114,9 @@ public class LocateInPlan extends HorizontalLayout {
         this.parent.getSave2().addClickListener((e) -> {
             des.setHelperText(null);
             if (des.isEmpty() || des.getValue().length() > 30) {
-                des.setHelperText("1-30 characters exiged");
+                des.setHelperText("1-30 caractères demandés");
             } else if (Xclick.isEmpty() || Yclick.isEmpty()) {
-                Notification.show("Locate the machine");
+                Notification.show("Localiser la machine");
             } else {
                 this.parent.getClickX().setValue(Xclick.getValue()); this.parent.setXc(Xclick.getValue());
                 this.parent.getClickY().setValue(Yclick.getValue()); this.parent.setYc(Yclick.getValue());

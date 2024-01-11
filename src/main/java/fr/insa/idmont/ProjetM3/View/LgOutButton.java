@@ -12,7 +12,7 @@ public class LgOutButton extends Button{
     // Constructeur du boutton de déconnexion
     public LgOutButton(MainView main){
         this.main = main;
-        this.setText("Log out");
+        this.setText("Se déconnecter");
         this.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
         ButtonVariant.LUMO_ERROR);
         

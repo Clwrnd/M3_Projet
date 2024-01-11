@@ -53,16 +53,16 @@ public class AffichRealise extends VerticalLayout {
         Hl1.setAlignSelf(Alignment.START, addButton);
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("New machine operations");
+        dialog.setHeaderTitle("Nouvelle liaison Machine-opérations");
         ComboBox<Machines> Machine = new ComboBox<>("Machine");
-        Machine.addClassName("error");
+        Machine.addClassName("erreur");
         try {
             Machine.setItems(SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
         } catch (SQLException ex) {
         }
-        Button save = new Button("Confirm");
+        Button save = new Button("Confirmer");
         ComboBox<TypeOperations> TypeOperation = new ComboBox<>("Type d'opération");
-        TypeOperation.addClassName("error");
+        TypeOperation.addClassName("erreur");
         try {
             TypeOperation.setItems(SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
         } catch (SQLException ex) {
@@ -70,7 +70,7 @@ public class AffichRealise extends VerticalLayout {
         NumberField duree = new NumberField("Durée (heure)");
         duree.addClassName("error");
         VerticalLayout vl = new VerticalLayout(Machine, TypeOperation, duree);
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
         dialog.add(vl);
@@ -79,7 +79,7 @@ public class AffichRealise extends VerticalLayout {
             this.TableOpM = new ListeRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()));
             this.add(Hl1,this.TableOpM);
         } catch (SQLException ex) {
-            Notification.show("Server error, try again");
+            Notification.show("Erreur serveur, veuillez réessayer");
         }
 
         this.setAlignSelf(Alignment.CENTER, Hl1);
@@ -89,7 +89,7 @@ public class AffichRealise extends VerticalLayout {
             try {
                 SqlQueryMainPart.deleteRealise(this.main.getInfoSess().getCon(), this.TableOpM.getSelectedItems().iterator());
             } catch (SQLException ex) {
-                Notification.show("Server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
             try {
                 refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()));

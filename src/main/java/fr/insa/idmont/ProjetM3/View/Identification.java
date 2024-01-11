@@ -35,17 +35,17 @@ public class Identification extends VerticalLayout {
         // Création des composants:
         VerticalLayout Vlay = new VerticalLayout();
 
-        Button validerBut = new Button("Log in");
+        Button validerBut = new Button("Se connecter");
         validerBut.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        Button newUserBut = new Button("Sign in");
+        Button newUserBut = new Button("S'inscrire");
         newUserBut.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         PasswordField pwEntry = new PasswordField();
-        pwEntry.setLabel("Password");
-        pwEntry.setClassName("error");
+        pwEntry.setLabel("Mot de passe");
+        pwEntry.setClassName("erreur");
 
-        TextField EntryUsername = new TextField("Username");
+        TextField EntryUsername = new TextField("Nom d'utilisateur");
 
-        Vlay.add(new Paragraph("First connection ? Click here:"), newUserBut);
+        Vlay.add(new Paragraph("Première connection ? Cliquer ici : "), newUserBut);
         Vlay.setAlignItems(Alignment.CENTER);
         Vlay.setSpacing(false);
         this.add(new H1("Gestionnaire de ligne de production"), EntryUsername, pwEntry, validerBut, new H1(""), Vlay);
@@ -63,7 +63,7 @@ public class Identification extends VerticalLayout {
                     this.main.getInfoSess().setUtilActuel(user);
                     this.controlleur.goMainContentLog();
                 } else {
-                    pwEntry.setHelperText("Incorect Username or Password");
+                    pwEntry.setHelperText("Nom d'utilisateur et/ou mot de passe incorrect ");
                 }
             } catch (SQLException ex) {
                 Notification.show("Error data base");

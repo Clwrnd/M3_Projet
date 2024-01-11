@@ -45,17 +45,17 @@ public class AffichProduit extends VerticalLayout {
         Hl1.setAlignSelf(Alignment.END, deleteButton1);
         Hl1.setAlignSelf(Alignment.CENTER, titre1);
         Hl1.setAlignSelf(Alignment.START, addButton);
-        TextField RechercheProduit = new TextField("Search a product");
-        RechercheProduit.setPlaceholder("Press enter");
+        TextField RechercheProduit = new TextField("Rechercher un produit");
+        RechercheProduit.setPlaceholder("Appuyez sur entrer");
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("New Product");
+        dialog.setHeaderTitle("Nouveau produit");
         TextField refAdd = new TextField("Référence");
-        refAdd.addClassName("error");
+        refAdd.addClassName("erreur");
         TextField desAdd = new TextField("Description");
-        desAdd.addClassName("error");
-        Button save = new Button("Confirm");
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        desAdd.addClassName("erreur");
+        Button save = new Button("Confirmer");
+        Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
 
@@ -66,7 +66,7 @@ public class AffichProduit extends VerticalLayout {
             this.TableProduit = new ListeProduits(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()));
             this.add(Hl1, RechercheProduit, this.TableProduit);;
         } catch (SQLException ex) {
-            Notification.show("Server error, try again");
+            Notification.show("Erreur serveur, veuillez réessayer");
         }
         this.setAlignSelf(Alignment.CENTER, Hl1);
 
@@ -76,7 +76,7 @@ public class AffichProduit extends VerticalLayout {
                 SqlQueryMainPart.deleteProd(this.main.getInfoSess().getCon(), this.TableProduit.getSelectedItems().iterator());
                 refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()));
             } catch (SQLException ex) {
-                Notification.show("Try again and verify there is no constraint on this item");
+                Notification.show("Réessayez et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
             }
         });
 
@@ -84,7 +84,7 @@ public class AffichProduit extends VerticalLayout {
             try {
                 refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchProd(this.main.getInfoSess().getCon(), RechercheProduit.getValue()));
             } catch (SQLException ex) {
-                Notification.show("server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
 
             }
             ;
@@ -96,9 +96,9 @@ public class AffichProduit extends VerticalLayout {
             desAdd.setHelperText(null);
 
             if (refAdd.getValue().length() > 30 || refAdd.getValue().length() == 0) {
-                refAdd.setHelperText("1-30 characters exiged");
+                refAdd.setHelperText("1-30 caractères demandés");
             } else if (desAdd.getValue().length() > 30 || desAdd.getValue().length() == 0) {
-                desAdd.setHelperText("1-30 characters exiged ");
+                desAdd.setHelperText("1-30 caractères demandés ");
             } else {
                 try {
                     int i = SqlQueryMainPart.TestProduit(this.main.getInfoSess().getCon(), refAdd.getValue());
@@ -107,10 +107,10 @@ public class AffichProduit extends VerticalLayout {
                         dialog.close();
                         refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()));
                     } else {
-                        refAdd.setHelperText("Product already exists");
+                        refAdd.setHelperText("Le produit existe déjà");
                     }
                 } catch (SQLException ex) {
-                    Notification.show("Server error, try again");
+                    Notification.show("Erreur serveur, veuillez réessayer ");
                 }
             }
 

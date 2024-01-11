@@ -46,7 +46,7 @@ public class ListeMachines extends Grid<Machines> {
         this.addColumn(Machines::getLoc).setHeader("Désignation plan: X-Y");
 
         this.addComponentColumn(user -> {
-            Button editButton = new Button("Edit");
+            Button editButton = new Button("Modifier");
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel();
@@ -68,20 +68,20 @@ public class ListeMachines extends Grid<Machines> {
 
         this.refField = new TextField();
         this.refField.setWidthFull();
-        this.refField.setClassName("error");
+        this.refField.setClassName("erreur");
         this.getEditor().getBinder().forField(refField).bind(Machines::getRef, Machines::setRef);
         this.getColumns().get(1).setEditorComponent(refField);
 
         this.desField = new TextField();
         this.desField.setWidthFull();
-        this.desField.setClassName("error");
+        this.desField.setClassName("erreur");
         this.getEditor().getBinder().forField(desField).bind(Machines::getDes, Machines::setDes);
         this.getColumns().get(2).setEditorComponent(desField);
 
         this.puisField = new IntegerField();
         this.puisField.setMax(999999999);
         this.puisField.setWidthFull();
-        this.puisField.setClassName("error");
+        this.puisField.setClassName("erreur");
         this.getEditor().getBinder().forField(puisField).bind(Machines::getPuissance, Machines::setPuissance);
         this.getColumns().get(3).setEditorComponent(puisField);
 
@@ -116,11 +116,11 @@ public class ListeMachines extends Grid<Machines> {
         this.desField.setHelperText(null);
         this.puisField.setHelperText(null);
         if (this.refField.getValue().length() > 30 || this.refField.getValue().length() == 0) {
-            this.refField.setHelperText("1-30 characters exiged");
+            this.refField.setHelperText("1-30 caractères demandés");
         } else if (this.desField.getValue().length() > 30 || this.desField.getValue().length() == 0) {
-            this.desField.setHelperText("1-30 characters exiged ");
+            this.desField.setHelperText("1-30 caractères demandés ");
         } else if (this.puisField.isEmpty()) {
-            this.puisField.setHelperText("Enter a valid value");
+            this.puisField.setHelperText("Entrer une valeur valide");
         } else {
             try {
                 int i = SqlQueryMainPart.TestMachine(con, this.refField.getValue());
@@ -128,10 +128,10 @@ public class ListeMachines extends Grid<Machines> {
                     SqlQueryMainPart.EditMachine(con, this.refField.getValue(), this.desField.getValue(), Integer.parseInt(this.idField.getValue()), this.puisField.getValue());
                     this.getEditor().save();
                 } else {
-                    this.refField.setHelperText("Machine already exists");
+                    this.refField.setHelperText("La machine existe déjà");
                 }
             } catch (SQLException ex) {
-                Notification.show("Server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
         }
 

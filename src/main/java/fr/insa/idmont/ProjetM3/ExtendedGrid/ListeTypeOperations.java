@@ -41,7 +41,7 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
         
 
         this.addComponentColumn(user -> {
-            Button editButton = new Button("Edit");
+            Button editButton = new Button("Modifier");
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel();
@@ -63,7 +63,7 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
 
         this.desField = new TextField();
         this.desField.setWidthFull();
-        this.desField.setClassName("error");
+        this.desField.setClassName("erreur");
         this.getEditor().getBinder().forField(desField).bind(TypeOperations::getDes, TypeOperations::setDes);
         this.getColumns().get(1).setEditorComponent(desField);
 
@@ -91,7 +91,7 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
         // Contrôle de saisie.
         this.desField.setHelperText(null);
         if (this.desField.getValue().length() > 30 || this.desField.getValue().length() == 0) {
-            this.desField.setHelperText("1-30 characters exiged");
+            this.desField.setHelperText("1-30 caractères demandés");
         } else {
             try {
                 int i = SqlQueryMainPart.TestTO(con, this.desField.getValue());
@@ -99,10 +99,10 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
                     SqlQueryMainPart.EditTO(con, this.desField.getValue(), this.idField.getValue());
                     this.getEditor().save();
                 } else {
-                    this.desField.setHelperText("Operation type already exists");
+                    this.desField.setHelperText("L'opération existe déjà");
                 }
             } catch (SQLException ex) {
-                Notification.show("Server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
         }
 

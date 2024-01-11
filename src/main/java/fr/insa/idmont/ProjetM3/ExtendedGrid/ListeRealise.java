@@ -43,7 +43,7 @@ public class ListeRealise extends Grid<Realise> {
         this.addColumn(Realise::getDuree).setHeader("Durée");
 
         this.addComponentColumn(user -> {
-            Button editButton = new Button("Edit");
+            Button editButton = new Button("modifier");
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel();
@@ -70,7 +70,7 @@ public class ListeRealise extends Grid<Realise> {
         this.Machine = new ComboBox<>();
         this.Machine.setItems(SqlQueryMainPart.GetMachine(con));
         this.Machine.setWidthFull();
-        this.Machine.setClassName("error");
+        this.Machine.setClassName("erreur");
         this.getEditor().getBinder().forField(Machine).bind(Realise::getMachine, Realise::setMachine);
         this.getColumns().get(0).setEditorComponent(Machine);
 
@@ -82,7 +82,7 @@ public class ListeRealise extends Grid<Realise> {
 
         this.duree = new NumberField();
         this.duree.setWidthFull();
-        this.duree.setClassName("error");
+        this.duree.setClassName("erreur");
         this.getEditor().getBinder().forField(duree).bind(Realise::getDuree, Realise::setDuree);
         this.getColumns().get(2).setEditorComponent(duree);
 
@@ -123,7 +123,7 @@ public class ListeRealise extends Grid<Realise> {
                 SqlQueryMainPart.EditRealise(con, this.TypeOperation.getValue().getId(),this.duree.getValue() ,this.Machine.getValue().getId(),this.getEditor().getItem().getTO().getId(),  this.getEditor().getItem().getDuree(),this.getEditor().getItem().getMachine().getId());
                 this.getEditor().save();
             } catch (SQLException ex) {
-                Notification.show("Server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
 
         }

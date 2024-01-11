@@ -46,15 +46,15 @@ public class AffichTypeOp extends VerticalLayout {
         Hl1.setAlignSelf(FlexComponent.Alignment.END, deleteButton1);
         Hl1.setAlignSelf(FlexComponent.Alignment.CENTER, titre1);
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
-        TextField RechercheTO = new TextField("Search an operation type");
-        RechercheTO.setPlaceholder("Press enter");
+        TextField RechercheTO = new TextField("Rechercher un type d'opération");
+        RechercheTO.setPlaceholder("Appuyer sur entrer");
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("New operation type");
+        dialog.setHeaderTitle("Nouveau type d'opération");
         TextField desAdd = new TextField("Description");
-        desAdd.addClassName("error");
-        Button save = new Button("Confirm");
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        desAdd.addClassName("erreur");
+        Button save = new Button("Confirmer");
+        Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
 
@@ -64,7 +64,7 @@ public class AffichTypeOp extends VerticalLayout {
             this.tableTO = new ListeTypeOperations(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
             this.add(Hl1, RechercheTO, this.tableTO);;
         } catch (SQLException ex) {
-            Notification.show("Server error, try again");
+            Notification.show("Erreur serveur, veuillez réessayer");
         }
         this.setAlignSelf(FlexComponent.Alignment.CENTER, Hl1);
 
@@ -74,7 +74,7 @@ public class AffichTypeOp extends VerticalLayout {
                 SqlQueryMainPart.deleteTO(this.main.getInfoSess().getCon(), this.tableTO.getSelectedItems().iterator());
                 refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
             } catch (SQLException ex) {
-                Notification.show("Try again and verify there is no constraint on this item");
+                Notification.show("Réessayez et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
             }
         });
 
@@ -82,7 +82,7 @@ public class AffichTypeOp extends VerticalLayout {
             try {
                 refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchTO(this.main.getInfoSess().getCon(), RechercheTO.getValue()));
             } catch (SQLException ex) {
-                Notification.show("server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
 
             }
             ;
@@ -93,7 +93,7 @@ public class AffichTypeOp extends VerticalLayout {
             desAdd.setHelperText(null);
 
             if (desAdd.getValue().length() > 30 || desAdd.getValue().length() == 0) {
-                desAdd.setHelperText("1-30 characters exiged");
+                desAdd.setHelperText("1-30 caractères demandés");
             } else {
                 try {
                     int i = SqlQueryMainPart.TestTO(this.main.getInfoSess().getCon(), desAdd.getValue());
@@ -102,10 +102,10 @@ public class AffichTypeOp extends VerticalLayout {
                         dialog.close();
                         refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
                     } else {
-                        desAdd.setHelperText("Operation type already exists");
+                        desAdd.setHelperText("Le type d'opération existe déjà");
                     }
                 } catch (SQLException ex) {
-                    Notification.show("Server error, try again");
+                    Notification.show("Erreur serveur, veuillez réessayer");
                 }
             }
 

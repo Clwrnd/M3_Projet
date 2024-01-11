@@ -44,12 +44,12 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
 
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(Utilisateur::getId).setHeader("Id");
-        this.addColumn(Utilisateur::getNom).setHeader("Username");
-        this.addColumn(Utilisateur::getPass).setHeader("Password");
+        this.addColumn(Utilisateur::getNom).setHeader("Nom d'utilisateur");
+        this.addColumn(Utilisateur::getPass).setHeader("Mot de passe");
         this.addColumn(Utilisateur::getAutorisation).setHeader("Permissions");
         
         this.addComponentColumn(user -> {
-            Button editButton = new Button("Edit");
+            Button editButton = new Button("Modifier");
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel(); 
@@ -65,13 +65,13 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         
         this.userField = new TextField();
         this.userField.setWidthFull();
-        this.userField.setClassName("error");
+        this.userField.setClassName("erreur");
         this.getEditor().getBinder().forField(userField).bind(Utilisateur::getNom, Utilisateur::setNom);
         this.getColumns().get(1).setEditorComponent(userField);
         
         this.pwField = new PasswordField();
         this.pwField.setWidthFull();
-        this.pwField.setClassName("error");
+        this.pwField.setClassName("erreur");
         this.getEditor().getBinder().forField(pwField).bind(Utilisateur::getPass, Utilisateur::setPass);
         this.getColumns().get(2).setEditorComponent(pwField);
         
@@ -79,7 +79,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.selecAutori.setItems(Autorisation.values());
         this.selecAutori.setWidthFull();
         this.selecAutori.setAllowCustomValue(false);
-        this.selecAutori.addClassName("error");
+        this.selecAutori.addClassName("erreur");
         this.getEditor().getBinder().forField(selecAutori).bind(Utilisateur::getAutorisation, Utilisateur::setAutorisation);
         this.getColumns().get(3).setEditorComponent(selecAutori);
         
@@ -120,11 +120,11 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.pwField.setHelperText(null);
         this.selecAutori.setHelperText(null);
         if (this.userField.getValue().length() > 30 || this.userField.getValue().length() == 0) {
-            this.userField.setHelperText("1-30 characters exiged");
+            this.userField.setHelperText("1-30 caractères demandés");
         } else if (this.pwField.getValue().length() < 6 || this.pwField.getValue().length() > 50) {
-            this.pwField.setHelperText("6-50 characters exiged ");
+            this.pwField.setHelperText("6-50 caractères demandés");
         } else if (this.selecAutori.isEmpty()) {
-            this.selecAutori.setHelperText("Enter a value");
+            this.selecAutori.setHelperText("Entrer une valeur");
         } else {
             try {
                 int i = GestionAdmin.TestUsername(con, this.userField.getValue());
@@ -136,10 +136,10 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
                         GestionAdmin.EditPreUser(con, this.userField.getValue(), this.pwField.getValue(), this.selecAutori.getValue().toString(), Integer.valueOf(id.getValue()));
                     }
                 } else {
-                    this.userField.setHelperText("Username already exists");
+                    this.userField.setHelperText("Le nom d'utilisateru existe déjà");
                 }
             } catch (SQLException ex) {
-                Notification.show("Server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
         }
         

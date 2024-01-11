@@ -41,7 +41,7 @@ public class ListeOperations extends Grid<Operations> {
 
         this.addComponentColumn(operation -> {
             this.upButton = new Button(VaadinIcon.ANGLE_UP.create());
-            this.upButton.addClassName("error");
+            this.upButton.addClassName("erreur");
             upButton.addClickListener((e) -> {
                 try {
                     PrecedenceUp(operation);
@@ -49,7 +49,7 @@ public class ListeOperations extends Grid<Operations> {
                 }
             });
             this.downButton = new Button(VaadinIcon.ANGLE_DOWN.create());
-            this.downButton.addClassName("error");
+            this.downButton.addClassName("erreur");
             downButton.addClickListener((e) -> {
                 try {
                     PrecedenceDown(operation);

@@ -63,21 +63,21 @@ public class AffichMachine extends VerticalLayout {
         Hl1.setAlignSelf(FlexComponent.Alignment.END, deleteButton1);
         Hl1.setAlignSelf(FlexComponent.Alignment.CENTER, titre1);
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
-        TextField RechercheMachine = new TextField("Search a machine");
-        RechercheMachine.setPlaceholder("Press enter");
+        TextField RechercheMachine = new TextField("Rechercher une machine");
+        RechercheMachine.setPlaceholder("Appuyez sur entrer");
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("New Machine");
+        dialog.setHeaderTitle("Nouvelle Machine");
         TextField refAdd = new TextField("Référence");
-        refAdd.addClassName("error");
+        refAdd.addClassName("erreur");
         TextField desAdd = new TextField("Description");
-        desAdd.addClassName("error");
+        desAdd.addClassName("erreur");
         IntegerField puisAdd = new IntegerField("Puissance (W)");
         puisAdd.setMax(999999999);
-        puisAdd.addClassName("error");
+        puisAdd.addClassName("erreur");
         this.locateBut = new Button("Localisation", VaadinIcon.BULLSEYE.create());
-        Button save = new Button("Confirm");
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        Button save = new Button("Confirmer");
+        Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
 
@@ -97,9 +97,9 @@ public class AffichMachine extends VerticalLayout {
         dialog.add(Hl2);
 
         this.dialog2 = new Dialog();
-        dialog2.setHeaderTitle("Locate");
-        this.save2 = new Button("Confirm");
-        Button cancelButton2 = new Button("Cancel", e -> getDialog2().close());
+        dialog2.setHeaderTitle("Localiser");
+        this.save2 = new Button("Confirmer");
+        Button cancelButton2 = new Button("Annuler", e -> getDialog2().close());
         dialog2.getFooter().add(cancelButton2);
         dialog2.getFooter().add(save2);
 
@@ -107,7 +107,7 @@ public class AffichMachine extends VerticalLayout {
             this.TableMachine = new ListeMachines(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
             this.add(Hl1, RechercheMachine, this.TableMachine);;
         } catch (SQLException ex) {
-            Notification.show("Server error, try again");
+            Notification.show("Erreur du serveur, veuillez réessayer");
         }
         this.setAlignSelf(FlexComponent.Alignment.CENTER, Hl1);
 
@@ -117,7 +117,7 @@ public class AffichMachine extends VerticalLayout {
                 SqlQueryMainPart.deleteMachine(this.main.getInfoSess().getCon(), this.TableMachine.getSelectedItems().iterator());
                 refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
             } catch (SQLException ex) {
-                Notification.show("Try again and verify there is no constraint on this item");
+                Notification.show("Réessayer et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
             }
         });
 
@@ -125,7 +125,7 @@ public class AffichMachine extends VerticalLayout {
             try {
                 refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchMachine(this.main.getInfoSess().getCon(), RechercheMachine.getValue()));
             } catch (SQLException ex) {
-                Notification.show("server error, try again");
+                Notification.show("Erreur du serveur, veuillez réessayer");
 
             }
             ;
@@ -139,13 +139,13 @@ public class AffichMachine extends VerticalLayout {
             puisAdd.setHelperText(null);
 
             if (refAdd.getValue().length() > 30 || refAdd.getValue().length() == 0) {
-                refAdd.setHelperText("1-30 characters exiged");
+                refAdd.setHelperText("1-30 caractères demandés");
             } else if (desAdd.getValue().length() > 30 || desAdd.getValue().length() == 0) {
-                desAdd.setHelperText("1-30 characters exiged ");
+                desAdd.setHelperText("1-30 caractères demandés");
             } else if (puisAdd.isEmpty()) {
-                puisAdd.setHelperText("Enter a valid value");
+                puisAdd.setHelperText("Entrer une valeur valide");
             } else if (this.Xc == -1 || this.Yc == -1 || this.desC == null) {
-                Notification.show("Add a location !");
+                Notification.show("ajouter une localisation");
             } else {
                 try {
                     int i = SqlQueryMainPart.TestMachine(this.main.getInfoSess().getCon(), refAdd.getValue());
@@ -158,10 +158,10 @@ public class AffichMachine extends VerticalLayout {
                         this.desC = null;
                         this.info.setVisible(false);
                     } else {
-                        refAdd.setHelperText("Machine already exists");
+                        refAdd.setHelperText("Cette machine existe déjà");
                     }
                 } catch (SQLException ex) {
-                    Notification.show("Server error, try again");
+                    Notification.show("Erreur serveur, veuillez réessayer");
                 }
             }
 

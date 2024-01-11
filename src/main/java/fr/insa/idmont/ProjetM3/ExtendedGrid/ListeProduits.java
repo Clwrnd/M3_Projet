@@ -43,7 +43,7 @@ public class ListeProduits extends Grid<Produits> {
         this.addColumn(Produits::getDes).setHeader("Description");
 
         this.addComponentColumn(produit -> {
-            Button editButton = new Button("Edit");
+            Button editButton = new Button("Modifier");
             Button planButton = new Button(VaadinIcon.TASKS.create());
             editButton.addClickListener(e -> {
                 if (this.getEditor().isOpen()) {
@@ -74,13 +74,13 @@ public class ListeProduits extends Grid<Produits> {
 
         this.refField = new TextField();
         this.refField.setWidthFull();
-        this.refField.setClassName("error");
+        this.refField.setClassName("erreur");
         this.getEditor().getBinder().forField(refField).bind(Produits::getRef, Produits::setRef);
         this.getColumns().get(1).setEditorComponent(refField);
 
         this.desField = new TextField();
         this.desField.setWidthFull();
-        this.desField.setClassName("error");
+        this.desField.setClassName("erreur");
         this.getEditor().getBinder().forField(desField).bind(Produits::getDes, Produits::setDes);
         this.getColumns().get(2).setEditorComponent(desField);
 
@@ -110,9 +110,9 @@ public class ListeProduits extends Grid<Produits> {
         this.refField.setHelperText(null);
         this.desField.setHelperText(null);
         if (this.refField.getValue().length() > 30 || this.refField.getValue().length() == 0) {
-            this.refField.setHelperText("1-30 characters exiged");
+            this.refField.setHelperText("1-30 caractères demandés");
         } else if (this.desField.getValue().length() > 30 || this.desField.getValue().length() == 0) {
-            this.desField.setHelperText("1-30 characters exiged ");
+            this.desField.setHelperText("1-30 caractères demandés");
         } else {
             try {
                 int i = SqlQueryMainPart.TestProduit(con, this.refField.getValue());
@@ -120,10 +120,10 @@ public class ListeProduits extends Grid<Produits> {
                     SqlQueryMainPart.EditProduct(con, this.refField.getValue(), this.desField.getValue(), Integer.parseInt(this.idField.getValue()));
                     this.getEditor().save();
                 } else {
-                    this.refField.setHelperText("Product already exists");
+                    this.refField.setHelperText("Le produit existe déjà");
                 }
             } catch (SQLException ex) {
-                Notification.show("Server error, try again");
+                Notification.show("Erreur serveur, veuillez réessayer");
             }
         }
 

@@ -35,19 +35,19 @@ public class FirstConnexionForm extends VerticalLayout {
         this.controlleur = new Connexion(this);
 
         // Création des composants:
-        TextField EntryUsername = new TextField("Username");
-        EntryUsername.addClassName("error");
-        PasswordField EntryPw = new PasswordField("Default password");
-        EntryPw.addClassName("error");
-        PasswordField newPassField = new PasswordField("New Password");
-        newPassField.addClassName("error");
-        PasswordField confirmPass = new PasswordField("Confirm your new password");
-        confirmPass.addClassName("error");
-        Button valide = new Button("Let's start!");
+        TextField EntryUsername = new TextField("Nom d'utilisateur");
+        EntryUsername.addClassName("erreur");
+        PasswordField EntryPw = new PasswordField("Mot de passe par défault");
+        EntryPw.addClassName("erreur");
+        PasswordField newPassField = new PasswordField("Nouveau mot de passe");
+        newPassField.addClassName("erreur");
+        PasswordField confirmPass = new PasswordField("Confirmer le nouveau mot de passe");
+        confirmPass.addClassName("erreur");
+        Button valide = new Button("C'est parti !");
         valide.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button retour = new Button("Retour", new Icon(VaadinIcon.ARROW_LEFT));
-        H2 reg = new H2("First connexion");
-        Paragraph info = new Paragraph("Enter the login details provided by your administrator and personalize your password.");
+        H2 reg = new H2("Première connection");
+        Paragraph info = new Paragraph("Entrez vos données de connection fournis par votre administrateur et personalisez votre mot de passe");
         HorizontalLayout DownSideHl = new HorizontalLayout(retour, valide);
 
         this.add(reg, info, EntryUsername, EntryPw, newPassField, confirmPass, DownSideHl);
@@ -77,12 +77,12 @@ public class FirstConnexionForm extends VerticalLayout {
                     } catch (SQLException ex) {
                     }
                 } else {
-                    confirmPass.setHelperText("Passwords don't match");
+                    confirmPass.setHelperText("Les mots de passe ne correspondent pas");
                 }
             } else if (user.isEmpty()) {
-                EntryPw.setHelperText("Incorect Username or Password");
+                EntryPw.setHelperText("Nom d'utilisateur ou mot de passe incorrect");
             } else {
-                newPassField.setHelperText("Password must contain 6 to 50 characters ");
+                newPassField.setHelperText("Le mot de passe doit contenir entre 6 et 50 caractères");
             }
         });
 
