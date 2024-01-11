@@ -30,7 +30,6 @@ import java.util.List;
 /**
  * @author cidmo
  */
-
 // Composant gérant l'affichage effectif des machines et des sous-composant le permettant.
 public class AffichMachine extends VerticalLayout {
 
@@ -50,7 +49,7 @@ public class AffichMachine extends VerticalLayout {
     private double Yc;
     private String desC;
 
-    public AffichMachine(MainView main) {
+    public AffichMachine(MainView main, boolean editAble) {
 
         // Initialisation des variables permettant la récupération des données.
         this.main = main;
@@ -111,19 +110,22 @@ public class AffichMachine extends VerticalLayout {
         dialog2.getFooter().add(save2);
 
         try {
-            this.TableMachine = new ListeMachines(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
+            this.TableMachine = new ListeMachines(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()),editAble);
             this.add(Hl1, RechercheMachine, this.TableMachine);;
         } catch (SQLException ex) {
             Notification.show("Erreur serveur, réessayer");
         }
         this.setAlignSelf(FlexComponent.Alignment.CENTER, Hl1);
-        
 
+        if (!editAble) {
+            addButton.setEnabled(false);
+            deleteButton1.setEnabled(false);
+        }
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
             try {
                 SqlQueryMainPart.deleteMachine(this.main.getInfoSess().getCon(), this.TableMachine.getSelectedItems().iterator());
-                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
+                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()),editAble);
             } catch (SQLException ex) {
                 Notification.show("Réessayer et vérifier qu'il n'y ai pas de contrainte sur l'élément");
             }
@@ -131,7 +133,7 @@ public class AffichMachine extends VerticalLayout {
 
         RechercheMachine.addKeyPressListener(Key.ENTER, (e) -> {
             try {
-                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchMachine(this.main.getInfoSess().getCon(), RechercheMachine.getValue()));
+                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchMachine(this.main.getInfoSess().getCon(), RechercheMachine.getValue()),editAble);
             } catch (SQLException ex) {
                 Notification.show("Erreur serveur, réessayer");
 
@@ -161,7 +163,7 @@ public class AffichMachine extends VerticalLayout {
                     if (i == -1) {
                         SqlQueryMainPart.addMachine(this.main.getInfoSess().getCon(), refAdd.getValue(), desAdd.getValue(), puisAdd.getValue());
                         dialog.close();
-                        refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
+                        refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()),editAble);
                         this.Xc = -1;
                         this.Yc = -1;
                         this.desC = null;
@@ -185,9 +187,9 @@ public class AffichMachine extends VerticalLayout {
     }
 
     // Méthodes:
-    private void refreshTableMachine(Connection con, List<Machines> data) throws SQLException {
+    private void refreshTableMachine(Connection con, List<Machines> data,boolean editAble) throws SQLException {
         this.remove(this.TableMachine);
-        this.TableMachine = new ListeMachines(con, data);
+        this.TableMachine = new ListeMachines(con, data,editAble);
         this.add(this.TableMachine);
     }
 

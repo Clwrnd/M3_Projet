@@ -33,7 +33,7 @@ public class ListeProduits extends Grid<Produits> {
     private TextField idField;
 
     // Constructeur du GRID affichant la liste des produits;
-    public ListeProduits(Connection con, List<Produits> data) throws SQLException {
+    public ListeProduits(Connection con, List<Produits> data, boolean editAble) throws SQLException {
         this.con = con;
 
         this.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -43,26 +43,29 @@ public class ListeProduits extends Grid<Produits> {
         this.addColumn(Produits::getRef).setHeader("Référence");
         this.addColumn(Produits::getDes).setHeader("Description");
 
-        this.addComponentColumn(produit -> {
-            Button editButton = new Button("Modifier");
-            Button planButton = new Button(VaadinIcon.TASKS.create());
-            editButton.addClickListener(e -> {
-                if (this.getEditor().isOpen()) {
-                    this.getEditor().cancel();
+            this.addComponentColumn(produit -> {
+                Button editButton = new Button("Modifier");
+                Button planButton = new Button(VaadinIcon.TASKS.create());
+                editButton.addClickListener(e -> {
+                    if (this.getEditor().isOpen()) {
+                        this.getEditor().cancel();
+                    }
+                    this.getEditor().editItem(produit);
+
+                });
+                planButton.addClickListener((e) -> {
+                    if (this.getEditor().isOpen()) {
+                        this.getEditor().cancel();
+                    }
+                    planFabrication(produit.getId(), produit.getRef(), editAble);
+
+                });
+                if (!editAble) {
+                    editButton.setEnabled(false);
                 }
-                this.getEditor().editItem(produit);
-
+                return new HorizontalLayout(editButton, planButton);
             });
-            planButton.addClickListener((e) -> {
-                if (this.getEditor().isOpen()) {
-                    this.getEditor().cancel();
-                }
-                planFabrication(produit.getId(), produit.getRef());
-
-            });
-            return new HorizontalLayout(editButton, planButton);
-        });
-
+        
         // Initialisation de l'éditeur et associations des composants avec ce dernier:
         this.getEditor().setBinder(new Binder<>(Produits.class));
         this.getEditor().setBuffered(true);
@@ -96,7 +99,10 @@ public class ListeProduits extends Grid<Produits> {
 
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
-        this.getColumns().get(3).setEditorComponent(actions);
+
+        if (editAble) {
+            this.getColumns().get(3).setEditorComponent(actions);
+        }
 
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
@@ -131,9 +137,9 @@ public class ListeProduits extends Grid<Produits> {
     }
 
     //Méthode:
-    private void planFabrication(int id, String ref) {
+    private void planFabrication(int id, String ref, boolean editAble) {
         Dialog diagPlan = new Dialog();
-        diagPlan.add(new AffichOperation(con, id, ref));
+        diagPlan.add(new AffichOperation(con, id, ref, editAble));
         diagPlan.open();
     }
 

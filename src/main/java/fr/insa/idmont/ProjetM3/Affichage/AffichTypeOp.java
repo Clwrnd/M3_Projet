@@ -33,7 +33,7 @@ public class AffichTypeOp extends VerticalLayout {
     private MainView main;
     private ListeTypeOperations tableTO;
 
-    public AffichTypeOp(MainView main) {
+    public AffichTypeOp(MainView main, boolean editAble) {
         this.main = main;
 
         // Création des composant et mise en place de leurs dispositions.
@@ -63,18 +63,22 @@ public class AffichTypeOp extends VerticalLayout {
         dialog.add(desAdd);
 
         try {
-            this.tableTO = new ListeTypeOperations(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
+            this.tableTO = new ListeTypeOperations(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()), editAble);
             this.add(Hl1, RechercheTO, this.tableTO);;
         } catch (SQLException ex) {
             Notification.show("Erreur serveur, veuillez réessayer");
         }
         this.setAlignSelf(FlexComponent.Alignment.CENTER, Hl1);
 
+        if (!editAble) {
+            addButton.setEnabled(false);
+            deleteButton1.setEnabled(false);
+        }
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
             try {
                 SqlQueryMainPart.deleteTO(this.main.getInfoSess().getCon(), this.tableTO.getSelectedItems().iterator());
-                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
+                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()),editAble);
             } catch (SQLException ex) {
                 Notification.show("Réessayez et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
             }
@@ -82,7 +86,7 @@ public class AffichTypeOp extends VerticalLayout {
 
         RechercheTO.addKeyPressListener(Key.ENTER, (e) -> {
             try {
-                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchTO(this.main.getInfoSess().getCon(), RechercheTO.getValue()));
+                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchTO(this.main.getInfoSess().getCon(), RechercheTO.getValue()),editAble);
             } catch (SQLException ex) {
                 Notification.show("Erreur serveur, veuillez réessayer");
 
@@ -102,7 +106,7 @@ public class AffichTypeOp extends VerticalLayout {
                     if (i == -1) {
                         SqlQueryMainPart.addTO(this.main.getInfoSess().getCon(), desAdd.getValue());
                         dialog.close();
-                        refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
+                        refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()),editAble);
                     } else {
                         desAdd.setHelperText("Le type d'opération existe déjà");
                     }
@@ -116,9 +120,9 @@ public class AffichTypeOp extends VerticalLayout {
     }
 
     //Méthode:
-    private void refreshTableTO(Connection con, List<TypeOperations> data) throws SQLException {
+    private void refreshTableTO(Connection con, List<TypeOperations> data, boolean editAble) throws SQLException {
         this.remove(this.tableTO);
-        this.tableTO = new ListeTypeOperations(con, data);
+        this.tableTO = new ListeTypeOperations(con, data, editAble);
         this.add(this.tableTO);
     }
 

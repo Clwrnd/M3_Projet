@@ -461,24 +461,48 @@ public class SqlQueryMainPart {
 
     }
 
-    /*  public static List<Realise> SearchRealise(Connection con, String Ref) {
+    public static List<Realise> SearchRealiseVM(Connection con, int Ref) throws SQLException {
         ArrayList<Realise> liste = new ArrayList<>();
-        try (PreparedStatement st = con.prepareStatement(
-                "select *"
-                + " from Tmachines"
-                + " where ref like ?")) {
-            st.setString(1, "%" + Ref + "%");
+        try (PreparedStatement st = con.prepareStatement("""
+                                                         SELECT Tmachine.id,Ttype_operation.id,Trealise.duree FROM Trealise 
+                                                         JOIN Tmachine ON Tmachine.id = Trealise.id_machine
+                                                         JOIN Ttype_operation ON  Ttype_operation.id = Trealise.id_type
+                                                         WHERE Tmachine.id = ?;""")) {
+            st.setInt(1, Ref);
             ResultSet res = st.executeQuery();
             while (res.next()) {
-                // liste.add(new Realise(res.getInt(1), res.getInt(2)));
+                liste.add(new Realise(new Machines(res.getInt(1)), new TypeOperations(res.getInt(2)), res.getDouble(3)));
             }
+            AssociationMachDes(con, liste);
+            AssociationOpDesRe(con, liste);
             return liste;
         } catch (SQLException ex) {
             return liste;
         }
 
     }
-     */
+    
+    public static List<Realise> SearchRealiseVTO(Connection con, int op) throws SQLException {
+        ArrayList<Realise> liste = new ArrayList<>();
+        try (PreparedStatement st = con.prepareStatement("""
+                                                         SELECT Tmachine.id,Ttype_operation.id,Trealise.duree FROM Trealise 
+                                                         JOIN Tmachine ON Tmachine.id = Trealise.id_machine
+                                                         JOIN Ttype_operation ON  Ttype_operation.id = Trealise.id_type
+                                                         WHERE Ttype_operation.id = ?;""")) {
+            st.setInt(1, op);
+            ResultSet res = st.executeQuery();
+            while (res.next()) {
+                liste.add(new Realise(new Machines(res.getInt(1)), new TypeOperations(res.getInt(2)), res.getDouble(3)));
+            }
+            AssociationMachDes(con, liste);
+            AssociationOpDesRe(con, liste);
+            return liste;
+        } catch (SQLException ex) {
+            return liste;
+        }
+
+    }
+
     // -------------------------------------------- Operations:
     public static void AssociationOpDes(Connection con, ArrayList<Operations> liste) throws SQLException {
 
@@ -612,7 +636,7 @@ public class SqlQueryMainPart {
         return pliste;
     }
 
-    public static void addPrecedence(Connection con, int avant, int apres) throws SQLException{
+    public static void addPrecedence(Connection con, int avant, int apres) throws SQLException {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Tprecedence (opavant,opapres)
                                                        VALUES (?,?)

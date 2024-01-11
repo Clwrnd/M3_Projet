@@ -31,7 +31,7 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
     private IntegerField idField;
 
     // Constructeur du GRID affichant la liste des types d'opérations;
-    public ListeTypeOperations(Connection con, List<TypeOperations> data) throws SQLException {
+    public ListeTypeOperations(Connection con, List<TypeOperations> data, boolean editAble) throws SQLException {
 
         this.con = con;
         this.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -40,17 +40,18 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
         this.addColumn(TypeOperations::getId).setHeader("Id");
         this.addColumn(TypeOperations::getDes).setHeader("Description");
 
-        this.addComponentColumn(user -> {
-            Button editButton = new Button("Modifier");
-            editButton.addClickListener(e -> {
-                if (this.getEditor().isOpen()) {
-                    this.getEditor().cancel();
-                }
-                this.getEditor().editItem(user);
+        if (editAble) {
+            this.addComponentColumn(user -> {
+                Button editButton = new Button("Modifier");
+                editButton.addClickListener(e -> {
+                    if (this.getEditor().isOpen()) {
+                        this.getEditor().cancel();
+                    }
+                    this.getEditor().editItem(user);
+                });
+                return editButton;
             });
-            return editButton;
-        });
-
+        }
         // Initialisation de l'éditeur et associations des composants avec ce dernier:
         this.getEditor().setBinder(new Binder<>(TypeOperations.class));
         this.getEditor().setBuffered(true);
@@ -78,7 +79,10 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
 
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
-        this.getColumns().get(2).setEditorComponent(actions);
+
+        if (editAble) {
+            this.getColumns().get(2).setEditorComponent(actions);
+        }
 
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);

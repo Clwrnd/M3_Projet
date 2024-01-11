@@ -30,7 +30,7 @@ public class ListeOperations extends Grid<Operations> {
     private Button downButton;
 
     // Constructeur du GRID affichant la liste des opérations;
-    public ListeOperations(Connection con, List<Operations> data) throws SQLException {
+    public ListeOperations(Connection con, List<Operations> data, boolean editAble) throws SQLException {
         this.con = con;
         this.data = data;
 
@@ -40,20 +40,22 @@ public class ListeOperations extends Grid<Operations> {
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(Operations::getDesTO).setHeader("Description");
 
-        this.addComponentColumn(operation -> {
-            this.upButton = new Button(VaadinIcon.ANGLE_UP.create());
-            this.upButton.addClassName("error");
-            upButton.addClickListener((e) -> {
-                PrecedenceUp(operation);
-            });
-            this.downButton = new Button(VaadinIcon.ANGLE_DOWN.create());
-            this.downButton.addClassName("error");
-            downButton.addClickListener((e) -> {
-                PrecedenceDown(operation);
-            });
+        if (editAble) {
+            this.addComponentColumn(operation -> {
+                this.upButton = new Button(VaadinIcon.ANGLE_UP.create());
+                this.upButton.addClassName("error");
+                upButton.addClickListener((e) -> {
+                    PrecedenceUp(operation);
+                });
+                this.downButton = new Button(VaadinIcon.ANGLE_DOWN.create());
+                this.downButton.addClassName("error");
+                downButton.addClickListener((e) -> {
+                    PrecedenceDown(operation);
+                });
 
-            return new HorizontalLayout(upButton, downButton);
-        });
+                return new HorizontalLayout(upButton, downButton);
+            });
+        }
 
         this.getColumns().get(0).setSortable(true);
 
@@ -89,28 +91,28 @@ public class ListeOperations extends Grid<Operations> {
 
     }
 
-    private void PrecedenceDown(Operations op)  {
-        try{
-        if (this.getData().indexOf(op) == this.getData().size() - 1) {
-            Notification.show("Vous êtes arrivés en bas de liste");
-        } else if (this.getData().indexOf(op) == 0) {
-            SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(1).getId(), op.getId(), this.getData().get(1).getId());
-            if (this.getData().indexOf(op) != this.getData().size() - 2) {
-                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 2).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) + 2).getId());
-            }
-            Collections.swap(getData(), 0, 1);
-            this.setItems(getData());
-        } else {
-            SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(getData().indexOf(op) + 1).getId(), op.getId(), this.getData().get(getData().indexOf(op) + 1).getId());
-            SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId());
-            if (this.getData().indexOf(op) != this.getData().size() - 2) {
-                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 2).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) + 2).getId());
-            }
+    private void PrecedenceDown(Operations op) {
+        try {
+            if (this.getData().indexOf(op) == this.getData().size() - 1) {
+                Notification.show("Vous êtes arrivés en bas de liste");
+            } else if (this.getData().indexOf(op) == 0) {
+                SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(1).getId(), op.getId(), this.getData().get(1).getId());
+                if (this.getData().indexOf(op) != this.getData().size() - 2) {
+                    SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 2).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) + 2).getId());
+                }
+                Collections.swap(getData(), 0, 1);
+                this.setItems(getData());
+            } else {
+                SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(getData().indexOf(op) + 1).getId(), op.getId(), this.getData().get(getData().indexOf(op) + 1).getId());
+                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId());
+                if (this.getData().indexOf(op) != this.getData().size() - 2) {
+                    SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 2).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) + 2).getId());
+                }
 
-            Collections.swap(getData(), this.getData().indexOf(op) + 1, this.getData().indexOf(op));
-            this.setItems(getData());
-        }            
-        }catch(SQLException ex){
+                Collections.swap(getData(), this.getData().indexOf(op) + 1, this.getData().indexOf(op));
+                this.setItems(getData());
+            }
+        } catch (SQLException ex) {
             Notification.show("Erreur serveur, réessayer");
         }
 

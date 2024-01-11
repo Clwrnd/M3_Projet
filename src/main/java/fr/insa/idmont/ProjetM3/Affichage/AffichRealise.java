@@ -34,7 +34,7 @@ public class AffichRealise extends VerticalLayout {
     private MainView main;
     private ListeRealise TableOpM;
 
-    public AffichRealise(MainView main) {
+    public AffichRealise(MainView main, boolean editAble) {
         this.main = main;
 
         // Création des composant et mise en place de leurs dispositions.
@@ -49,6 +49,17 @@ public class AffichRealise extends VerticalLayout {
         Hl1.setAlignSelf(Alignment.END, deleteButton1);
         Hl1.setAlignSelf(Alignment.CENTER, titre1);
         Hl1.setAlignSelf(Alignment.START, addButton);
+
+        ComboBox<Machines> rechercheViaM = new ComboBox<>("Recherche via Machine");
+        ComboBox<TypeOperations> rechercheViaTO = new ComboBox<>("Recherche via TO");
+        try {
+            rechercheViaM.setItems(SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
+            rechercheViaTO.setItems(SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()));
+        } catch (SQLException ex) {
+            Notification.show("Erreur serveur, recharger la page");
+        }
+
+        HorizontalLayout RHl = new HorizontalLayout(rechercheViaM, rechercheViaTO);
 
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Nouvelle liaison Machine-opérations");
@@ -74,14 +85,18 @@ public class AffichRealise extends VerticalLayout {
         dialog.add(vl);
 
         try {
-            this.TableOpM = new ListeRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()));
-            this.add(Hl1, this.TableOpM);
+            this.TableOpM = new ListeRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
+            this.add(Hl1, RHl, this.TableOpM);
         } catch (SQLException ex) {
             Notification.show("Erreur serveur, veuillez réessayer");
         }
 
         this.setAlignSelf(Alignment.CENTER, Hl1);
 
+        if (!editAble) {
+            addButton.setEnabled(false);
+            deleteButton1.setEnabled(false);
+        }
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
             try {
@@ -90,8 +105,36 @@ public class AffichRealise extends VerticalLayout {
                 Notification.show("Erreur serveur, veuillez réessayer");
             }
             try {
-                refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()));
+                refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
             } catch (SQLException ex) {
+            }
+        });
+
+        rechercheViaM.addValueChangeListener((e) -> {
+            try {
+                if (rechercheViaM.isEmpty()) {
+                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
+
+                } else {
+                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchRealiseVM(this.main.getInfoSess().getCon(), rechercheViaM.getValue().getId()),editAble);
+
+                }
+            } catch (SQLException ex) {
+                Notification.show("Erreur serveur, réessayer");
+            }
+        });
+
+        rechercheViaTO.addValueChangeListener((e) -> {
+            try {
+                if (rechercheViaTO.isEmpty()) {
+                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
+
+                } else {
+                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchRealiseVTO(this.main.getInfoSess().getCon(), rechercheViaTO.getValue().getId()),editAble);
+
+                }
+            } catch (SQLException ex) {
+                Notification.show("Erreur serveur, réessayer");
             }
         });
 
@@ -115,7 +158,7 @@ public class AffichRealise extends VerticalLayout {
                     if (SqlQueryMainPart.TestRealise(this.main.getInfoSess().getCon(), Machine.getValue().getId(), TypeOperation.getValue().getId(), duree.getValue())) {
                         SqlQueryMainPart.addRealise(this.main.getInfoSess().getCon(), Machine.getValue().getId(), TypeOperation.getValue().getId(), duree.getValue());
                         dialog.close();
-                        refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()));
+                        refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
                     } else {
                         Machine.setHelperText("Combinaison déja existante");
                     }
@@ -129,10 +172,10 @@ public class AffichRealise extends VerticalLayout {
     }
 
     // Méthode:
-    private void refreshTableRealise(Connection con, List<Realise> data) throws SQLException {
+    private void refreshTableRealise(Connection con, List<Realise> data, boolean editAble) throws SQLException {
 
         this.remove(this.TableOpM);
-        this.TableOpM = new ListeRealise(con, data);
+        this.TableOpM = new ListeRealise(con, data,editAble);
         this.add(this.TableOpM);
     }
 

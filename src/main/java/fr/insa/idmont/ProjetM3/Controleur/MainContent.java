@@ -28,39 +28,39 @@ public class MainContent {
         this.viewPrinc.setContent(new GestionUser(this.viewPrinc.getMain()));
     }
 
-    public void GoToProduit() {
-        this.viewPrinc.setContent(new AffichProduit(this.viewPrinc.getMain()));
+    public void GoToProduit(boolean editAble) {
+        this.viewPrinc.setContent(new AffichProduit(this.viewPrinc.getMain(),editAble));
     }
 
-    public void GoToMachine() {
-        this.viewPrinc.setContent(new AffichMachine(this.viewPrinc.getMain()));
+    public void GoToMachine(boolean editAble) {
+        this.viewPrinc.setContent(new AffichMachine(this.viewPrinc.getMain(),editAble));
     }
 
-    public void GoToTypeOp() {
-        this.viewPrinc.setContent(new AffichTypeOp(this.viewPrinc.getMain()));
+    public void GoToTypeOp(boolean editAble) {
+        this.viewPrinc.setContent(new AffichTypeOp(this.viewPrinc.getMain(),editAble));
     }
 
-      public void GoToRealise() {
-        this.viewPrinc.setContent(new AffichRealise(this.viewPrinc.getMain()));
+      public void GoToRealise(boolean editAble) {
+        this.viewPrinc.setContent(new AffichRealise(this.viewPrinc.getMain(),editAble));
     }
 
     ;
 
-    public void setContent(int i)  {
+    public void setContent(int i,boolean editAble)  {
 
         switch (i) {
 
             case (0):
-                GoToMachine();
+                GoToMachine(editAble);
                 break;
             case (1):
-                GoToProduit();
+                GoToProduit(editAble);
                 break;
             case (2):
-                GoToTypeOp();
+                GoToTypeOp(editAble);
                 break;
             case (3):
-                GoToRealise();
+                GoToRealise(editAble);
                 break;
             case (4):
                 GoToAdminInterface();

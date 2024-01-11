@@ -34,7 +34,7 @@ public class ListeRealise extends Grid<Realise> {
     private ComboBox<Machines> Machine;
     private NumberField duree;
 
-    public ListeRealise(Connection con, List<Realise> data) throws SQLException {
+    public ListeRealise(Connection con, List<Realise> data, boolean editAble) throws SQLException {
 
         this.con = con;
         this.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -44,16 +44,18 @@ public class ListeRealise extends Grid<Realise> {
         this.addColumn(Realise::getTO).setHeader("Operation");
         this.addColumn(Realise::getDuree).setHeader("Durée");
 
-        this.addComponentColumn(user -> {
-            Button editButton = new Button("Modifier");
-            editButton.addClickListener(e -> {
-                if (this.getEditor().isOpen()) {
-                    this.getEditor().cancel();
-                }
-                this.getEditor().editItem(user);
+        if (editAble) {
+            this.addComponentColumn(user -> {
+                Button editButton = new Button("Modifier");
+                editButton.addClickListener(e -> {
+                    if (this.getEditor().isOpen()) {
+                        this.getEditor().cancel();
+                    }
+                    this.getEditor().editItem(user);
+                });
+                return editButton;
             });
-            return editButton;
-        });
+        }
 
         this.addComponentColumn(realise -> {
             Button info = new Button(VaadinIcon.INFO.create());
@@ -99,7 +101,9 @@ public class ListeRealise extends Grid<Realise> {
 
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
-        this.getColumns().get(3).setEditorComponent(actions);
+        if (editAble) {
+            this.getColumns().get(3).setEditorComponent(actions);
+        }
 
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);

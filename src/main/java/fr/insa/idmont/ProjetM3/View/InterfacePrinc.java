@@ -19,11 +19,13 @@ public class InterfacePrinc extends AppLayout {
     private MainView main;
     private MainContent controlleur;
     private final Checkbox themeToggle;
+    private boolean editAble;
 
     // Constructeur de l'interface principale
     public InterfacePrinc(MainView mainn) {
 
         this.addClassName("x");
+        this.editAble = true;
 
         // Initialisation de l'AppLayout            
         DrawerToggle toggle = new DrawerToggle();
@@ -74,13 +76,18 @@ public class InterfacePrinc extends AppLayout {
             case ADMINISTRATION:
                 break;
             case MODIFICATION:
+                Administration.setVisible(false);
+                Administration.setEnabled(false);
                 break;
             case CONSULTATION:
+                Administration.setVisible(false);
+                Administration.setEnabled(false);
+                editAble = false;
                 break;
         }
 
         tabs.addSelectedChangeListener((e) -> {
-            this.controlleur.setContent(tabs.getSelectedIndex());
+            this.controlleur.setContent(tabs.getSelectedIndex(),editAble);
         });
 
     }

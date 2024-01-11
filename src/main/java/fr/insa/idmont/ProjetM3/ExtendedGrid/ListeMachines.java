@@ -34,7 +34,7 @@ public class ListeMachines extends Grid<Machines> {
     private Button LocaFiedl;
 
     // Constructeur du GRID affichant la liste des opérations;
-    public ListeMachines(Connection con, List<Machines> data) throws SQLException {
+    public ListeMachines(Connection con, List<Machines> data, boolean editAble) throws SQLException {
         this.con = con;
 
         this.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -46,17 +46,18 @@ public class ListeMachines extends Grid<Machines> {
         this.addColumn(Machines::getPuissance).setHeader("Puissance (W)");
         this.addColumn(Machines::getLoc).setHeader("Désignation plan: X-Y");
 
-        this.addComponentColumn(user -> {
-            Button editButton = new Button("Modifier");
-            editButton.addClickListener(e -> {
-                if (this.getEditor().isOpen()) {
-                    this.getEditor().cancel();
-                }
-                this.getEditor().editItem(user);
+        if (editAble) {
+            this.addComponentColumn(user -> {
+                Button editButton = new Button("Modifier");
+                editButton.addClickListener(e -> {
+                    if (this.getEditor().isOpen()) {
+                        this.getEditor().cancel();
+                    }
+                    this.getEditor().editItem(user);
+                });
+                return editButton;
             });
-            return editButton;
-        });
-
+        }
         // Initialisation de l'éditeur et associations des composants avec ce dernier:
         this.getEditor().setBinder(new Binder<>(Machines.class));
         this.getEditor().setBuffered(true);
@@ -100,7 +101,10 @@ public class ListeMachines extends Grid<Machines> {
 
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
-        this.getColumns().get(5).setEditorComponent(actions);
+        if (editAble) {
+            this.getColumns().get(5).setEditorComponent(actions);
+        }
+        
 
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);
