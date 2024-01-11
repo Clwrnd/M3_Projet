@@ -8,7 +8,9 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  *
  * @author cidmo
  */
+// Objet Precedence, permmetant la gestion de cette entité SQL en java.
 public class Precedence {
+
     private int opAvant;
     private int opApres;
 
@@ -17,19 +19,13 @@ public class Precedence {
         this.opApres = opApres;
     }
 
-    /**
-     * @return the opAvant
-     */
+    // Getteurs et Setteurs:
     public int getOpAvant() {
         return opAvant;
     }
 
-    /**
-     * @return the opApres
-     */
     public int getOpApres() {
         return opApres;
     }
-    
-    
+
 }

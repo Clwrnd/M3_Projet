@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class AlgoGestionPrecedence {
 
+    // Classe regroupant tout les méthodes permettant le tri des précédences.
     public static List<Integer> Tri(List<Precedence> atrier) {
         int i;
         ArrayList<Integer> list = new ArrayList<>();
@@ -36,11 +37,11 @@ public class AlgoGestionPrecedence {
                     // Ne rien faire (reboucler)
                 }
             }
-            
+
         }
         return list;
     }
-    
+
     public static int SizePrecedence(List<Precedence> atrier) {
         int i = 0;
         ArrayList<Integer> dejaVu = new ArrayList<>();
@@ -60,31 +61,23 @@ public class AlgoGestionPrecedence {
         }
         return i;
     }
-    
-    public static ArrayList<Operations> Ordre(List<Operations> partielle, List<Integer> complet) {   
+
+    public static ArrayList<Operations> Ordre(List<Operations> partielle, List<Integer> complet) {
         int a;
         boolean test;
         ArrayList<Operations> finL = new ArrayList<>();
         for (Integer i : complet) {
-            test=true;
-            a=0;
-             while(test && a<partielle.size()) {
-                if (partielle.get(a).getId() == i){   
+            test = true;
+            a = 0;
+            while (test && a < partielle.size()) {
+                if (partielle.get(a).getId() == i) {
                     finL.add(partielle.get(a));
-                    test= false;
+                    test = false;
                 }
                 a++;
             }
-        }        
-      return finL; 
+        }
+        return finL;
     }
-    
-     
 
-
-
-    
-    
-    
-    
 }

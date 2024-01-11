@@ -21,6 +21,7 @@ import java.util.List;
  *
  * @author cidmo
  */
+// Controleurs de la partie gestion des administrateur :
 public class GestionAdmin {
 
     GestionUser viewGest;
@@ -38,7 +39,6 @@ public class GestionAdmin {
         }
     }
 
-    //Différents costructeurs des controleurs de la partie principale:
     public GestionAdmin(GestionUser vienGest) {
         this.viewGest = vienGest;
     }

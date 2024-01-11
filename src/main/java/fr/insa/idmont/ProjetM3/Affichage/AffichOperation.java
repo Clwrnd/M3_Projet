@@ -27,15 +27,17 @@ import java.util.List;
  *
  * @author cidmo
  */
+// Composant gérant l'affichage effectif des opérations et des sous-composant le permettant.
 public class AffichOperation extends VerticalLayout {
 
     private Connection con;
     private ListeOperations TableOp;
 
-    public AffichOperation(Connection con, int idproduit,String ref) {
+    public AffichOperation(Connection con, int idproduit, String ref) {
         this.con = con;
 
-        H2 titre1 = new H2("Plan de fabrication: "+ref);
+        // Création des composant et mise en place de leurs dispositions.
+        H2 titre1 = new H2("Plan de fabrication: " + ref);
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
         Button deleteAllButton = new Button(VaadinIcon.EXCLAMATION_CIRCLE_O.create());
         deleteAllButton.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -43,21 +45,21 @@ public class AffichOperation extends VerticalLayout {
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
         deleteButton1.setTooltipText("Supprimer un élément");
-        deleteAllButton.setTooltipText("Supprimer tout !");
+        deleteAllButton.setTooltipText("Supprimer tout !!");
 
         Button addButton = new Button(VaadinIcon.PLUS.create());
         addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
-        HorizontalLayout Hl1 = new HorizontalLayout(deleteAllButton,deleteButton1, titre1, addButton);
-        Hl1.setAlignSelf(FlexComponent.Alignment.END, deleteAllButton,deleteButton1);
+        HorizontalLayout Hl1 = new HorizontalLayout(deleteAllButton, deleteButton1, titre1, addButton);
+        Hl1.setAlignSelf(FlexComponent.Alignment.END, deleteAllButton, deleteButton1);
         Hl1.setAlignSelf(FlexComponent.Alignment.CENTER, titre1);
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
 
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Ajouter une opération");
         ComboBox<TypeOperations> ToChoix = new ComboBox<>("Type d'opération:");
-        ToChoix.addClassName("erreur");
+        ToChoix.addClassName("error");
         Button save = new Button("Confirmer");
-        Button cancelButton = new Button("Annuler", e -> dialog.close());
+        Button cancelButton = new Button("Retour", e -> dialog.close());
         dialog.add(ToChoix);
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
@@ -66,51 +68,52 @@ public class AffichOperation extends VerticalLayout {
             this.TableOp = new ListeOperations(this.con, SqlQueryMainPart.GetOp(this.con, idproduit));
             this.add(Hl1, this.TableOp);;
         } catch (SQLException ex) {
-            Notification.show("Erreur serveur, veuillez réessayer");
+            Notification.show("Erreur serveur, réessayer");
         }
         this.setAlignSelf(Alignment.CENTER, Hl1);
 
+        // Actions des composants:
         deleteButton1.addClickListener((e) -> {
             try {
                 SqlQueryMainPart.deletePrece(con, this.TableOp.getSelectedItems().iterator(), this.TableOp.getData());
                 SqlQueryMainPart.deleteOp(this.con, this.TableOp.getSelectedItems().iterator());
                 refreshTableOp(this.con, SqlQueryMainPart.GetOp(this.con, idproduit));
             } catch (SQLException ex) {
-                Notification.show("Réessayez et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
+                Notification.show("Réessayer et vérifier qu'il n'y ai pas de contrainte sur l'élément");
             }
         });
         deleteAllButton.addClickListener((e) -> {
             try {
-                SqlQueryMainPart.DeletePreceAll(con,this.TableOp.getData());
+                SqlQueryMainPart.DeletePreceAll(con, this.TableOp.getData());
                 SqlQueryMainPart.deleteOpAll(this.con, idproduit);
                 refreshTableOp(this.con, SqlQueryMainPart.GetOp(this.con, idproduit));
             } catch (SQLException ex) {
-                Notification.show("Réessayez et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
+                Notification.show("Réessayer et vérifier qu'il n'y ai pas de contrainte sur l'élément");
             }
         });
 
-        
         addButton.addClickListener((e) -> {
             dialog.open();
             try {
                 ToChoix.setItems(SqlQueryMainPart.GetTO(this.con));
             } catch (SQLException ex) {
-                Notification.show("Erreur serveur, veuillez réessayer");
+                Notification.show("Erreur serveur, réessayer");
             }
         });
 
         save.addClickListener((e) -> {
+            // Controle de saisie.
             if (ToChoix.isEmpty()) {
-                ToChoix.setHelperText("Choisissez une valeur");
+                ToChoix.setHelperText("Choisir une valeur");
             } else {
                 List<Operations> existant = SqlQueryMainPart.GetOp(con, idproduit);
-                int id =SqlQueryMainPart.addOp(con, ToChoix.getValue().getId(), idproduit);
-                AddPrecedence(existant,id);
+                int id = SqlQueryMainPart.addOp(con, ToChoix.getValue().getId(), idproduit);
+                AddPrecedence(existant, id);
                 dialog.close();
                 try {
                     refreshTableOp(con, SqlQueryMainPart.GetOp(con, idproduit));
                 } catch (SQLException ex) {
-                    Notification.show("Erreur serveur, veuillez réessayer");
+                    Notification.show("Erreur serveur, réeesayer");
                 }
             }
 
@@ -118,18 +121,19 @@ public class AffichOperation extends VerticalLayout {
 
     }
 
+    // Méthode.
     private void refreshTableOp(Connection con, List<Operations> data) throws SQLException {
         this.remove(this.TableOp);
         this.TableOp = new ListeOperations(con, data);
         this.add(this.TableOp);
     }
 
-    private void AddPrecedence(List<Operations> existant,int id) {
+    private void AddPrecedence(List<Operations> existant, int id) {
         int taille = existant.size();
-        if(taille==0){
+        if (taille == 0) {
             // Ne rien faire
         } else {
-            SqlQueryMainPart.addPrecedence(con,existant.get(taille-1).getId(),id );
+            SqlQueryMainPart.addPrecedence(con, existant.get(taille - 1).getId(), id);
         }
     }
 

@@ -8,8 +8,9 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  *
  * @author Simon
  */
+// Objet Realise, permmetant la gestion de cette entité SQL en java.
 public class Realise {
-    
+
     private Machines Machine;
     private TypeOperations TypeOperation;
     private double duree;
@@ -20,8 +21,7 @@ public class Realise {
         this.duree = duree;
     }
 
-    
-
+    // Getteurs et Setteurs  
     public Machines getMachine() {
         return Machine;
     }
@@ -29,39 +29,21 @@ public class Realise {
     public TypeOperations getTO() {
         return TypeOperation;
     }
-    
 
-
-    /**
-     * @param TypeOperation the TypeOperation to set
-     */
     public void setTypeOperation(TypeOperations TypeOperation) {
         this.TypeOperation = TypeOperation;
     }
 
-
-
-
-    /**
-     * @param Machine the Machine to set
-     */
     public void setMachine(Machines Machine) {
         this.Machine = Machine;
     }
 
-    /**
-     * @return the duree
-     */
     public double getDuree() {
         return duree;
     }
 
-    /**
-     * @param duree the duree to set
-     */
     public void setDuree(double duree) {
         this.duree = duree;
     }
-    
-    
+
 }

@@ -8,6 +8,7 @@ import java.sql.SQLException;
  *
  * @author cidmo
  */
+// Méthode permetant l'initialisation de la base de donnée.
 public class Initialisation {
 
     public static boolean pilotCheck() {

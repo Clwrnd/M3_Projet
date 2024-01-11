@@ -8,6 +8,7 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  *
  * @author Henry Adèle
  */
+// Objet Produit, permmetant la gestion de cette entité SQL en java.
 public class Produits {
 
     private int id;
@@ -22,12 +23,8 @@ public class Produits {
 
     public Produits() {
     }
-    
-    
 
-    
     // Get() et Set():
-
     public int getId() {
         return id;
     }
@@ -47,7 +44,6 @@ public class Produits {
     public String getDes() {
         return des;
     }
-
 
     public void setDes(String des) {
         this.des = des;

@@ -14,9 +14,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
 import fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart;
-import static fr.insa.idmont.ProjetM3.Controleur.SqlQueryMainPart.GetTO;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
@@ -25,13 +23,12 @@ import fr.insa.idmont.ProjetM3.View.MainView;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author cidmo
  */
+// Composant gérant l'affichage effectif des "opérations effectuées par les différentes machines" et des sous-composant le permettant.
 public class AffichRealise extends VerticalLayout {
 
     private MainView main;
@@ -40,6 +37,7 @@ public class AffichRealise extends VerticalLayout {
     public AffichRealise(MainView main) {
         this.main = main;
 
+        // Création des composant et mise en place de leurs dispositions.
         H2 titre1 = new H2("Machine operations");
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -77,7 +75,7 @@ public class AffichRealise extends VerticalLayout {
 
         try {
             this.TableOpM = new ListeRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()));
-            this.add(Hl1,this.TableOpM);
+            this.add(Hl1, this.TableOpM);
         } catch (SQLException ex) {
             Notification.show("Erreur serveur, veuillez réessayer");
         }
@@ -100,6 +98,7 @@ public class AffichRealise extends VerticalLayout {
         addButton.addClickListener((e) -> dialog.open());
 
         save.addClickListener((e) -> {
+            // Controle de saisie.
             Machine.setHelperText(null);
             TypeOperation.setHelperText(null);
             duree.setHelperText(null);
@@ -128,6 +127,7 @@ public class AffichRealise extends VerticalLayout {
 
     }
 
+    // Méthode:
     private void refreshTableRealise(Connection con, List<Realise> data) throws SQLException {
 
         this.remove(this.TableOpM);

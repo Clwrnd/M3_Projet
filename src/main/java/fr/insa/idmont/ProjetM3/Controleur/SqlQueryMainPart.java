@@ -298,12 +298,12 @@ public class SqlQueryMainPart {
     }
 
     // ------------------------------------ Realise :
-    public static void addRealise(Connection con, int idM,int idOp,double duree)throws SQLException{
+    public static void addRealise(Connection con, int idM, int idOp, double duree) throws SQLException {
         try (PreparedStatement pt = con.prepareStatement("""
                                                        INSERT INTO Trealise (id_machine,id_type,duree)
                                                        VALUES (?,?,?)
                                                        """)) {
-            pt.setInt(1,idM);
+            pt.setInt(1, idM);
             pt.setInt(2, idOp);
             pt.setDouble(3, duree);
             pt.executeUpdate();
@@ -311,10 +311,8 @@ public class SqlQueryMainPart {
 
         }
     }
-    
-    
-    
-    public static boolean TestRealise(Connection con, int idMachine, int idTO,double duree) throws SQLException {
+
+    public static boolean TestRealise(Connection con, int idMachine, int idTO, double duree) throws SQLException {
         int[] test = new int[2];
         test[0] = -1;
         test[1] = -1;
@@ -357,7 +355,7 @@ public class SqlQueryMainPart {
         try (Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("SELECT * FROM Trealise  ");
             while (res.next()) {
-                liste.add(new Realise(new  Machines(res.getInt(1)), new TypeOperations(res.getInt(2)),res.getDouble(3)));
+                liste.add(new Realise(new Machines(res.getInt(1)), new TypeOperations(res.getInt(2)), res.getDouble(3)));
             }
             AssociationMachDes(con, liste);
             AssociationOpDesRe(con, liste);
@@ -366,7 +364,7 @@ public class SqlQueryMainPart {
             return liste;
         }
     }
-    
+
     public static void AssociationMachDes(Connection con, ArrayList<Realise> liste) throws SQLException {
 
         for (Realise rea : liste) {
@@ -384,7 +382,7 @@ public class SqlQueryMainPart {
             }
         }
     }
-    
+
     public static void AssociationOpDesRe(Connection con, ArrayList<Realise> liste) throws SQLException {
 
         for (Realise re : liste) {
@@ -421,7 +419,7 @@ public class SqlQueryMainPart {
         }
     }
 
-    public static List<Realise> SearchRealise(Connection con, String Ref) {
+/*  public static List<Realise> SearchRealise(Connection con, String Ref) {
         ArrayList<Realise> liste = new ArrayList<>();
         try (PreparedStatement st = con.prepareStatement(
                 "select *"
@@ -438,7 +436,7 @@ public class SqlQueryMainPart {
         }
 
     }
-
+*/
     // -------------------------------------------- Operations:
     public static void AssociationOpDes(Connection con, ArrayList<Operations> liste) throws SQLException {
 

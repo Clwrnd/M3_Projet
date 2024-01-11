@@ -8,6 +8,7 @@ package fr.insa.idmont.ProjetM3.DataBase_Model;
  *
  * @author Henry Adèle
  */
+// Objet Operation, permmetant la gestion de cette entité SQL en java.
 public class Operations {
 
     private int id;
@@ -20,6 +21,7 @@ public class Operations {
         this.produit = prod;
     }
 
+    // Getteurs et Setteurs:
     public String getDesTO() {
         return getTypeOP().getDes();
     }
@@ -28,23 +30,14 @@ public class Operations {
         this.getTypeOP().setDes(des);
     }
 
-    /**
-     * @return the typeOP
-     */
     public TypeOperations getTypeOP() {
         return typeOP;
     }
 
-    /**
-     * @return the produit
-     */
     public Produits getProduit() {
         return produit;
     }
 
-    /**
-     * @return the id
-     */
     public int getId() {
         return id;
     }
@@ -52,5 +45,5 @@ public class Operations {
     public int getIdType() {
         return this.typeOP.getId();
     }
-    
+
 }

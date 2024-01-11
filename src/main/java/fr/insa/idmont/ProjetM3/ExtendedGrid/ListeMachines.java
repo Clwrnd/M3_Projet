@@ -23,6 +23,7 @@ import java.util.List;
  *
  * @author Henry Adèle
  */
+// Création du tableau affichant les données
 public class ListeMachines extends Grid<Machines> {
 
     private Connection con;

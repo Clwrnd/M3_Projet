@@ -26,6 +26,7 @@ import java.util.List;
  *
  * @author cidmo
  */
+// Composant gérant l'affichage effectif des produits et des sous-composant le permettant.
 public class AffichProduit extends VerticalLayout {
 
     private MainView main;
@@ -34,6 +35,7 @@ public class AffichProduit extends VerticalLayout {
     public AffichProduit(MainView main) {
         this.main = main;
 
+        // Création des composant et mise en place de leurs dispositions.
         H2 titre1 = new H2("Produits");
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -92,9 +94,9 @@ public class AffichProduit extends VerticalLayout {
 
         addButton.addClickListener((e) -> dialog.open());
         save.addClickListener((e) -> {
+            // Controle de saisi
             refAdd.setHelperText(null);
             desAdd.setHelperText(null);
-
             if (refAdd.getValue().length() > 30 || refAdd.getValue().length() == 0) {
                 refAdd.setHelperText("1-30 caractères demandés");
             } else if (desAdd.getValue().length() > 30 || desAdd.getValue().length() == 0) {
@@ -118,6 +120,7 @@ public class AffichProduit extends VerticalLayout {
 
     }
 
+    // Méthodes.
     private void refreshTableProduct(Connection con, List<Produits> data) throws SQLException {
         this.remove(this.TableProduit);
         this.TableProduit = new ListeProduits(con, data);

@@ -28,30 +28,37 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- *
  * @author cidmo
  */
+
+// Composant gérant l'affichage effectif des machines et des sous-composant le permettant.
 public class AffichMachine extends VerticalLayout {
 
     private MainView main;
     private ListeMachines TableMachine;
+
     private Button save2;
-    private TextField des;
-    private NumberField clickX;
-    private NumberField clickY;
+    private Button ButtonLocalisation;
+    private TextField desF;
+    private NumberField clickXField;
+    private NumberField clickYField;
+    private HorizontalLayout infoBandereaux;
+
     private Dialog dialog2;
-    private HorizontalLayout info;
-    private Button locateBut;
+
     private double Xc;
     private double Yc;
     private String desC;
 
     public AffichMachine(MainView main) {
+
+        // Initialisation des variables permettant la récupération des données.
         this.main = main;
         this.Xc = -1;
         this.Yc = -1;
         this.desC = null;
 
+        // Création des composant et mise en place de leurs dispositions.
         H2 titre1 = new H2("Machine");
         Button deleteButton1 = new Button(VaadinIcon.TRASH.create());
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -64,42 +71,42 @@ public class AffichMachine extends VerticalLayout {
         Hl1.setAlignSelf(FlexComponent.Alignment.CENTER, titre1);
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
         TextField RechercheMachine = new TextField("Rechercher une machine");
-        RechercheMachine.setPlaceholder("Appuyez sur entrer");
+        RechercheMachine.setPlaceholder("Appuyer sur entrée");
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Nouvelle Machine");
+        dialog.setHeaderTitle("Nouvelle machine");
         TextField refAdd = new TextField("Référence");
-        refAdd.addClassName("erreur");
+        refAdd.addClassName("error");
         TextField desAdd = new TextField("Description");
-        desAdd.addClassName("erreur");
+        desAdd.addClassName("error");
         IntegerField puisAdd = new IntegerField("Puissance (W)");
         puisAdd.setMax(999999999);
-        puisAdd.addClassName("erreur");
-        this.locateBut = new Button("Localisation", VaadinIcon.BULLSEYE.create());
+        puisAdd.addClassName("error");
+        this.ButtonLocalisation = new Button("Localisation", VaadinIcon.BULLSEYE.create());
         Button save = new Button("Confirmer");
-        Button cancelButton = new Button("Annuler", e -> dialog.close());
+        Button cancelButton = new Button("Retour", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
 
-        this.des = new TextField("Specification");
-        this.des.setReadOnly(true);
-        this.clickX = new NumberField("X:");
-        this.clickX.setWidth(100, Unit.PIXELS);
-        this.clickY = new NumberField("Y:");
-        this.clickY.setWidth(100, Unit.PIXELS);
-        this.clickX.setReadOnly(true);
-        this.clickY.setReadOnly(true);
-        this.info = new HorizontalLayout(getDes(), getClickX(), getClickY());
+        this.desF = new TextField("Spécifications");
+        this.desF.setReadOnly(true);
+        this.clickXField = new NumberField("X:");
+        this.clickXField.setWidth(100, Unit.PIXELS);
+        this.clickYField = new NumberField("Y:");
+        this.clickYField.setWidth(100, Unit.PIXELS);
+        this.clickXField.setReadOnly(true);
+        this.clickYField.setReadOnly(true);
+        this.infoBandereaux = new HorizontalLayout(getDesF(), getClickX(), getClickY());
 
-        VerticalLayout Hl2 = new VerticalLayout(refAdd, desAdd, puisAdd, locateBut, getInfo());
-        info.setVisible(false);
-        Hl2.setAlignSelf(Alignment.CENTER, refAdd, desAdd, puisAdd, locateBut);
+        VerticalLayout Hl2 = new VerticalLayout(refAdd, desAdd, puisAdd, ButtonLocalisation, getInfo());
+        infoBandereaux.setVisible(false);
+        Hl2.setAlignSelf(Alignment.CENTER, refAdd, desAdd, puisAdd, ButtonLocalisation);
         dialog.add(Hl2);
 
         this.dialog2 = new Dialog();
         dialog2.setHeaderTitle("Localiser");
         this.save2 = new Button("Confirmer");
-        Button cancelButton2 = new Button("Annuler", e -> getDialog2().close());
+        Button cancelButton2 = new Button("Retour", e -> getDialog2().close());
         dialog2.getFooter().add(cancelButton2);
         dialog2.getFooter().add(save2);
 
@@ -107,9 +114,10 @@ public class AffichMachine extends VerticalLayout {
             this.TableMachine = new ListeMachines(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
             this.add(Hl1, RechercheMachine, this.TableMachine);;
         } catch (SQLException ex) {
-            Notification.show("Erreur du serveur, veuillez réessayer");
+            Notification.show("Erreur serveur, réessayer");
         }
         this.setAlignSelf(FlexComponent.Alignment.CENTER, Hl1);
+        
 
         //Actions des composants:
         deleteButton1.addClickListener((e) -> {
@@ -117,7 +125,7 @@ public class AffichMachine extends VerticalLayout {
                 SqlQueryMainPart.deleteMachine(this.main.getInfoSess().getCon(), this.TableMachine.getSelectedItems().iterator());
                 refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()));
             } catch (SQLException ex) {
-                Notification.show("Réessayer et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
+                Notification.show("Réessayer et vérifier qu'il n'y ai pas de contrainte sur l'élément");
             }
         });
 
@@ -125,7 +133,7 @@ public class AffichMachine extends VerticalLayout {
             try {
                 refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchMachine(this.main.getInfoSess().getCon(), RechercheMachine.getValue()));
             } catch (SQLException ex) {
-                Notification.show("Erreur du serveur, veuillez réessayer");
+                Notification.show("Erreur serveur, réessayer");
 
             }
             ;
@@ -134,18 +142,19 @@ public class AffichMachine extends VerticalLayout {
         addButton.addClickListener((e) -> dialog.open());
 
         save.addClickListener((e) -> {
+            // Controle de saisie.
             refAdd.setHelperText(null);
             desAdd.setHelperText(null);
             puisAdd.setHelperText(null);
 
             if (refAdd.getValue().length() > 30 || refAdd.getValue().length() == 0) {
-                refAdd.setHelperText("1-30 caractères demandés");
+                refAdd.setHelperText("1-30 caractères exigés");
             } else if (desAdd.getValue().length() > 30 || desAdd.getValue().length() == 0) {
-                desAdd.setHelperText("1-30 caractères demandés");
+                desAdd.setHelperText("1-30 caractères exigés ");
             } else if (puisAdd.isEmpty()) {
                 puisAdd.setHelperText("Entrer une valeur valide");
             } else if (this.Xc == -1 || this.Yc == -1 || this.desC == null) {
-                Notification.show("ajouter une localisation");
+                Notification.show("Ajouter une localisation");
             } else {
                 try {
                     int i = SqlQueryMainPart.TestMachine(this.main.getInfoSess().getCon(), refAdd.getValue());
@@ -156,18 +165,18 @@ public class AffichMachine extends VerticalLayout {
                         this.Xc = -1;
                         this.Yc = -1;
                         this.desC = null;
-                        this.info.setVisible(false);
+                        this.infoBandereaux.setVisible(false);
                     } else {
-                        refAdd.setHelperText("Cette machine existe déjà");
+                        refAdd.setHelperText("La machine existe déjà");
                     }
                 } catch (SQLException ex) {
-                    Notification.show("Erreur serveur, veuillez réessayer");
+                    Notification.show("Erreur serveur, réessayer");
                 }
             }
 
         });
 
-        locateBut.addClickListener((e) -> {
+        ButtonLocalisation.addClickListener((e) -> {
             dialog2.removeAll();
             dialog2.add(new LocateInPlan(this.main, this));
             dialog2.open();
@@ -175,71 +184,46 @@ public class AffichMachine extends VerticalLayout {
 
     }
 
+    // Méthodes:
     private void refreshTableMachine(Connection con, List<Machines> data) throws SQLException {
         this.remove(this.TableMachine);
         this.TableMachine = new ListeMachines(con, data);
         this.add(this.TableMachine);
     }
 
-    /**
-     * @return the save2
-     */
+    // Getteurs et Setteur.
     public Button getSave2() {
         return save2;
     }
 
-    /**
-     * @return the des
-     */
-    public TextField getDes() {
-        return des;
+    public TextField getDesF() {
+        return desF;
     }
 
-    /**
-     * @return the clickX
-     */
     public NumberField getClickX() {
-        return clickX;
+        return clickXField;
     }
 
-    /**
-     * @return the clickY
-     */
     public NumberField getClickY() {
-        return clickY;
+        return clickYField;
     }
 
-    /**
-     * @return the dialog2
-     */
     public Dialog getDialog2() {
         return dialog2;
     }
 
-    /**
-     * @return the info
-     */
     public HorizontalLayout getInfo() {
-        return info;
+        return infoBandereaux;
     }
 
-    /**
-     * @param Xc the Xc to set
-     */
     public void setXc(double Xc) {
         this.Xc = Xc;
     }
 
-    /**
-     * @param Yc the Yc to set
-     */
     public void setYc(double Yc) {
         this.Yc = Yc;
     }
 
-    /**
-     * @param desC the desC to set
-     */
     public void setDesC(String desC) {
         this.desC = desC;
     }

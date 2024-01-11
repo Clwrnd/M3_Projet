@@ -24,6 +24,7 @@ import java.util.List;
  *
  * @author Henry Adèle
  */
+// Création du tableau affichant les données
 public class ListeProduits extends Grid<Produits> {
 
     private Connection con;
@@ -56,7 +57,7 @@ public class ListeProduits extends Grid<Produits> {
                 if (this.getEditor().isOpen()) {
                     this.getEditor().cancel();
                 }
-                planFabrication(produit.getId(),produit.getRef());
+                planFabrication(produit.getId(), produit.getRef());
 
             });
             return new HorizontalLayout(editButton, planButton);
@@ -129,9 +130,10 @@ public class ListeProduits extends Grid<Produits> {
 
     }
 
-    private void planFabrication(int id,String ref) {
+    //Méthode:
+    private void planFabrication(int id, String ref) {
         Dialog diagPlan = new Dialog();
-        diagPlan.add(new AffichOperation(con, id,ref));
+        diagPlan.add(new AffichOperation(con, id, ref));
         diagPlan.open();
     }
 

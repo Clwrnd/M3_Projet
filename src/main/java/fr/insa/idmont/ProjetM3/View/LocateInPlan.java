@@ -10,7 +10,6 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.DomEvent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
@@ -28,6 +27,7 @@ import java.io.InputStream;
  *
  * @author cidmo
  */
+// Interface permettant la localisation d'une machine sur un plan:
 public class LocateInPlan extends HorizontalLayout {
 
     private MainView main;
@@ -37,13 +37,14 @@ public class LocateInPlan extends HorizontalLayout {
     public LocateInPlan(MainView main, AffichMachine parent) {
         this.main = main;
         this.parent = parent;
-                
+
+        // Création des composants:        
         MemoryBuffer memoryBuffer = new MemoryBuffer();
         MyUpload uploadBut = new MyUpload();
         uploadBut.setReceiver(memoryBuffer);
         uploadBut.setUploadButton(new Button("Uploader un plan"));
         uploadBut.setAcceptedFileTypes("image/JPEG", "image/png");
- 
+
         NumberField X = new NumberField("Position X:");
         X.setWidth(100, Unit.PIXELS);
         NumberField Y = new NumberField("Positon Y:");
@@ -72,6 +73,7 @@ public class LocateInPlan extends HorizontalLayout {
 
         this.add(info);
 
+        // Action receveur de fichier:
         uploadBut.addAllFinishedListener(event -> {
             InputStream inputStream = memoryBuffer.getInputStream();
             plan = new Image(new StreamResource(memoryBuffer.getFileName(), () -> {;
@@ -118,14 +120,19 @@ public class LocateInPlan extends HorizontalLayout {
             } else if (Xclick.isEmpty() || Yclick.isEmpty()) {
                 Notification.show("Localiser la machine");
             } else {
-                this.parent.getClickX().setValue(Xclick.getValue()); this.parent.setXc(Xclick.getValue());
-                this.parent.getClickY().setValue(Yclick.getValue()); this.parent.setYc(Yclick.getValue());
-                this.parent.getDes().setValue(des.getValue()); this.parent.setDesC(des.getValue());
+                this.parent.getClickX().setValue(Xclick.getValue());
+                this.parent.setXc(Xclick.getValue());
+                this.parent.getClickY().setValue(Yclick.getValue());
+                this.parent.setYc(Yclick.getValue());
+                this.parent.getDesF().setValue(des.getValue());
+                this.parent.setDesC(des.getValue());
                 this.parent.getInfo().setVisible(true);
-                
+
                 this.parent.getDialog2().close();
-                
-                Xclick.setValue(null); Yclick.setValue(null); des.setValue("");
+
+                Xclick.setValue(null);
+                Yclick.setValue(null);
+                des.setValue("");
             }
         });
 

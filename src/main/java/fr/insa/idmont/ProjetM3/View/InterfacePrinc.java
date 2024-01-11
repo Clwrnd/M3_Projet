@@ -12,10 +12,8 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.theme.lumo.Lumo;
 import fr.insa.idmont.ProjetM3.Controleur.MainContent;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+// Page statique principale où seront affichés les différents éléments.
 public class InterfacePrinc extends AppLayout {
 
     private MainView main;
@@ -26,16 +24,16 @@ public class InterfacePrinc extends AppLayout {
     public InterfacePrinc(MainView mainn) {
 
         this.addClassName("x");
-        
+
         // Initialisation de l'AppLayout            
         DrawerToggle toggle = new DrawerToggle();
         H4 title = new H4("Ligne de production");
         Tab Machine = new Tab(VaadinIcon.HAMMER.create(), new Span("Machines")); // :0  
         Tab Produit = new Tab(VaadinIcon.CART.create(), new Span("Produits"));   // :1
         Tab TypeOp = new Tab(VaadinIcon.AUTOMATION.create(), new Span("Type d'opérations")); //2
-        Tab Realise = new Tab(VaadinIcon.TWIN_COL_SELECT.create(),new Span("Réalisation machine")); //3
+        Tab Realise = new Tab(VaadinIcon.TWIN_COL_SELECT.create(), new Span("Réalisation machine")); //3
         Tab Administration = new Tab(VaadinIcon.USER.create(), new Span("Administration")); // :4
-        Tabs tabs = new Tabs(Machine, Produit, TypeOp, Realise,Administration);
+        Tabs tabs = new Tabs(Machine, Produit, TypeOp, Realise, Administration);
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
 
         addToDrawer(tabs);
@@ -73,7 +71,7 @@ public class InterfacePrinc extends AppLayout {
 
         // Ajout/Mise en visibilité des éléments spécifiques aux autorisations      
         switch (this.main.getInfoSess().getUtilActuel().get().getAutorisation()) {
-            case ADMINISTRATION:               
+            case ADMINISTRATION:
                 break;
             case MODIFICATION:
                 break;
@@ -83,8 +81,7 @@ public class InterfacePrinc extends AppLayout {
 
         tabs.addSelectedChangeListener((e) -> {
             this.controlleur.setContent(tabs.getSelectedIndex());
- });
-
+        });
 
     }
 

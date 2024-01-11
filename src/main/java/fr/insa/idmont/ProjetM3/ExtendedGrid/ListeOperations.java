@@ -21,6 +21,7 @@ import java.util.List;
  *
  * @author Henry Adèle
  */
+// Création du tableau affichant les données
 public class ListeOperations extends Grid<Operations> {
 
     Connection con;
@@ -35,7 +36,7 @@ public class ListeOperations extends Grid<Operations> {
 
         this.setSelectionMode(Grid.SelectionMode.SINGLE);
         Tooltip tooltip = Tooltip.forComponent(this).withText("Cliquez sur une ligne pour la sélectionner").withPosition(Tooltip.TooltipPosition.BOTTOM);
-        
+
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(Operations::getDesTO).setHeader("Description");
 
@@ -66,6 +67,7 @@ public class ListeOperations extends Grid<Operations> {
 
     }
 
+    // Méthodes:
     private void PrecedenceUp(Operations op) throws SQLException {
         if (this.getData().indexOf(op) == 0) {
             Notification.show("Vous êtes arrivés en haut de liste");
@@ -78,7 +80,7 @@ public class ListeOperations extends Grid<Operations> {
             this.setItems(getData());
         } else {
             SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId());
-            SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) -1).getId(),op.getId(),this.getData().get(this.getData().indexOf(op) + 1).getId());
+            SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId());
             if (this.getData().indexOf(op) != 1) {
                 SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(this.getData().indexOf(op) - 2).getId(), this.getData().get(this.getData().indexOf(op) - 2).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId());
             }
@@ -89,31 +91,29 @@ public class ListeOperations extends Grid<Operations> {
 
     }
 
-    
     private void PrecedenceDown(Operations op) throws SQLException {
         if (this.getData().indexOf(op) == this.getData().size() - 1) {
             Notification.show("Vous êtes arrivés en bas de liste");
-        } else if (this.getData().indexOf(op) ==0) {
-            SqlQueryMainPart.EditPrecedence2(con,op.getId(),this.getData().get(1).getId(), op.getId(), this.getData().get(1).getId());
-            if (this.getData().indexOf(op) !=this.getData().size() - 2) {
-                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op)+2).getId(),op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) + 2).getId());
+        } else if (this.getData().indexOf(op) == 0) {
+            SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(1).getId(), op.getId(), this.getData().get(1).getId());
+            if (this.getData().indexOf(op) != this.getData().size() - 2) {
+                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 2).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) + 2).getId());
             }
             Collections.swap(getData(), 0, 1);
             this.setItems(getData());
         } else {
-             SqlQueryMainPart.EditPrecedence2(con,op.getId(),this.getData().get(getData().indexOf(op)+1).getId(), op.getId(), this.getData().get(getData().indexOf(op)+1).getId());
-             SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) -1).getId(),this.getData().get(this.getData().indexOf(op) - 1).getId(),op.getId());
-             if (this.getData().indexOf(op) !=this.getData().size() - 2) {
-             SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op)+2).getId(),op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) + 2).getId());
+            SqlQueryMainPart.EditPrecedence2(con, op.getId(), this.getData().get(getData().indexOf(op) + 1).getId(), op.getId(), this.getData().get(getData().indexOf(op) + 1).getId());
+            SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), this.getData().get(this.getData().indexOf(op) - 1).getId(), op.getId());
+            if (this.getData().indexOf(op) != this.getData().size() - 2) {
+                SqlQueryMainPart.EditPrecedence2(con, this.getData().get(this.getData().indexOf(op) + 2).getId(), op.getId(), this.getData().get(this.getData().indexOf(op) + 1).getId(), this.getData().get(this.getData().indexOf(op) + 2).getId());
             }
 
             Collections.swap(getData(), this.getData().indexOf(op) + 1, this.getData().indexOf(op));
-            this.setItems(getData());       }
+            this.setItems(getData());
+        }
     }
 
-    /**
-     * @return the data
-     */
+    // Get et Set:
     public List<Operations> getData() {
         return data;
     }

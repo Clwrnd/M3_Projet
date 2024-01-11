@@ -21,6 +21,7 @@ import java.util.Optional;
  *
  * @author cidmo
  */
+// Interface de connexion pour les utilisateurs:
 public class Identification extends VerticalLayout {
 
     private Connexion controlleur;
