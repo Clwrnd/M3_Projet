@@ -419,7 +419,7 @@ public class SqlQueryMainPart {
         }
     }
 
-    public static List<Realise> SearchRealise(Connection con, String Ref) {
+/*  public static List<Realise> SearchRealise(Connection con, String Ref) {
         ArrayList<Realise> liste = new ArrayList<>();
         try (PreparedStatement st = con.prepareStatement(
                 "select *"
@@ -436,7 +436,7 @@ public class SqlQueryMainPart {
         }
 
     }
-
+*/
     // -------------------------------------------- Operations:
     public static void AssociationOpDes(Connection con, ArrayList<Operations> liste) throws SQLException {
 

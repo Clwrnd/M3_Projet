@@ -45,7 +45,7 @@ public class AffichOperation extends VerticalLayout {
         deleteButton1.addThemeVariants(ButtonVariant.LUMO_ICON,
                 ButtonVariant.LUMO_ERROR);
         deleteButton1.setTooltipText("Supprimer un élément");
-        deleteAllButton.setTooltipText("Supprimer tout !");
+        deleteAllButton.setTooltipText("Supprimer tout !!");
 
         Button addButton = new Button(VaadinIcon.PLUS.create());
         addButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
@@ -55,11 +55,11 @@ public class AffichOperation extends VerticalLayout {
         Hl1.setAlignSelf(FlexComponent.Alignment.START, addButton);
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Add an operation");
+        dialog.setHeaderTitle("Ajouter une opération");
         ComboBox<TypeOperations> ToChoix = new ComboBox<>("Type d'opération:");
         ToChoix.addClassName("error");
-        Button save = new Button("Confirm");
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        Button save = new Button("Confirmer");
+        Button cancelButton = new Button("Retour", e -> dialog.close());
         dialog.add(ToChoix);
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);
@@ -68,7 +68,7 @@ public class AffichOperation extends VerticalLayout {
             this.TableOp = new ListeOperations(this.con, SqlQueryMainPart.GetOp(this.con, idproduit));
             this.add(Hl1, this.TableOp);;
         } catch (SQLException ex) {
-            Notification.show("Server error, try again");
+            Notification.show("Erreur serveur, réessayer");
         }
         this.setAlignSelf(Alignment.CENTER, Hl1);
 
@@ -79,7 +79,7 @@ public class AffichOperation extends VerticalLayout {
                 SqlQueryMainPart.deleteOp(this.con, this.TableOp.getSelectedItems().iterator());
                 refreshTableOp(this.con, SqlQueryMainPart.GetOp(this.con, idproduit));
             } catch (SQLException ex) {
-                Notification.show("Try again and verify there is no constraint on this item");
+                Notification.show("Réessayer et vérifier qu'il n'y ai pas de contrainte sur l'élément");
             }
         });
         deleteAllButton.addClickListener((e) -> {
@@ -88,7 +88,7 @@ public class AffichOperation extends VerticalLayout {
                 SqlQueryMainPart.deleteOpAll(this.con, idproduit);
                 refreshTableOp(this.con, SqlQueryMainPart.GetOp(this.con, idproduit));
             } catch (SQLException ex) {
-                Notification.show("Try again and verify there is no constraint on this item");
+                Notification.show("Réessayer et vérifier qu'il n'y ai pas de contrainte sur l'élément");
             }
         });
 
@@ -97,14 +97,14 @@ public class AffichOperation extends VerticalLayout {
             try {
                 ToChoix.setItems(SqlQueryMainPart.GetTO(this.con));
             } catch (SQLException ex) {
-                Notification.show("Server error, retry");
+                Notification.show("Erreur serveur, réessayer");
             }
         });
 
         save.addClickListener((e) -> {
             // Controle de saisie.
             if (ToChoix.isEmpty()) {
-                ToChoix.setHelperText("Choose a value");
+                ToChoix.setHelperText("Choisir une valeur");
             } else {
                 List<Operations> existant = SqlQueryMainPart.GetOp(con, idproduit);
                 int id = SqlQueryMainPart.addOp(con, ToChoix.getValue().getId(), idproduit);
@@ -113,7 +113,7 @@ public class AffichOperation extends VerticalLayout {
                 try {
                     refreshTableOp(con, SqlQueryMainPart.GetOp(con, idproduit));
                 } catch (SQLException ex) {
-                    Notification.show("Server error, retry");
+                    Notification.show("Erreur serveur, réeesayer");
                 }
             }
 
