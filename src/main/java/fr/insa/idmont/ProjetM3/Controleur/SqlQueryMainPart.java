@@ -4,13 +4,20 @@
  */
 package fr.insa.idmont.ProjetM3.Controleur;
 
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.server.StreamResource;
 import static fr.insa.idmont.ProjetM3.Controleur.AlgoGestionPrecedence.Tri;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Machines;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Operations;
+import fr.insa.idmont.ProjetM3.DataBase_Model.Plan;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Precedence;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Produits;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
 import fr.insa.idmont.ProjetM3.DataBase_Model.TypeOperations;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -134,8 +141,9 @@ public class SqlQueryMainPart {
         try (Statement st = con.createStatement()) {
             ResultSet res = st.executeQuery("SELECT * FROM Tmachine  ");
             while (res.next()) {
-                liste.add(new Machines(res.getInt(1), res.getString(2), res.getString(3), res.getInt(4)));
+                liste.add(new Machines(res.getInt(1), res.getString(2), res.getString(3), res.getInt(4), res.getInt(5), res.getInt(6), res.getInt(7)));
             }
+            AssociationIdPlan(con, liste);
             return liste;
         } catch (SQLException ex) {
             return liste;
@@ -207,8 +215,9 @@ public class SqlQueryMainPart {
             st.setString(1, "%" + ref + "%");
             ResultSet res = st.executeQuery();
             while (res.next()) {
-                liste.add(new Machines(res.getInt(1), res.getString(2), res.getString(3), res.getInt(4)));
+                liste.add(new Machines(res.getInt(1), res.getString(2), res.getString(3), res.getInt(4), res.getInt(5), res.getInt(6), res.getInt(7)));
             }
+            AssociationIdPlan(con, liste);
             return liste;
         } catch (SQLException ex) {
             return liste;
@@ -216,17 +225,37 @@ public class SqlQueryMainPart {
 
     }
 
-    public static void addMachine(Connection con, String ref, String des, int puissance) throws SQLException {
+    public static void addMachine(Connection con, String ref, String des, int puissance, int idPlan, int X, int Y) throws SQLException {
         try (PreparedStatement pt = con.prepareStatement("""
-                                                       INSERT INTO Tmachine (ref,des,puissance)
-                                                       VALUES (?,?,?)
+                                                       INSERT INTO Tmachine (ref,des,puissance,idPlan,X,Y)
+                                                       VALUES (?,?,?,?,?,?)
                                                        """)) {
             pt.setString(1, ref);
             pt.setString(2, des);
             pt.setInt(3, puissance);
+            pt.setInt(4, idPlan);
+            pt.setInt(5, X);
+            pt.setInt(6, Y);
             pt.executeUpdate();
         } catch (SQLException ex) {
             throw ex;
+        }
+    }
+
+    public static void AssociationIdPlan(Connection con, ArrayList<Machines> liste) throws SQLException {
+        for (Machines m : liste) {
+            try (PreparedStatement st = con.prepareStatement(
+                    "select *"
+                    + " from Tplan"
+                    + " where id=? ")) {
+                st.setInt(1, m.getPlan().getIdP());
+                ResultSet res = st.executeQuery();
+                if (res.next()) {
+                    m.getPlan().setDes(res.getString(2));
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            }
         }
     }
 
@@ -481,7 +510,7 @@ public class SqlQueryMainPart {
         }
 
     }
-    
+
     public static List<Realise> SearchRealiseVTO(Connection con, int op) throws SQLException {
         ArrayList<Realise> liste = new ArrayList<>();
         try (PreparedStatement st = con.prepareStatement("""
@@ -720,4 +749,52 @@ public class SqlQueryMainPart {
         }
     }
 
+    // Plan:
+    public static void addPlan(Connection con, String des, File file) throws SQLException, FileNotFoundException {
+        FileInputStream ist = new FileInputStream(file);
+        try (PreparedStatement pt = con.prepareStatement("insert into Tplan (des,imagee) values(?,?)")) {
+            pt.setString(1, des);
+            pt.setBinaryStream(2, (InputStream) ist, (int) file.length());
+            System.out.println("ok0");
+            pt.executeUpdate();
+        } catch (Exception ex) {
+            throw ex;
+        }
+
+    }
+
+    public static List<Plan> getPlan(Connection con) throws SQLException {
+        ArrayList<Plan> liste = new ArrayList<>();
+        try (Statement st = con.createStatement()) {
+            ResultSet res = st.executeQuery("SELECT * FROM Tplan  ");
+            while (res.next()) {
+                InputStream inputStream = res.getBinaryStream(3);
+                Image plan = new Image(new StreamResource("test.png", () -> {;
+                    try {
+                        return inputStream;
+                    } catch (Exception a) {
+                        throw a;
+                    }
+                }), "");
+                liste.add(new Plan(plan, res.getString(2), res.getInt(1)));
+            }
+            return liste;
+        } catch (SQLException ex) {
+            return null;
+        }
+
+    }
+
+    public static void DeletePlan(Connection con, int idP) throws SQLException {
+        try (PreparedStatement pst = con.prepareStatement(
+                "delete "
+                + " from Tplan"
+                + " where id = ?")) {
+            pst.setInt(1, idP);
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+            throw ex;
+        }
+
+    }
 }

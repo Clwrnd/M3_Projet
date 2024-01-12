@@ -45,9 +45,9 @@ public class AffichMachine extends VerticalLayout {
 
     private Dialog dialog2;
 
-    private double Xc;
-    private double Yc;
-    private String desC;
+    private int Xc;
+    private int Yc;
+    private int idPlan;
 
     public AffichMachine(MainView main, boolean editAble) {
 
@@ -55,7 +55,7 @@ public class AffichMachine extends VerticalLayout {
         this.main = main;
         this.Xc = -1;
         this.Yc = -1;
-        this.desC = null;
+        this.idPlan = -1;
 
         // Création des composant et mise en place de leurs dispositions.
         H2 titre1 = new H2("Machine");
@@ -110,7 +110,7 @@ public class AffichMachine extends VerticalLayout {
         dialog2.getFooter().add(save2);
 
         try {
-            this.TableMachine = new ListeMachines(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()),editAble);
+            this.TableMachine = new ListeMachines(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()), editAble);
             this.add(Hl1, RechercheMachine, this.TableMachine);;
         } catch (SQLException ex) {
             Notification.show("Erreur serveur, réessayer");
@@ -125,7 +125,7 @@ public class AffichMachine extends VerticalLayout {
         deleteButton1.addClickListener((e) -> {
             try {
                 SqlQueryMainPart.deleteMachine(this.main.getInfoSess().getCon(), this.TableMachine.getSelectedItems().iterator());
-                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()),editAble);
+                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()), editAble);
             } catch (SQLException ex) {
                 Notification.show("Réessayer et vérifier qu'il n'y ai pas de contrainte sur l'élément");
             }
@@ -133,7 +133,7 @@ public class AffichMachine extends VerticalLayout {
 
         RechercheMachine.addKeyPressListener(Key.ENTER, (e) -> {
             try {
-                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchMachine(this.main.getInfoSess().getCon(), RechercheMachine.getValue()),editAble);
+                refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchMachine(this.main.getInfoSess().getCon(), RechercheMachine.getValue()), editAble);
             } catch (SQLException ex) {
                 Notification.show("Erreur serveur, réessayer");
 
@@ -155,23 +155,24 @@ public class AffichMachine extends VerticalLayout {
                 desAdd.setHelperText("1-30 caractères exigés ");
             } else if (puisAdd.isEmpty()) {
                 puisAdd.setHelperText("Entrer une valeur valide");
-            } else if (this.Xc == -1 || this.Yc == -1 || this.desC == null) {
+            } else if (this.Xc == -1 || this.Yc == -1 || this.idPlan == -1) {
                 Notification.show("Ajouter une localisation");
             } else {
                 try {
                     int i = SqlQueryMainPart.TestMachine(this.main.getInfoSess().getCon(), refAdd.getValue());
                     if (i == -1) {
-                        SqlQueryMainPart.addMachine(this.main.getInfoSess().getCon(), refAdd.getValue(), desAdd.getValue(), puisAdd.getValue());
+                        SqlQueryMainPart.addMachine(this.main.getInfoSess().getCon(), refAdd.getValue(), desAdd.getValue(), puisAdd.getValue(), this.idPlan, this.Xc, this.Yc);
                         dialog.close();
-                        refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()),editAble);
+                        refreshTableMachine(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetMachine(this.main.getInfoSess().getCon()), editAble);
                         this.Xc = -1;
                         this.Yc = -1;
-                        this.desC = null;
+                        this.idPlan = -1;
                         this.infoBandereaux.setVisible(false);
                     } else {
                         refAdd.setHelperText("La machine existe déjà");
                     }
                 } catch (SQLException ex) {
+                    ex.printStackTrace();
                     Notification.show("Erreur serveur, réessayer");
                 }
             }
@@ -187,9 +188,9 @@ public class AffichMachine extends VerticalLayout {
     }
 
     // Méthodes:
-    private void refreshTableMachine(Connection con, List<Machines> data,boolean editAble) throws SQLException {
+    private void refreshTableMachine(Connection con, List<Machines> data, boolean editAble) throws SQLException {
         this.remove(this.TableMachine);
-        this.TableMachine = new ListeMachines(con, data,editAble);
+        this.TableMachine = new ListeMachines(con, data, editAble);
         this.add(this.TableMachine);
     }
 
@@ -218,16 +219,16 @@ public class AffichMachine extends VerticalLayout {
         return infoBandereaux;
     }
 
-    public void setXc(double Xc) {
+    public void setXc(int Xc) {
         this.Xc = Xc;
     }
 
-    public void setYc(double Yc) {
+    public void setYc(int Yc) {
         this.Yc = Yc;
     }
 
-    public void setDesC(String desC) {
-        this.desC = desC;
+    public void setDesC(int desC) {
+        this.idPlan = desC;
     }
 
 }

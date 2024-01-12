@@ -78,7 +78,7 @@ public class AffichTypeOp extends VerticalLayout {
         deleteButton1.addClickListener((e) -> {
             try {
                 SqlQueryMainPart.deleteTO(this.main.getInfoSess().getCon(), this.tableTO.getSelectedItems().iterator());
-                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()),editAble);
+                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()), editAble);
             } catch (SQLException ex) {
                 Notification.show("Réessayez et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
             }
@@ -86,7 +86,7 @@ public class AffichTypeOp extends VerticalLayout {
 
         RechercheTO.addKeyPressListener(Key.ENTER, (e) -> {
             try {
-                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchTO(this.main.getInfoSess().getCon(), RechercheTO.getValue()),editAble);
+                refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchTO(this.main.getInfoSess().getCon(), RechercheTO.getValue()), editAble);
             } catch (SQLException ex) {
                 Notification.show("Erreur serveur, veuillez réessayer");
 
@@ -106,7 +106,7 @@ public class AffichTypeOp extends VerticalLayout {
                     if (i == -1) {
                         SqlQueryMainPart.addTO(this.main.getInfoSess().getCon(), desAdd.getValue());
                         dialog.close();
-                        refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()),editAble);
+                        refreshTableTO(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetTO(this.main.getInfoSess().getCon()), editAble);
                     } else {
                         desAdd.setHelperText("Le type d'opération existe déjà");
                     }

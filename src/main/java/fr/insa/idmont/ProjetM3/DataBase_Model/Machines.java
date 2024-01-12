@@ -15,15 +15,18 @@ public class Machines {
     private String ref;
     private String des;
     private int puissance;
-    private String DesignationPlan;
+    private Plan Plan;
     private int X;
     private int Y;
 
-    public Machines(int id, String ref, String des, int puissance) {
+    public Machines(int id, String ref, String des, int puissance, int idplan, int X, int Y) {
         this.id = id;
         this.ref = ref;
         this.des = des;
         this.puissance = puissance;
+        this.Plan = new Plan(idplan);
+        this.X = X;
+        this.Y = Y;
     }
 
     public Machines(int id) {
@@ -71,12 +74,16 @@ public class Machines {
         return String.valueOf(id);
     }
 
-    public String getDesignationPlan() {
-        return DesignationPlan;
+    public Plan getPlan() {
+        return Plan;
     }
 
-    public void setDesignationPlan(String DesignationPlan) {
-        this.DesignationPlan = DesignationPlan;
+    public void setPlan(Plan Plan) {
+        this.Plan = Plan;
+    }
+
+    public String getPlanDes() {
+        return this.Plan.getDes();
     }
 
     public int getX() {
@@ -92,16 +99,6 @@ public class Machines {
     }
 
     public void setY(int Y) {
-        this.Y = Y;
-    }
-
-    public String getLoc() {
-        return (this.DesignationPlan + ": " + String.valueOf(this.X) + " - " + String.valueOf(this.Y));
-    }
-
-    public void setLoc(String desPlan, int X, int Y) {
-        this.DesignationPlan = desPlan;
-        this.X = X;
         this.Y = Y;
     }
 

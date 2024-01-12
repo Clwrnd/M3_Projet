@@ -29,24 +29,24 @@ public class MainContent {
     }
 
     public void GoToProduit(boolean editAble) {
-        this.viewPrinc.setContent(new AffichProduit(this.viewPrinc.getMain(),editAble));
+        this.viewPrinc.setContent(new AffichProduit(this.viewPrinc.getMain(), editAble));
     }
 
     public void GoToMachine(boolean editAble) {
-        this.viewPrinc.setContent(new AffichMachine(this.viewPrinc.getMain(),editAble));
+        this.viewPrinc.setContent(new AffichMachine(this.viewPrinc.getMain(), editAble));
     }
 
     public void GoToTypeOp(boolean editAble) {
-        this.viewPrinc.setContent(new AffichTypeOp(this.viewPrinc.getMain(),editAble));
+        this.viewPrinc.setContent(new AffichTypeOp(this.viewPrinc.getMain(), editAble));
     }
 
-      public void GoToRealise(boolean editAble) {
-        this.viewPrinc.setContent(new AffichRealise(this.viewPrinc.getMain(),editAble));
+    public void GoToRealise(boolean editAble) {
+        this.viewPrinc.setContent(new AffichRealise(this.viewPrinc.getMain(), editAble));
     }
 
     ;
 
-    public void setContent(int i,boolean editAble)  {
+    public void setContent(int i, boolean editAble) {
 
         switch (i) {
 

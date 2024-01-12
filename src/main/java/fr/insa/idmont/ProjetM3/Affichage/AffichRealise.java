@@ -85,7 +85,7 @@ public class AffichRealise extends VerticalLayout {
         dialog.add(vl);
 
         try {
-            this.TableOpM = new ListeRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
+            this.TableOpM = new ListeRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()), editAble);
             this.add(Hl1, RHl, this.TableOpM);
         } catch (SQLException ex) {
             Notification.show("Erreur serveur, veuillez réessayer");
@@ -105,7 +105,7 @@ public class AffichRealise extends VerticalLayout {
                 Notification.show("Erreur serveur, veuillez réessayer");
             }
             try {
-                refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
+                refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()), editAble);
             } catch (SQLException ex) {
             }
         });
@@ -113,10 +113,10 @@ public class AffichRealise extends VerticalLayout {
         rechercheViaM.addValueChangeListener((e) -> {
             try {
                 if (rechercheViaM.isEmpty()) {
-                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
+                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()), editAble);
 
                 } else {
-                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchRealiseVM(this.main.getInfoSess().getCon(), rechercheViaM.getValue().getId()),editAble);
+                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchRealiseVM(this.main.getInfoSess().getCon(), rechercheViaM.getValue().getId()), editAble);
 
                 }
             } catch (SQLException ex) {
@@ -127,10 +127,10 @@ public class AffichRealise extends VerticalLayout {
         rechercheViaTO.addValueChangeListener((e) -> {
             try {
                 if (rechercheViaTO.isEmpty()) {
-                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
+                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()), editAble);
 
                 } else {
-                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchRealiseVTO(this.main.getInfoSess().getCon(), rechercheViaTO.getValue().getId()),editAble);
+                    refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchRealiseVTO(this.main.getInfoSess().getCon(), rechercheViaTO.getValue().getId()), editAble);
 
                 }
             } catch (SQLException ex) {
@@ -158,7 +158,7 @@ public class AffichRealise extends VerticalLayout {
                     if (SqlQueryMainPart.TestRealise(this.main.getInfoSess().getCon(), Machine.getValue().getId(), TypeOperation.getValue().getId(), duree.getValue())) {
                         SqlQueryMainPart.addRealise(this.main.getInfoSess().getCon(), Machine.getValue().getId(), TypeOperation.getValue().getId(), duree.getValue());
                         dialog.close();
-                        refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()),editAble);
+                        refreshTableRealise(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetRealise(this.main.getInfoSess().getCon()), editAble);
                     } else {
                         Machine.setHelperText("Combinaison déja existante");
                     }
@@ -175,7 +175,7 @@ public class AffichRealise extends VerticalLayout {
     private void refreshTableRealise(Connection con, List<Realise> data, boolean editAble) throws SQLException {
 
         this.remove(this.TableOpM);
-        this.TableOpM = new ListeRealise(con, data,editAble);
+        this.TableOpM = new ListeRealise(con, data, editAble);
         this.add(this.TableOpM);
     }
 

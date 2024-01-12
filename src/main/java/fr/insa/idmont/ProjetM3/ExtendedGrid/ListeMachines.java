@@ -44,7 +44,9 @@ public class ListeMachines extends Grid<Machines> {
         this.addColumn(Machines::getRef).setHeader("Ref");
         this.addColumn(Machines::getDes).setHeader("Des");
         this.addColumn(Machines::getPuissance).setHeader("Puissance (W)");
-        this.addColumn(Machines::getLoc).setHeader("Désignation plan: X-Y");
+        this.addColumn(Machines::getPlanDes).setHeader("Repère");
+        this.addColumn(Machines::getX).setHeader("X");
+        this.addColumn(Machines::getY).setHeader("Y");
 
         if (editAble) {
             this.addComponentColumn(user -> {
@@ -87,10 +89,6 @@ public class ListeMachines extends Grid<Machines> {
         this.getEditor().getBinder().forField(puisField).bind(Machines::getPuissance, Machines::setPuissance);
         this.getColumns().get(3).setEditorComponent(puisField);
 
-        this.LocaFiedl = new Button(VaadinIcon.BULLSEYE.create());
-        this.LocaFiedl.setWidthFull();
-        this.getColumns().get(4).setEditorComponent(LocaFiedl);
-
         Button saveBut = new Button(VaadinIcon.CHECK.create(), e -> {
             save();
         });
@@ -102,9 +100,8 @@ public class ListeMachines extends Grid<Machines> {
         HorizontalLayout actions = new HorizontalLayout(saveBut, cancelBut);
         actions.setPadding(false);
         if (editAble) {
-            this.getColumns().get(5).setEditorComponent(actions);
+            this.getColumns().get(7).setEditorComponent(actions);
         }
-        
 
         this.getColumns().get(0).setSortable(true);
         this.getColumns().get(1).setSortable(true);

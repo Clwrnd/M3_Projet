@@ -11,6 +11,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.data.binder.Binder;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Realise;
@@ -61,9 +62,7 @@ public class ListeRealise extends Grid<Realise> {
             Button info = new Button(VaadinIcon.INFO.create());
             info.addThemeVariants(ButtonVariant.LUMO_ICON,
                     ButtonVariant.LUMO_TERTIARY);
-            info.addClickListener((e) -> {
-
-            });
+            Tooltip tooltip = Tooltip.forComponent(info).withText("Pour plus d'info sur la machine aller dans l'onglet dédié");
             return info;
         });
 

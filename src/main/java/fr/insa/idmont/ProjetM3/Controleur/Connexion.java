@@ -103,7 +103,7 @@ public class Connexion {
             DeletePreId(id);
         } catch (SQLException ex) {
             throw ex;
-        } 
+        }
     }
 
     public void GotoLoginForm() {

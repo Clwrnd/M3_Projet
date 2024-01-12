@@ -65,13 +65,13 @@ public class AffichProduit extends VerticalLayout {
         dialog.add(Hl2);
 
         try {
-            this.TableProduit = new ListeProduits(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()),editAble);
+            this.TableProduit = new ListeProduits(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()), editAble);
             this.add(Hl1, RechercheProduit, this.TableProduit);;
         } catch (SQLException ex) {
             Notification.show("Erreur serveur, veuillez réessayer");
         }
         this.setAlignSelf(Alignment.CENTER, Hl1);
-        
+
         if (!editAble) {
             addButton.setEnabled(false);
             deleteButton1.setEnabled(false);
@@ -81,7 +81,7 @@ public class AffichProduit extends VerticalLayout {
         deleteButton1.addClickListener((e) -> {
             try {
                 SqlQueryMainPart.deleteProd(this.main.getInfoSess().getCon(), this.TableProduit.getSelectedItems().iterator());
-                refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()),editAble);
+                refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()), editAble);
             } catch (SQLException ex) {
                 Notification.show("Réessayez et vérifiez qu'il n'y ait pas de contrainte sur cet objet");
             }
@@ -89,7 +89,7 @@ public class AffichProduit extends VerticalLayout {
 
         RechercheProduit.addKeyPressListener(Key.ENTER, (e) -> {
             try {
-                refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchProd(this.main.getInfoSess().getCon(), RechercheProduit.getValue()),editAble);
+                refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.SearchProd(this.main.getInfoSess().getCon(), RechercheProduit.getValue()), editAble);
             } catch (SQLException ex) {
                 Notification.show("Erreur serveur, veuillez réessayer");
 
@@ -112,7 +112,7 @@ public class AffichProduit extends VerticalLayout {
                     if (i == -1) {
                         SqlQueryMainPart.addProduct(this.main.getInfoSess().getCon(), refAdd.getValue(), desAdd.getValue());
                         dialog.close();
-                        refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()),editAble);
+                        refreshTableProduct(this.main.getInfoSess().getCon(), SqlQueryMainPart.GetProduit(this.main.getInfoSess().getCon()), editAble);
                     } else {
                         refAdd.setHelperText("Le produit existe déjà");
                     }
@@ -128,7 +128,7 @@ public class AffichProduit extends VerticalLayout {
     // Méthodes.
     private void refreshTableProduct(Connection con, List<Produits> data, boolean editAble) throws SQLException {
         this.remove(this.TableProduit);
-        this.TableProduit = new ListeProduits(con, data,editAble);
+        this.TableProduit = new ListeProduits(con, data, editAble);
         this.add(this.TableProduit);
     }
 
