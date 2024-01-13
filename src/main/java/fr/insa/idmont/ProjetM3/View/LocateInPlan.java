@@ -12,6 +12,7 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -89,7 +90,7 @@ public class LocateInPlan extends HorizontalLayout {
             Notification.show("Erreur serveur, réessayer");
         }
 
-        VerticalLayout info = new VerticalLayout(des, new Hr(), uploadBut, hr1, coordinateMoving, hr2, coordinateClick, hl3);
+        VerticalLayout info = new VerticalLayout(des, uploadBut, new Hr(), hr1, coordinateMoving, hr2, coordinateClick, new H3("Plan récemment utilisé:"), hl3);
 
         this.add(info);
 
@@ -179,6 +180,8 @@ public class LocateInPlan extends HorizontalLayout {
 
         deleteButton3.addClickListener((e) -> {
             try {
+                coordinateClick.setVisible(false);
+                coordinateMoving.setVisible(false);
                 SqlQueryMainPart.DeletePlan(this.main.getInfoSess().getCon(), choixPlan.getValue().getIdP());
                 choixPlan.setItems(SqlQueryMainPart.getPlan(this.main.getInfoSess().getCon()));
             } catch (SQLException ex) {

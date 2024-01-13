@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -41,6 +42,7 @@ public class ListeUtilisateur extends Grid<Utilisateur> {
         this.mode = mode;
 
         this.setSelectionMode(Grid.SelectionMode.MULTI);
+        this.addThemeVariants(GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
 
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(Utilisateur::getId).setHeader("Id");

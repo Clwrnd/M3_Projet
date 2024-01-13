@@ -62,7 +62,7 @@ public class AffichRealise extends VerticalLayout {
         HorizontalLayout RHl = new HorizontalLayout(rechercheViaM, rechercheViaTO);
 
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Nouvelle liaison Machine-opérations");
+        dialog.setHeaderTitle("Nouvelle liaison Machine-Opération");
         ComboBox<Machines> Machine = new ComboBox<>("Machine");
         Machine.addClassName("error");
         try {
@@ -79,6 +79,7 @@ public class AffichRealise extends VerticalLayout {
         NumberField duree = new NumberField("Durée (heure)");
         duree.addClassName("error");
         VerticalLayout vl = new VerticalLayout(Machine, TypeOperation, duree);
+        vl.setAlignSelf(Alignment.CENTER, Machine, TypeOperation, duree);
         Button cancelButton = new Button("Annuler", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(save);

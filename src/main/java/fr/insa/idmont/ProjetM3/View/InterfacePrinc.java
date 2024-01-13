@@ -3,11 +3,18 @@ package fr.insa.idmont.ProjetM3.View;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -58,7 +65,47 @@ public class InterfacePrinc extends AppLayout {
             setTheme(e.getValue());
         });
 
-        HorizontalLayout hl3 = new HorizontalLayout(permState, new H4("|"), VaadinIcon.MOON.create(), themeToggle);
+        Span infoB = new Span(VaadinIcon.QUESTION.create());
+        infoB.getElement().getThemeList().add("badge contrast");
+        Tooltip tooltip = Tooltip.forComponent(infoB).withText("Aide");
+        H3 descr = new H3("Voici quelques vidéos pour vous aider à utiliser l'application:");
+
+        H4 link1 = new H4("Connexion et 1er connexion");
+        link1.addClassName("link");
+        link1.addClickListener((e) -> {
+            getUI().get().getPage().open("https://www.youtube.com/watch?v=IOmMUjBj6Is&ab_channel=Clewrnd");
+        });
+        H4 link2 = new H4("Interface principale: Vue d'ensemble");
+        link2.addClassName("link");
+        link2.addClickListener((e) -> {
+            getUI().get().getPage().open("https://www.youtube.com/watch?v=74bZaTMRrR8&ab_channel=Clewrnd");
+        });
+
+        H4 link3 = new H4("Fonctionnalités");
+        link3.addClassName("link");
+        link3.addClickListener((e) -> {
+            getUI().get().getPage().open("https://www.youtube.com/watch?v=N0A_4hEDhUA&ab_channel=Clewrnd");
+        });
+
+        H4 link4 = new H4("Ajout-Modification-Administration");
+        link4.addClassName("link");
+        link4.addClickListener((e) -> {
+            getUI().get().getPage().open("https://www.youtube.com/watch?v=aAnv4sC2gFI&ab_channel=Clewrnd");
+        });
+
+        H4 link5 = new H4("Compléments");
+        link5.addClassName("link");
+        link5.addClickListener((e) -> {
+            getUI().get().getPage().open("https://www.youtube.com/watch?v=FnSzdXlZgok&ab_channel=Clewrnd");
+        });
+
+        VerticalLayout vaide = new VerticalLayout(descr, link1, link2, link3, link4, link5);
+        vaide.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        Dialog infoD = new Dialog("Aide");
+        infoD.add(vaide);
+
+        HorizontalLayout hl3 = new HorizontalLayout(permState, new H4("|"), infoB, new H4("|"), VaadinIcon.MOON.create(), themeToggle);
         hl3.getStyle().set("margin-left", "auto");
         hl3.getStyle().set("margin-right", "5px");
 
@@ -87,9 +134,12 @@ public class InterfacePrinc extends AppLayout {
         }
 
         tabs.addSelectedChangeListener((e) -> {
-            this.controlleur.setContent(tabs.getSelectedIndex(),editAble);
+            this.controlleur.setContent(tabs.getSelectedIndex(), editAble);
         });
 
+        infoB.addClickListener((e) -> {
+            infoD.open();
+        });
     }
 
     private void setTheme(boolean dark) {

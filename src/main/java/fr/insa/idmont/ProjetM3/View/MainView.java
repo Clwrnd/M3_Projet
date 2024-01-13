@@ -7,7 +7,7 @@ import com.vaadin.flow.router.Route;
 import fr.insa.idmont.ProjetM3.DataBase_Model.Initialisation;
 import fr.insa.idmont.ProjetM3.DataBase_Model.InfoSession;
 
-@PageTitle("Main")
+@PageTitle("ASC Production Manager")
 @Route(value = "")
 public class MainView extends HorizontalLayout {
 

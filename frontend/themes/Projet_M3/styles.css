@@ -22,10 +22,17 @@ vaadin-combo-box.error > [slot="helper"] {
 }
 
 
+
 vaadin-app-layout.x::part(drawer) {
     border-color: #35b0f7 ;
     border-width: 2px;
 }
 
+h4.link{
+    color: blue;
+    text-decoration: underline blue;
+    cursor:help;
+    display:inline;
+}
 
 

@@ -6,6 +6,7 @@ package fr.insa.idmont.ProjetM3.ExtendedGrid;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -34,6 +35,7 @@ public class ListeOperations extends Grid<Operations> {
         this.con = con;
         this.data = data;
 
+        this.addThemeVariants(GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         this.setSelectionMode(Grid.SelectionMode.SINGLE);
         Tooltip tooltip = Tooltip.forComponent(this).withText("Cliquez sur une ligne pour la sélectionner").withPosition(Tooltip.TooltipPosition.BOTTOM);
 

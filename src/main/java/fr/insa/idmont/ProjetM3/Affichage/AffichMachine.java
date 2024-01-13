@@ -103,7 +103,7 @@ public class AffichMachine extends VerticalLayout {
         dialog.add(Hl2);
 
         this.dialog2 = new Dialog();
-        dialog2.setHeaderTitle("Localiser");
+        dialog2.setHeaderTitle("Localisation machine:");
         this.save2 = new Button("Confirmer");
         Button cancelButton2 = new Button("Retour", e -> getDialog2().close());
         dialog2.getFooter().add(cancelButton2);

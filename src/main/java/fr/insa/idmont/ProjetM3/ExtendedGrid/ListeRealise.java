@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -39,11 +40,12 @@ public class ListeRealise extends Grid<Realise> {
 
         this.con = con;
         this.setSelectionMode(Grid.SelectionMode.MULTI);
+        this.addThemeVariants(GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
 
         // Constructeur du GRID affichant la liste des opérations;
         this.addColumn(Realise::getMachine).setHeader("Machine");
         this.addColumn(Realise::getTO).setHeader("Operation");
-        this.addColumn(Realise::getDuree).setHeader("Durée");
+        this.addColumn(Realise::getDuree).setHeader("Durée (h)");
 
         if (editAble) {
             this.addComponentColumn(user -> {

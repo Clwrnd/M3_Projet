@@ -7,6 +7,7 @@ package fr.insa.idmont.ProjetM3.ExtendedGrid;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -38,12 +39,13 @@ public class ListeMachines extends Grid<Machines> {
         this.con = con;
 
         this.setSelectionMode(Grid.SelectionMode.MULTI);
+        this.addThemeVariants(GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
 
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(Machines::getId).setHeader("Id");
         this.addColumn(Machines::getRef).setHeader("Ref");
         this.addColumn(Machines::getDes).setHeader("Des");
-        this.addColumn(Machines::getPuissance).setHeader("Puissance (W)");
+        this.addColumn(Machines::getPuissance).setHeader("P(W)");
         this.addColumn(Machines::getPlanDes).setHeader("Repère");
         this.addColumn(Machines::getX).setHeader("X");
         this.addColumn(Machines::getY).setHeader("Y");

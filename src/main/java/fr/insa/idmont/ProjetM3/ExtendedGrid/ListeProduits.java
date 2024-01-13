@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -36,6 +37,7 @@ public class ListeProduits extends Grid<Produits> {
     public ListeProduits(Connection con, List<Produits> data, boolean editAble) throws SQLException {
         this.con = con;
 
+        this.addThemeVariants(GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
         this.setSelectionMode(Grid.SelectionMode.MULTI);
 
         // Ajout des colonnes et des composants d'éditions:

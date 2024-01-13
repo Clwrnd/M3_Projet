@@ -7,6 +7,7 @@ package fr.insa.idmont.ProjetM3.ExtendedGrid;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -39,6 +40,7 @@ public class ListeTypeOperations extends Grid<TypeOperations> {
         // Ajout des colonnes et des composants d'éditions:
         this.addColumn(TypeOperations::getId).setHeader("Id");
         this.addColumn(TypeOperations::getDes).setHeader("Description");
+        this.addThemeVariants(GridVariant.LUMO_NO_BORDER,GridVariant.LUMO_ROW_STRIPES);
 
         if (editAble) {
             this.addComponentColumn(user -> {
